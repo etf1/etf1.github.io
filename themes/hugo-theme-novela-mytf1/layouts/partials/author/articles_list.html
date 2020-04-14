@@ -1,0 +1,39 @@
+<section class="section nartrow author-alc-section">
+  <div id="articlesList" class="articles-list-container show-details author-alc">
+    {{ $articles := .Pages }}
+    {{ $paginator := .Paginate .Pages }}
+      <div class="post-row-alt">
+        {{ $scratch := newScratch }}
+        {{ $scratch.Set "numPages" (len $paginator.Pages) }}
+        {{ range $index, $article := $paginator.Pages }}
+          {{ $counter := mod $index 2 }}
+            <a href="{{ .RelPermalink }}" class="article-link">
+              <div class="article-data-outer">
+                <div class="image-container">
+                  <img src="{{ .Params.hero }}" class="article-image" />
+                </div>
+                <div class="article-data">
+                  <h2 class="article-title">
+                    {{ .Params.title }}
+                  </h2>
+                  <p class="article-excerpt">
+                    {{ .Params.excerpt }}
+                  </p>
+                  <div class="article-metadata">
+                    {{ .Date.Format "January 2, 2006" }} • {{ .ReadingTime }} min read
+                  </div>
+                </div>
+              </div>
+            </a>
+            {{ if eq ($scratch.Get "numPages") (add $index 1) }}
+              <a href="{{ .RelPermalink }}" style="opacity: 0;" class="article-link">
+              </a>
+            {{ end }}
+        {{ end }}
+      </div>
+  </div>
+  {{ partial "paginator/paginator.html" . }}
+</section>
+
+{{ $script := resources.Get "js/toggleBorder.js" }}
+<script src="{{ $script.RelPermalink }}"></script>

@@ -1,0 +1,18 @@
+name = "Hugo Novela"
+license = "MIT"
+licenselink = "https://github.com/forestryio/hugo-theme-novela/blob/master/LICENSE"
+description = "A Hugo port of the Novela theme by Narative"
+homepage = "https://hugo-novela-forestry.netlify.com/"
+tags = ["blog"]
+features = ["dark mode", "grid view"]
+min_version = "0.55.0"
+
+[author]
+    name = "The New Dynamic"
+    homepage = "https://www.thenewdynamic.com/"
+
+# If porting an existing theme
+[original]
+    author = "Narative"
+    homepage = "https://www.narative.co/"
+    repo = "https://github.com/narative/gatsby-theme-novela"

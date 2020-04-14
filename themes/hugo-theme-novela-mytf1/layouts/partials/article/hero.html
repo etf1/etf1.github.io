@@ -1,0 +1,19 @@
+<section id="articleHero" class="section narrow">
+    <div class="article-hero">
+        <header class="article-header">
+            <h1 class="article-hero-heading">{{ .Page.Params.Title }}</h1>
+            <div class="article-hero-subtitle">
+                <div class="article-meta">
+                    {{ partial "article/authors.html" . }}
+                    {{ .Page.Date.Format "January 2, 2006" }}
+                    • {{ .ReadingTime }} min read
+                </div>
+            </div>
+        </header>
+        {{ with .Page.Params.hero }}
+        <div class="article-hero-image" id="ArticleImage__Hero">
+            <img src="{{ . }}">
+        </div>
+        {{ end }}
+    </div>
+</section>
