@@ -33,7 +33,7 @@
                     {{ $article.Params.excerpt }}
                   </p>
                   <div class="article-metadata">
-                    {{ $article.Date.Format "January 2, 2006" }} • {{ $article.ReadingTime }} min read
+                    Article publié le {{ $article.Date.Day }} {{ index $.Site.Data.mois (printf "%d" $article.Date.Month) }} {{ $article.Date.Year }} • {{ $article.ReadingTime }} min{{ if gt $article.ReadingTime 1}}s{{ end }}
                   </div>
                 </div>
               </div>

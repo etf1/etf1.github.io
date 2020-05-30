@@ -9,9 +9,11 @@
           {{ $counter := mod $index 2 }}
             <a href="{{ .RelPermalink }}" class="article-link">
               <div class="article-data-outer">
-                <div class="image-container">
-                  <img src="{{ .Params.hero }}" class="article-image" />
-                </div>
+                {{ with .Params.avatar }}
+                  <div class="author-hero-image">
+                    <img src="{{ . }}" />
+                  </div>
+                {{ end }}
                 <div class="article-data">
                   <h2 class="article-title">
                     {{ .Params.title }}
@@ -19,9 +21,6 @@
                   <p class="article-excerpt">
                     {{ .Params.excerpt }}
                   </p>
-                  <div class="article-metadata">
-                    {{ .Date.Format "January 2, 2006" }} • {{ .ReadingTime }} min read
-                  </div>
                 </div>
               </div>
             </a>

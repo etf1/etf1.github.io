@@ -11,17 +11,17 @@
         -ms-flex-pack: justify;
             justify-content: space-between;
     margin-bottom: 50px;
-  
+
     /*DESKTOP*/
     @media screen and (max-width: $desktop){
       margin-bottom: 40px;
     }
-  
+
     /*TABLET*/
     @media screen and (max-width: $tablet){
       margin-bottom: 30px;
     }
-  
+
     /*PHABLET*/
     @media screen and (max-width: $phablet){
       display: none;
@@ -35,7 +35,7 @@
     -webkit-box-align: center;
         -ms-flex-align: center;
             align-items: center;
-  
+
     /*TABLET*/
     @media screen and (max-width: $tablet){
       display: none !important;
@@ -49,7 +49,7 @@
     @media screen and (max-width: $desktop){
       width: 80%;
     }
-  
+
     /*TABLET*/
     @media screen and (max-width: $tablet){
       width: 100%;
@@ -64,12 +64,12 @@
     line-height: 1.15;
     color: var(--primary);
     margin: 0;
-  
+
     /*DESKTOP*/
     @media screen and (max-width: $desktop){
       font-size: 38px
     }
-  
+
     /*PHABLET*/
     @media screen and (max-width: $phablet){
       font-size: 32px;
@@ -94,15 +94,15 @@
     -webkit-transition: background 0.25s;
     -o-transition: background 0.25s;
     transition: background 0.25s;
-  
+
     &:not(:last-child) {
       margin-right: 30px;
     }
-  
+
     &:hover {
       background: var(--hover);
     }
-  
+
     &[data-a11y="true"]:focus::after {
       content: "";
       position: absolute;
@@ -114,12 +114,12 @@
       background: rgba(255, 255, 255, 0.01);
       border-radius: 50%;
     }
-  
+
     svg {
       -webkit-transition: opacity 0.2s;
       -o-transition: opacity 0.2s;
       transition: opacity 0.2s;
-  
+
       path {
         fill: var(--primary);
       }
@@ -138,7 +138,7 @@
     display: -webkit-box;
     white-space: normal;
     overflow: hidden;
-  
+
     /*PHABLET*/
     @media screen and (max-width: $phablet){
       -webkit-line-clamp: 3;
@@ -150,7 +150,7 @@
     p {
         display: -webkit-box;
       }
-    
+
     h2 {
       margin-bottom: 10px;
     }
@@ -163,9 +163,6 @@
 }
 
 .author-alc{
-    background-image: -webkit-gradient(linear, left top, left bottom, from(var(--card)), to(var(--background-color)));
-    background-image: -o-linear-gradient(var(--card), var(--background-color));
-    background-image: linear-gradient(var(--card), var(--background-color));
     padding-top: 90px;
 
     .post-row-alt{
@@ -193,7 +190,7 @@
     -webkit-column-gap: 30px;
        -moz-column-gap: 30px;
             column-gap: 30px;
-  
+
     &:not(:last-child) {
       margin-bottom: 75px;
     }
@@ -202,21 +199,21 @@
     @media screen and (max-width: $desktop_medium){
         grid-template-columns: 1fr 1fr;
       }
-    
+
     /*TABLET*/
     @media screen and (max-width: $tablet){
       grid-template-columns: 1fr;
-      
+
       &:not(:last-child) {
         margin-bottom: 0;
       }
     }
-  
+
 }
 .list-title > *:nth-child(1){
     -ms-grid-row: 1;
     -ms-grid-column: 1
-  
+
 }
 
 .list-title-alt{
@@ -247,7 +244,7 @@
         grid-column-gap: 24px;
         grid-template-columns: 1fr 380px;
     }
-    
+
       /*TABLET*/
       @media screen and (max-width: $tablet){
         grid-template-columns: 1fr;
@@ -256,7 +253,7 @@
     @media (max-width: 540px) {
         background: var(--card);
     }
-    
+
     /*PHABLET*/
     @media screen and (max-width: $phablet){
         -webkit-box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.2);
@@ -264,12 +261,12 @@
         border-bottom-right-radius: 5px;
         border-bottom-left-radius: 5px;
     }
-  
+
 
 }.list-item-row > *:nth-child(1){
     -ms-grid-row: 1;
     -ms-grid-column: 1;
-  
+
 
 }.list-item-row > *:nth-child(2){
     -ms-grid-row: 1;
@@ -282,11 +279,11 @@
     @media screen and (max-width: $tablet){
       margin-bottom: 60px;
     }
-  
+
     @media (max-width: 540px) {
       background: var(--card);
     }
-  
+
     /*PHABLET*/
     @media screen and (max-width: $phablet){
       margin-bottom: 40px;
@@ -340,17 +337,17 @@
       box-shadow 0.3s var(--ease-out-quad),
       -webkit-transform 0.3s var(--ease-out-quad),
       -webkit-box-shadow 0.3s var(--ease-out-quad);
-  
+
     & > div {
       height: 100%;
     }
-  
+
     /*TABLET*/
     @media screen and (max-width: $tablet){
       height: 200px;
       margin-bottom: 35px;
     }
-  
+
     /*PHABLET*/
     @media screen and (max-width: $phablet){
       overflow: hidden;
@@ -378,20 +375,20 @@
     -webkit-transition: color 0.3s ease-in-out;
     -o-transition: color 0.3s ease-in-out;
     transition: color 0.3s ease-in-out;
-  
+
     /*DESKTOP*/
     @media screen and (max-width: $desktop){
       margin-bottom: 15px;
     }
-  
+
     /*TABLET*/
     @media screen and (max-width: $tablet){
-      font-size: 24px;  
+      font-size: 24px;
     }
-  
+
     /*PHABLET*/
     @media screen and (max-width: $phablet){
-      font-size: 22px;  
+      font-size: 22px;
       padding: 30px 20px 0;
       margin-bottom: 10px;
       -webkit-line-clamp: 3;
@@ -405,12 +402,12 @@
     margin-bottom: 10px;
     color: var(--grey);
     display: none;
-  
+
     /*DESKTOP*/
     @media screen and (max-width: $desktop){
       display: -webkit-box;
     }
-  
+
     /*PHABLET*/
     @media screem and (max-width: $phablet){
       margin-bottom: 15px;
@@ -426,7 +423,7 @@
     font-size: 16px;
     color: var(--grey);
     opacity: 0.33;
-  
+
     /*PHABLET*/
     @media screen and (max-width: $phablet){
       max-width: 100%;
@@ -493,7 +490,7 @@
     transition: transform 0.33s var(--ease-out-quart);
     transition: transform 0.33s var(--ease-out-quart), -webkit-transform 0.33s var(--ease-out-quart);
     -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
-  
+
     &:hover{
         text-decoration: none;
     }
@@ -507,12 +504,12 @@
               box-shadow: 0 50px 80px -20px rgba(0, 0, 0, 0.27),
         0 30px 50px -30px rgba(0, 0, 0, 0.3);
     }
-  
+
     &:hover h2,
     &:focus h2 {
       color: var(--accent);
     }
-  
+
     &[data-a11y="true"]:focus::after {
       content: "";
       position: absolute;
@@ -540,7 +537,7 @@
         padding: 0;
       }
     }
-  
+
     /*PHABLET*/
     @media screen and (max-width: $phablet){
       min-width: 100% !important;
@@ -555,7 +552,7 @@
         -webkit-box-shadow: initial;
                 box-shadow: initial;
       }
-  
+
       &:active {
         -webkit-transform: scale(0.97) translateY(3px);
             -ms-transform: scale(0.97) translateY(3px);
@@ -569,7 +566,7 @@
 }
 
 #article-link-bigger{
-  max-width: 58.5% !important; 
+  max-width: 58.5% !important;
 
   /*DESKTOP MEDIUM*/
   @media screen and (max-width: $desktop_medium){
@@ -583,7 +580,7 @@
       -ms-flex-wrap: wrap !important;
           flex-wrap: wrap !important;
       margin-bottom: 0;
-  
+
       .article-link{
         display: -webkit-box !important;
         display: -ms-flexbox !important;
@@ -595,7 +592,7 @@
                 flex-direction: row;
         -ms-flex-wrap: none;
             flex-wrap: none;
-  
+
         .article-data-outer{
           display: -webkit-box !important;
           display: -ms-flexbox !important;
@@ -610,16 +607,16 @@
           -webkit-box-pack: justify;
               -ms-flex-pack: justify;
                   justify-content: space-between;
-  
+
           .image-container{
             max-width: 46%;
           }
-        
+
           .article-data{
             max-width: 46%;
           }
         }
       }
-    
+
     }
   }

@@ -5,5 +5,5 @@ theme: "hugo-theme-novela-mytf1"
 pygmentsstyle: "monokai"
 paginate: 6
 social:
-  linkedin: "#"
-  github: "#"
+  linkedin: "https://www.linkedin.com/company/e-tf1/"
+  github: "http://github.com/etf1"
