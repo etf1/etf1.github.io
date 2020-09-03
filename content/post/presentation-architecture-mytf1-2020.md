@@ -78,7 +78,7 @@ TODO
 
 ## Le CMS
 
-Nous acons également développé un CMS maison qui permet à l'équipe édito d'animer le contenu de MYTF1. Il est développé en VueJS.
+Nous avons également développé un CMS maison qui permet à l'équipe édito d'animer le contenu de MYTF1. Il est développé en VueJS.
 
 # L'architecture backend
 
