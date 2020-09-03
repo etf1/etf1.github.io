@@ -8,7 +8,7 @@ authors:
 
 ---
 
-# MY TF1 quésaco ?
+# MYTF1 quésaco ?
 
 MYTF1 est le service de replay du groupe TF1. Il permet à nos utilisateurs de voir ou revoir en streaming les programmes des chaînes suivantes : TF1, TMC, TFX, TF1 Séries Films et LCI. Il est disponible sur la plupart des écrans: Web, Mobile (iOS, Android) et sur les box des principaux opérateurs (IPTV). Ce service gratuit tire principalement ses revenus de la publicité.
 
