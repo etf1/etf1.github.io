@@ -12,7 +12,7 @@ authors:
 
 MYTF1 est le service de replay du groupe TF1. Il permet à nos utilisateurs de voir ou revoir en streaming les programmes des chaînes suivantes : TF1, TMC, TFX, TF1 Séries Films et LCI. Il est disponible sur la plupart des écrans: Web, Mobile (iOS, Android) et sur les box des principaux opérateurs (IPTV). Ce service gratuit tire principalement ses revenus de la publicité.
 
-Dans son ensemble ce service englobe un large spectre de sujets :
+MYTF1 englobe un large spectre de sujets :
 * le streaming vidéo et l'encodage des contenus
 * le ciblage de la publicité
 * la recommendation de contenu (la data)
