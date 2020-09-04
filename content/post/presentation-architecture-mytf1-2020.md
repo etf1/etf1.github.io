@@ -56,16 +56,22 @@ Ces données sont ensuite dénormalisées dans des cluster **Redis**. Nous avons
 
 Le site web est aujourd'hui une SPA en **React**.
 
+TODO a voir avec Koni / Michael
+
 ## APP
 
-Les applications mobiles sont natives et codées en **Swift** (iOS) et **Kotlin** (Android).
+Les application mobiles sont natives et codées en **Swift** (iOS) et **Kotlin** (Android).
+
+TODO a voir avec Mohamed
 
 ## IPTV
 
-Les technos utilisées sur l'IPTV sont très variées et dépendent du modèle de box. Globalement on retrouve trois familles :
-* HTML/JS, principalement SFR et Orange
-* QT/QML, très utilisé par Free
-* Android, notemment sur Bouygues et Free
+Les techno utilisées sur l'iptv sont très variées et dépendent du modèle de box, globalement on retrouve trois familles:
+* **HTML/JS**, principalement SFR et Orange
+* **QT/QML**, très utilisé par Free
+* **Android**, notemment sur Bouygues et Free
+
+Dans le cas des box Android, un moteur QT/QML tourne dans l'application afin de réutiliser le code QT/QML.
 
 ## Le player
 
@@ -74,7 +80,7 @@ Nous developpons notre propre player pour différentes plateformes :
 * iOS (Swift)
 * Android (Kotlin) pour les applications mobiles et certaines box opérateur
 
-TODO
+TODO a voir avec Guillaume
 
 ## Le CMS
 
@@ -94,19 +100,39 @@ La performance est un sujet critique pour MYTF1. Lors de grands évènements tel
 
 ### Les niveaux de cache
 
-TODO Apollo, CDN, Redis
+Pour tenir la charge, différents niveaux de caches sont utilisés:
+* le cache apollo, permet d'avoir un cache cohérent au niveau d'un front pour un utilisateur (données privées et publiques)
+* les CDN (cloudfront) permettent de mettre en cache les données publiques et le flux vidéo coté backend
+* les base de données Redis permettent de mettre en place une session pour les données privées ou d'avoir un vision dénormalisée des données publiques
 
 ### GraphQL et les persisted queries
 
-TODO persited queries
+Historiquement, MY TF1 s'appuie beaucoup sur le cache des CDN. En effet, une grande partie des données sont publiques, notemment toutes les informations liées au catalogue vidéo. Avec graphQL il n'est pas naturel d'utiliser ce type de cache. Par nature, la combinatoire des requêtes et le fait de pouvoir mélanger données privées et publiques ne permet pas de cacher.
+
+Nous avons réutilisé la mécanique de "persisted queries" d'apollo que nous avons légèrement modifiée. Celle-ci consiste à sauvegarder le body de la requête dans une base de données. Le client apollo n'envoit qu'un ID (en général un hash du body de la requête) dans une requête GET pour intérroger le graphQL. De cette façon il est plus simple de mettre en place du cache CDN. Ce fonctionnement est activé en PROD, sur les environnements de developpement il reste desactivé pour garder toute la souplesse de graphQL. Les body des requêtes sont sauvegardés en base de données au moment du build par notre CI/CD.
+
+![Schema](/persistedQueries.png)
+
+Les avantages sont les suivants:
+* le graphQL est vérouillé en PROD on ne peut pas explorer le schema avec des requêtes non présentes dans le code
+* le graphQL n'est pas vérouillé sur les environnment hors PROD, on garde donc toute la souplesse de l'API pour les developpeurs
+* les requêtes publiques sont connues à l'avance et associées à un TTL qui est transmis dans un header Cache-Control et donc exploités par les CDN
 
 ### Le cache de données privées
 
-TODO séparation des requêtes publiques / charger les données user dans Redis / token JWT
+Il est necessaire, pour exploiter efficacement le cache, de séparer les call qui présentent des données privées. Une partie de l'intelligence est déportée sur le front. Par exemple, la liste des vidéo mises en favoris par un utilisateur, est récupérée en début de session. L'écran est construit à partir des données publiques, les favoris précédemments récupérés viennent enrichir l'écran, en affichant un coeur sur la vignette vidéo. Cette logique est plus complexe mais garanti que même lors d'une indisponibilité du backend, le front pourra afficher un écran dans un mode dégradé (à partir du stale cache CDN).
+<!--more-->
+
+Nous nous appuyons également sur des cache Redis, en début de sessions, les données d'un utilisateur sont remontées dans ce type de cache, les call ultérieurs sont alors moins couteux.
+<!--more-->
+
+Enfin, l'utilisations d'un token JWT, permet d'identifier un utilisateur sans sollicitation d'un service ou d'une base de données, le token est transmis du graphQL aux micro services sous jacents qui peuvent alors vérifier eux même la validitée du token (par simple vérification de la signature).
 
 ## Le monitoring
 
-TODO Grafana + prometheus + graylog
+Nous utilisons l'outil **Grafana**, associé à **Prometheus**, pour faire le monitoring de nos applicatifs et de notre infrastructure. **Graylog** permet quand à lui de récupérer les logs d'execution. Nous enviseagons d'utiliser **Jaeger** qui permettrait de restituer une vision cohérente des services en terme de monitoring et de logs.
+
+![Screenshot](/grafana_graphQL.png)
 
 # La vidéo
 
