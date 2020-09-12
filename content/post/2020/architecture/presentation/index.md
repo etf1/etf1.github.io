@@ -91,7 +91,7 @@ Les techno utilisées sur l'iptv sont très variées et dépendent du modèle de
 
 - **HTML/JS**, principalement SFR et Orange
 - **QT/QML**, très utilisé par Free
-- **Android**, notemment sur Bouygues et Free
+- **Android**, notamment sur Bouygues et Free
 
 Dans le cas des box Android, un moteur QT/QML tourne dans l'application afin de réutiliser le code QT/QML.
 
@@ -131,7 +131,7 @@ Pour tenir la charge, différents niveaux de caches sont utilisés:
 
 ### GraphQL et les persisted queries
 
-Historiquement, MYTF1 s'appuie beaucoup sur le cache des CDN. En effet, une grande partie des données sont publiques, notemment toutes les informations liées au catalogue vidéo. Avec GraphQL il n'est pas naturel d'utiliser ce type de cache. Par nature, la combinatoire des requêtes et le fait de pouvoir mélanger données privées et publiques ne permet pas de cacher.
+Historiquement, MYTF1 s'appuie beaucoup sur le cache des CDN. En effet, une grande partie des données sont publiques, notamment toutes les informations liées au catalogue vidéo. Avec GraphQL il n'est pas naturel d'utiliser ce type de cache. Par nature, la combinatoire des requêtes et le fait de pouvoir mélanger données privées et publiques ne permet pas de cacher.
 
 Nous avons réutilisé la mécanique de "persisted queries" d'apollo que nous avons légèrement modifiée. Celle-ci consiste à sauvegarder le body de la requête dans une base de données. Le client apollo n'envoit qu'un ID (en général un hash du body de la requête) dans une requête GET pour intérroger le GraphQL. De cette façon il est plus simple de mettre en place du cache CDN. Ce fonctionnement est activé en PROD, sur les environnements de developpement il reste desactivé pour garder toute la souplesse de GraphQL. Les body des requêtes sont sauvegardés en base de données au moment du build par notre CI/CD.
 
