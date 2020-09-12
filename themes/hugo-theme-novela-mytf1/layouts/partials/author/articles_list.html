@@ -21,6 +21,9 @@
                   <p class="article-excerpt">
                     {{ .Params.excerpt }}
                   </p>
+                  <div class="article-metadata">
+                    {{ .Page.Date.Day }}{{ if eq .Date.Day 1}}er{{ end }} {{ index $.Site.Data.mois (printf "%d" .Date.Month) }} {{ (printf "%.4d" .Date.Year) }} • {{ .ReadingTime }} minute{{ if gt .ReadingTime 1}}s{{ end }}
+                  </div>
                 </div>
               </div>
             </a>
