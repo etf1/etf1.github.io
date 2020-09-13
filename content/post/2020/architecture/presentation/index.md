@@ -1,8 +1,8 @@
 ---
-title: Présentation architecture MYTF1
+title: Présentation technique de MYTF1
 date: 2020-09-01
 hero: /post/2020/architecture/presentation/images/hero.jpg
-excerpt: Une présentation technique de la stack MYTF1
+excerpt: Un tour d'horizon des coulisses techniques de MYTF1
 authors:
   - rpinsonneau
 ---
