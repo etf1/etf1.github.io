@@ -1,7 +1,9 @@
 ---
 title: Rémy Pinsonneau
-bio: |
-  Responsable des développements chez eTF1
+excerpt: Responsable des développements 
+bio: | 
+  Prend toujours deux desserts à la cantine
+hero: /authors/rpinsonneau/avatar.jpg
 avatar: /authors/rpinsonneau/avatar.jpg
 featured: true
 social:
