@@ -1,10 +1,10 @@
 ---
 title: Présentation architecture MYTF1
 date: 2020-09-01
-hero: /images/hero-2.jpg
+hero: /post/2020/architecture/presentation/images/hero.jpg
 excerpt: Une présentation technique de la stack MYTF1
 authors:
-  - Rémy PINSONNEAU
+  - rpinsonneau
 ---
 
 # MYTF1 quésaco ?

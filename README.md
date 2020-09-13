@@ -1,4 +1,4 @@
-# MYTF1 Tech blog
+# eTF1 Tech blog
 
 ## Edition
 

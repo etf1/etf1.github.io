@@ -1,7 +1,8 @@
 ---
 title: Quentin Neyrat
 bio: |
-avatar: /images/qneyrat.jpg
+  Développeur Backend chez eTF1
+avatar: /authors/qneyrat/avatar.jpg
 featured: true
 social:
   - title: blog
