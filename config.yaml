@@ -9,3 +9,5 @@ social:
   github: "http://github.com/etf1"
 
 sourceRelativeLinksEval: true
+canonifyURLs: false
+relativeURLs: true
