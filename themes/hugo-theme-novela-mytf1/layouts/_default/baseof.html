@@ -1,0 +1,26 @@
+<html>
+
+{{ partial "head/head.html" . }}
+
+<body class="line-numbers">
+
+    {{ $script := resources.Get "js/initColors.js" }}
+    <script src="{{ $script.RelPermalink }}"></script>
+
+    <div class="layout-styled">
+
+        {{ partial "header.html" . }}
+
+        {{ block "main" . }}
+        
+        {{ end }}
+        
+        {{ partial "footer.html" . }}
+
+    </div>
+
+    {{ $script := resources.Get "js/prism.js" }}
+    <script src="{{ $script.RelPermalink }}"></script>
+</body>
+
+</html>
