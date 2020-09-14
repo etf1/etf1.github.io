@@ -81,9 +81,17 @@ Nous utilisons [Jest](https://jestjs.io) pour nos tests unitaires, ce qui nous p
 
 ## APP
 
-Les application mobiles sont natives et codées en [Swift](https://swift.org) (iOS) et [Kotlin](https://kotlinlang.org) (Android).
+Les applications mobiles sont natives et codées en [Swift](https://swift.org) (iOS) et [Kotlin](https://kotlinlang.org) (Android) implémentant une architecture modulaire multi couches.
 
-TODO a voir avec Mohamed
+**Couche Networking:**
+Un client GraphQL [Apollo](https://github.com/apollographql/apollo-ios) intégré dans l'application nous permet de consommer l'API backend GraphQL.
+
+**Couche Core:**
+Couche contenant la logique métier et les modèles utiliser dans l'application.
+
+**Couche Présentation:**
+Implémentant une architecture MVI unidirectionnel qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. Les avantages d'une telle architecture est un flux de données plus facile à suivre et à debugger.
+
 
 ## IPTV
 
