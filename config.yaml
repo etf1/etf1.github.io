@@ -7,3 +7,5 @@ paginate: 6
 social:
   linkedin: "https://www.linkedin.com/company/e-tf1/"
   github: "http://github.com/etf1"
+
+sourceRelativeLinksEval: true
