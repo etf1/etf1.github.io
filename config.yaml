@@ -1,4 +1,4 @@
-baseURL: "/blog/"
+baseURL: "/"
 languageCode: "fr-FR"
 title: "Blog technique de MYTF1"
 theme: "hugo-theme-novela-mytf1"
@@ -7,7 +7,3 @@ paginate: 6
 social:
   linkedin: "https://www.linkedin.com/company/e-tf1/"
   github: "http://github.com/etf1"
-
-sourceRelativeLinksEval: true
-canonifyURLs: false
-relativeURLs: true
