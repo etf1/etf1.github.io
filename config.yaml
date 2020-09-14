@@ -1,4 +1,4 @@
-baseURL: "https://example.com"
+baseURL: "/"
 languageCode: "fr-FR"
 title: "Blog technique eTF1"
 theme: "hugo-theme-novela-mytf1"

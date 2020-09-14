@@ -9,4 +9,4 @@ git checkout develop
 hugo server
 ```
 
-### https://etf1.github.io/blog/
+### https://etf1.github.io

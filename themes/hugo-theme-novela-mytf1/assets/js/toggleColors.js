@@ -6,8 +6,6 @@ let sunRays = document.getElementById("sunRays");
 let moonMask = document.getElementById("moonMask");
 let logo = document.getElementById("logo-desktop");
 
-console.log("toto");
-
 initAnimation();
 
 function initAnimation(){
