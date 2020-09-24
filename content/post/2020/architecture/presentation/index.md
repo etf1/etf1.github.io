@@ -83,11 +83,13 @@ Dans le cas des box Android, un moteur QT/QML tourne dans l'application afin de 
 
 Nous developpons notre propre player pour différentes plateformes :
 
-- le Web (JS)
-- iOS (Swift)
-- Android (Kotlin) pour les applications mobiles et certaines box opérateur
+- le Web (JS en [ES 2020](https://www.ecma-international.org/ecma-262/)) basé sur **[Shaka](https://github.com/google/shaka-player)**
+- iOS ([Swift](https://swift.org)) basé sur **[AVPlayer](https://developer.apple.com/documentation/avfoundation/avplayer)**
+- Android ([Kotlin](https://kotlinlang.org)) pour les mobiles/tablettes et certaines box opérateur basé sur **[ExoPlayer](https://exoplayer.dev)**
 
-TODO a voir avec Guillaume
+Nous privilégions le plus possible de code en natif ou JS Vanilla pour avoir le moins de dépendances possibles et optimiser les performances.
+
+Tous les players sont constitués d'une couche métier (Core) et d'une couche présentation (Skin).
 
 ## Backend
 
