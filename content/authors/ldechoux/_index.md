@@ -2,7 +2,7 @@
 title: Laurent Dechoux
 excerpt: Lead Tech Backend
 bio: |
-  Développeur Backend chez eTF1
+  Lead Tech Backend chez eTF1
 hero: /authors/ldechoux/avatar.jpg
 avatar: /authors/ldechoux/avatar.jpg
 featured: true
