@@ -7,9 +7,13 @@ authors:
   - ldechoux
 ---
 
+## Avant propos
+
+Cet article a pour objectif de présenter l'équipe Backend et n'est en aucun cas une présentation technique détaillée des entrailles de MYTF1. Les aspects techniques seront abordés en détail dans des articles dédiés. Ici, nous nous concentrerons sur la composition de l'équipe, son histoire et partagerons avec vous quelques unes des décisions que nous avons prises ces dernières années. Bonne lecture.
+
 ## Qui sommes nous ?
 
-Intégrée au sein de e-TF1 (antenne digital du groupe TF1) l’équipe backend a pour objectif de répondre aux problématiques suivantes :
+Intégrée au sein de e-TF1 (antenne digital du groupe TF1) l’équipe Backend a pour objectif de répondre aux problématiques suivantes :
 - Gérer la mise en ligne et l’animation éditoriale de notre contenu
 - Stocker et restituer les données utilisateurs (historique et progression de lecture, programme favoris, bookmakrs etc..)
 - Exporter/partager notre catalogue de contenu avec nos partenaires (FAI, Salto, etc...)
@@ -104,10 +108,12 @@ En parallèle, le second semestre 2018 nous permet de renforcer l'équipe avec d
 - Rendre l'API GraphQL publique (exposée sur internet, jusqu'alors elle est exposée sur des IP privées pour les différents opérateurs IPTV)
 - Gestion du cache HTTP et mise en place des *Persisted Queries* GraphQL
 - Permettre la recommandation de contenu pour les utilisateurs non connectés (introduction des personas)
-- Refonte du CMS 
+- Refonte du CMS
+- Refonte médiathèque et proxy image
 
 Le gros des travaux commence réellement fin 2018 et concerne l'ensemble des équipes (web, mobile, publicité, player, OPS). Là encore le planning est ambitieux, la mise en production du nouveau MYTF1 est prévue pour Avril/Mai 2019. Finalement, le lancement aura lieu le 11 Juin 2019.
 
 Notre architecture cuvée 2019 ressemble alors à ça :
 
 ![2019 -  Schéma d'architecture backend](images/archi_2019.svg "2019 - Schéma d'architecture backend")
+*TODO : Ajouter médiathèque + proxy image*
