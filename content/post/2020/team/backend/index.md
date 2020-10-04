@@ -91,9 +91,9 @@ Niveau infrastucture, toutes nos applications sont packagées sous forme d'image
 
 Un deuxième jalon important marquera l'année 2018, avec la mise à disposition de notre nouvelle application IPTV sur les box Android de Bouygues Telecom. Mais pour nous, ce n'est que le début...
 
-### 2019 : Du grand aux petits écrans
+### 2019 : De la télévision aux petits écrans
 
-Mi-2018, émerge chez e-TF1 l'envie de refondre les applications MYTF1 web et mobile. Au delà de l'aspect esthétique il y a une véritable volonté de repenser le produit et le recentrer autour d'axes stratégiques précis. Le second semestre 2018 est mis à profit pour définir précisément les contours de ce nouveau produit. Au terme de cette réflexion plusieurs priorités sont définies :
+Mi-2018, émerge chez e-TF1 l'envie de refondre les applications MYTF1 web et mobile (OTT). Au delà de l'aspect esthétique il y a une véritable volonté de repenser le produit et le recentrer autour d'axes stratégiques précis. Le second semestre 2018 est mis à profit pour définir précisément les contours de ce nouveau produit. Au terme de cette réflexion plusieurs priorités sont définies :
 - Un nouveau design pour les applications web et mobile
 - Une expérience de lecture vidéo irréprochable
 - Mettre la personnalisation au centre de l'expérience MYTF1
@@ -116,4 +116,18 @@ Le gros des travaux commence réellement fin 2018 et concerne l'ensemble des éq
 Notre architecture cuvée 2019 ressemble alors à ça :
 
 ![2019 -  Schéma d'architecture backend](images/archi_2019.svg "2019 - Schéma d'architecture backend")
-*TODO : Ajouter médiathèque + proxy image*
+
+Comme vous pouvez le voir, nous avons enrichi le socle de plusieurs nouveaux composants. Une grosse partie de nos effort c'est concentrée autour de nos outils internes. En particulier le CMS que nous avons entièrement refondu pour répondre aux nouveaux besoins des équipes éditoriales. Nous avons fait le choix de créer un CMS headless autour de MongoDB et Elasticsearch (pour le stockage des données) et de Vue.js (pour la partie interface graphique). Pour la gestion des images nous avons également créé une nouvelle médiathèque profitant des possibilités de stockages offertes par S3. De plus nous avons introduit un nouveau composant *Image proxy* dont le but est de permettre la mise à l'échelle automatique des images (il est possible d'obtenir une version d'une image à une résolution différente de celle d'origine). Nous avons également ajouté une mécanique de *crop intelligent* qui préserve les parties importantes d'une image (détection des visages, entropie, etc...). Pour se faire nous nous appuyons sur [OpenCV](https://github.com/opencv/opencv).
+
+![Démonstration crop intelligent](images/smart_crop.jpg "Démonstration crop intelligent")
+
+Une autre nouveauté introduite avec la refonte MYTF1 est la notion de persona. L'idée est de pouvoir personnaliser/adapter le contenu proposé à chaque utilisateur (même lors de sa première connexion au site ou au premier lancement de l'application mobile). Via une API fournie par l'équipe data, nous affectons aux utilisateurs une persona (en fonction de différents critères : utilisateur authentifié ou non, appareil utilisé, heure de connexion, dernier contenu consulté, etc...) qui va impacter la manière dont le contenu est présenté. Pour se faire, nous calculons régulièrement des tops (vidéos les plus vues, programmes les plus consultés) pour chaque persona. Ces tops sont ensuite utilisés pour, par exemple, modifier l'ordre d'affichage des programmes sur la home MYTF1.
+
+Enfin une des grosses nouveautés introduite en 2019 est l'utilisation des *persisted queries* au niveau de notre API GraphQL. Le principe est relativement simple. Au lieu d'envoyer une requête classique (POST + body), les fronts appellent le GraphQL via des identifiants de requête (GET + query parameters). L'intérêt est double. Premièrement on profite facilement des possibilité de cache offertes par Cloudfront et deuxièmement il nous est possible de vérouiller le GraphQL en production (ne sont autorisés que les requêtes préalablement définies dans notre référentiel). Si ce sujet vous intéresse, il est abordé en détail dans cet article : **TODO : AJOUTER LE LIEN ICI**.
+
+Le dernier challenge relevé dans le cadre de la refonte MYTF1 a été la migration vers AWS de l'ensemble de notre socle backend. Nous hébergions ultérieurement l'ensemble des services au sein d'un datacenter géré par notre équipe infrastucture. Suite à un travail conjoint avec cette dernière, l'ensemble de nos services a maintenant basculé dans le cloud nous offrant ainsi beaucoup d'avantages (services managés, mise à l'échelle automatique, etc...).
+
+Le premier semestre 2019 fût donc riche pour l'ensemble des équipes. Nous avons principalement consacré le second semestre à enrichir le produit (fourniture de nouvelles fonctionnalités) et à généraliser le déploiement IPTV à d'autres opérateurs (SFR et VIDEOFUTUR).
+
+### 2020 : Vers une architecture "temps réel"
+
