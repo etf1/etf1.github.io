@@ -91,7 +91,7 @@ Niveau infrastucture, toutes nos applications sont packagées sous forme d'image
 
 Un deuxième jalon important marquera l'année 2018, avec la mise à disposition de notre nouvelle application IPTV sur les box Android de Bouygues Telecom. Mais pour nous, ce n'est que le début...
 
-### 2019 : De la télévision aux petits écrans
+### 2019 : De l'IPTV à l'OTT
 
 Mi-2018, émerge chez e-TF1 l'envie de refondre les applications MYTF1 web et mobile (OTT). Au delà de l'aspect esthétique il y a une véritable volonté de repenser le produit et le recentrer autour d'axes stratégiques précis. Le second semestre 2018 est mis à profit pour définir précisément les contours de ce nouveau produit. Au terme de cette réflexion plusieurs priorités sont définies :
 - Un nouveau design pour les applications web et mobile
