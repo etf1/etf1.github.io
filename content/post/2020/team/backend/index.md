@@ -132,3 +132,8 @@ Le premier semestre 2019 fût donc riche pour l'ensemble des équipes. Nous avon
 
 ### 2020 : Vers une architecture "temps réel"
 
+Début 2020, bonnes résolutions obligent, nous avons dressé un bilan de notre architecture, identifié les faiblesses et imaginé des solutions pour y remédier. Un travail qui nous a permis de dresser une feuille de route pour 2020 qui s’articule autour de deux grands axes.
+
+Tout d’abord, l’aspect temps réel. Comme évoqué dans les paragraphes précédents, nous nous basons sur des indexer pour dénormaliser les données provenant du CMS dans des instances Elasticsearch. C’est une manière de faire relativement simple qui, bien que fonctionnelle, introduit une latence entre les mises à jour faites par les équipes éditoriales et leurs mises en ligne effectives sur les fronts. En effet nos indexer tournent régulièrement ce qui impose, suite à une modification, d’attendre l’indexation suivante pour que celle-ci soit mise en ligne.
+
+Vient ensuite l’aspect performance. Depuis la refonte des produits MYTF1 (autant IPTV que OTT) les audiences sont en hausse. De plus nous continuons à déployer notre nouvelle application IPTV chez d’autres opérateurs (Orange entre autre) ce qui amène une charge supplémentaire sur nos services backend. Depuis 2 ans nous avons misé sur différentes mécaniques de mises en cache (CDN, cache HTTP, cache in-memory, etc...) pour être en mesure d’absorber la charge générée par l’activité des utilisateurs. Ces différentes couches de cache sont de moins en moins évidentes à maintenir et participent également à la latence des mises en ligne de contenu évoquée précédemment.
