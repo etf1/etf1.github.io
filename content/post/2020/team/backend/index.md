@@ -110,6 +110,7 @@ En parallèle, le second semestre 2018 nous permet de renforcer l'équipe avec d
 - Permettre la recommandation de contenu pour les utilisateurs non connectés (introduction des personas)
 - Refonte du CMS
 - Refonte médiathèque et proxy image
+- Gestion du moteur de recherche
 
 Le gros des travaux commence réellement fin 2018 et concerne l'ensemble des équipes (web, mobile, publicité, player, OPS). Là encore le planning est ambitieux, la mise en production du nouveau MYTF1 est prévue pour Avril/Mai 2019. Finalement, le lancement aura lieu le 11 Juin 2019.
 
@@ -121,7 +122,7 @@ Comme vous pouvez le voir, nous avons enrichi le socle de plusieurs nouveaux com
 
 ![Démonstration crop intelligent](images/smart_crop.jpg "Démonstration crop intelligent")
 
-Une autre nouveauté introduite avec la refonte MYTF1 est la notion de persona. L'idée est de pouvoir personnaliser/adapter le contenu proposé à chaque utilisateur (même lors de sa première connexion au site ou au premier lancement de l'application mobile). Via une API fournie par l'équipe data, nous affectons aux utilisateurs une persona (en fonction de différents critères : utilisateur authentifié ou non, appareil utilisé, heure de connexion, dernier contenu consulté, etc...) qui va impacter la manière dont le contenu est présenté. Pour se faire, nous calculons régulièrement des tops (vidéos les plus vues, programmes les plus consultés) pour chaque persona. Ces tops sont ensuite utilisés pour, par exemple, modifier l'ordre d'affichage des programmes sur la home MYTF1.
+Nous avons également ajouté un composant dédié au moteur de recherche disponibles dans les fronts. Il s'appuie sur les capacités de recherche full-text offertes par Elasticsearch. Une autre nouveauté introduite avec la refonte MYTF1 est la notion de persona. L'idée est de pouvoir personnaliser/adapter le contenu proposé à chaque utilisateur (même lors de sa première connexion au site ou au premier lancement de l'application mobile). Via une API fournie par l'équipe data, nous affectons aux utilisateurs une persona (en fonction de différents critères : utilisateur authentifié ou non, appareil utilisé, heure de connexion, dernier contenu consulté, etc...) qui va impacter la manière dont le contenu est présenté. Pour se faire, nous calculons régulièrement des tops (vidéos les plus vues, programmes les plus consultés) pour chaque persona. Ces tops sont ensuite utilisés pour, par exemple, modifier l'ordre d'affichage des programmes sur la home MYTF1.
 
 Enfin une des grosses nouveautés introduite en 2019 est l'utilisation des *persisted queries* au niveau de notre API GraphQL. Le principe est relativement simple. Au lieu d'envoyer une requête classique (POST + body), les fronts appellent le GraphQL via des identifiants de requête (GET + query parameters). L'intérêt est double. Premièrement on profite facilement des possibilité de cache offertes par Cloudfront et deuxièmement il nous est possible de vérouiller le GraphQL en production (ne sont autorisés que les requêtes préalablement définies dans notre référentiel). Si ce sujet vous intéresse, il est abordé en détail dans cet article : **TODO : AJOUTER LE LIEN ICI**.
 
