@@ -1392,8 +1392,8 @@
     },
     {
       "type": "rectangle",
-      "version": 970,
-      "versionNonce": 1832034630,
+      "version": 972,
+      "versionNonce": 91139674,
       "isDeleted": false,
       "id": "wh_iU1zjeUyr8BqEQ4W-J",
       "fillStyle": "hachure",
@@ -3164,8 +3164,8 @@
     },
     {
       "type": "rectangle",
-      "version": 1265,
-      "versionNonce": 908472134,
+      "version": 1269,
+      "versionNonce": 961089670,
       "isDeleted": false,
       "id": "vXH4KPj1B-FJ6fj06nhds",
       "fillStyle": "hachure",
@@ -3352,8 +3352,8 @@
     },
     {
       "type": "arrow",
-      "version": 341,
-      "versionNonce": 717286662,
+      "version": 526,
+      "versionNonce": 771852762,
       "isDeleted": false,
       "id": "zrdpqnJ7hxeGyqr_0ZtSy",
       "fillStyle": "hachure",
@@ -3362,25 +3362,25 @@
       "roughness": 1,
       "opacity": 100,
       "angle": 0,
-      "x": 383.3493303571429,
+      "x": 383.67877312822725,
       "y": 1294.5658482142858,
       "strokeColor": "#000000",
       "backgroundColor": "#fd7e14",
-      "width": 308.09997528660097,
-      "height": 203.13359923887583,
+      "width": 349.0568822605229,
+      "height": 204.40800489722346,
       "seed": 1099548265,
       "groupIds": [],
       "strokeSharpness": "sharp",
       "boundElementIds": [],
       "startBinding": {
         "elementId": "wh_iU1zjeUyr8BqEQ4W-J",
-        "focus": -0.1482661941119785,
-        "gap": 17.765758443322966
+        "focus": -0.14097636100940059,
+        "gap": 17.436315672238607
       },
       "endBinding": {
         "elementId": "vXH4KPj1B-FJ6fj06nhds",
-        "focus": 0.05288748424636452,
-        "gap": 16.143415178571104
+        "focus": 0.2546578583617944,
+        "gap": 16.802300720739538
       },
       "points": [
         [
@@ -3388,12 +3388,12 @@
           0
         ],
         [
-          -128.43191964285722,
-          -0.30691964285733775
+          -349.0568822605229,
+          1.9332912005161234
         ],
         [
-          -308.09997528660097,
-          -203.13359923887583
+          -349.0087017720043,
+          -202.47471369670734
         ]
       ],
       "lastCommittedPoint": null
