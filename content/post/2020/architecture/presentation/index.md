@@ -33,39 +33,44 @@ MYTF1 existe depuis 2011 et a été depuis plusieurs fois refondu from scratch.
 
 Le front MYTF1 repose sur une SPA en [Reactjs](https://fr.reactjs.org) et un serveur expressjs pour le SSR (server side rendering) pour assurer un bon référencement. Nous utilisons react car la partie SSR est éprouvée ainsi que le large écosystème open source.
 
-### Applicatif front :
+### Applicatif front
 
-La stack est principalement axée sur les performances et le SEO. React via React-dom/server permet de généré du HTML cote serveur qui sera ensuite "hydrater" cote client pour assurer une bonne UX.
+La stack est principalement axée sur les performances et le SEO. React via React-dom/server permet de générer du HTML coté serveur qui sera ensuite ["hydrate"](https://fr.reactjs.org/docs/react-dom.html#hydrate) coté client pour assurer une UX réactive.
 
-**TypeScript :**
-Nous utilisons fortement [Typescript](https://www.typescriptlang.org) pour que l'appropriation du code soit rapide, de plus, et comme tests "statiques" pour s'assurer que l'on envoie bien le bon type de données aux fonctions
+**TypeScript**
+Nous utilisons fortement [Typescript](https://www.typescriptlang.org).
 
-**GraphQL & Apollo :**
-[Apollo](https://www.apollographql.com) nous permet de consommer l'API GraphQL et fonctionne aussi cote serveur.
-Via GraphQL code generator, on genere toute nos composants/hooks Apollo via nos queries/mutations en typescript, ce qui permet encore une fois de s'assurer que ces requêtes sont valides.
+Les avantages sont les suivants :
+- meilleure lisibilitée du code
+- cohérence des signatures de fonctions (typage fort)
+- meilleure complétion dans l'IDE
 
-**Helmet :**
-[Helmet](https://github.com/staylor/react-helmet-async) est la librairie (react-helmet-async et non pas react-helmet) nous permet d'enrichir au fur et a mesure des composants rendu les balises metas qui aident a la compréhension des robots de moteurs de recherches du contenu de nos pages.
+**GraphQL & Apollo**
+[Apollo](https://www.apollographql.com) nous permet de consommer l'API GraphQL exposée par le backend.
+GraphQL code generator génère les composants/hooks Apollo via nos queries/mutations en typescript, ce qui permet de s'assurer que ces requêtes sont valides.
+
+**Helmet**
+[Helmet](https://github.com/staylor/react-helmet-async) est la librairie (react-helmet-async et non pas react-helmet) nous permet d'enrichir au fur et a mesure des composants le rendu des balises metas qui aident a la compréhension des robots de moteurs de recherches du contenu de nos pages.
 
 ### Performance et Qualité :
 
-**Webpack & Lazyloading :**
-_brouillon : Nous utilisons [Webpack](https://webpack.js.org) pour nos ressources statiques…( modules, chunk...), (code splitting) splitter nos builds en plusieurs paquets, chargé à la demande (à compléter ....)_
+**Webpack & Lazyloading**
+Nous utilisons [Webpack](https://webpack.js.org) pour packager nos ressources statiques ( modules, chunk...). Le support du code splitting permet le découpage des fichiers JS pour permettre un chargement de l'application optimisé: seul les resources réellement utilisées à un instant T sont chargées (lazy loading).
 
-**Jest / React Testing Library :**
+**Jest / React Testing Library**
 Nous utilisons [Jest](https://jestjs.io) pour nos tests unitaires, ce qui nous permet de vérifier la non-régression du front MYTF1, tout au long du développement de nos features et de garantir la fonctionnalité de composants complexes.
 
 ## APP
 
 Les applications mobiles sont natives et codées en [Swift](https://swift.org) (iOS) et [Kotlin](https://kotlinlang.org) (Android) implémentant une architecture modulaire multi couches.
 
-**Couche Networking:**
+**Couche Networking**
 Un client GraphQL [Apollo](https://github.com/apollographql/apollo-ios) intégré dans l'application nous permet de consommer l'API backend GraphQL.
 
-**Couche Core:**
+**Couche Core**
 Couche contenant la logique métier et les modèles utiliser dans l'application.
 
-**Couche Présentation:**
+**Couche Présentation**
 Implémentant une architecture MVI unidirectionnel qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. Les avantages d'une telle architecture est un flux de données plus facile à suivre et à debugger.
 
 
@@ -119,7 +124,10 @@ Nous avons également développé un CMS maison qui permet à l'équipe édito d
 
 ## L'infra et les outils transverses
 
-Nos services sont déployés sur des clusters kubernetes. Nous utilisons le cloud [AWS](https://aws.amazon.com/) pour héberger ces clusters (service [EKS](https://aws.amazon.com/eks/)).
+Nos services sont déployés sur des clusters [Kubernetes](https://kubernetes.io/). Nous utilisons le cloud [AWS](https://aws.amazon.com/) pour héberger ces clusters (service [EKS](https://aws.amazon.com/eks/)).
+
+Les images docker des applicatifs sont construits par des pipelines [Jenkins](https://www.jenkins.io/), après execution des tests.
+Nous sommes en train de mettre en place l'outil [Spinnaker](https://spinnaker.io/) pour permettre des déploiements canary et sécuriser nos mises en production.
 
 Nous utilisons l'outil [Grafana](https://grafana.com), associé à [Prometheus](https://prometheus.io), pour faire le monitoring de nos applicatifs et de notre infrastructure. [Graylog](https://www.graylog.org) permet quand à lui de récupérer les logs d'execution. Nous enviseagons d'utiliser [Jaeger](https://www.jaegertracing.io) qui permettrait de restituer une vision cohérente des services en terme de monitoring et de logs.
 
