@@ -37,7 +37,7 @@ Le front MYTF1 repose sur une SPA en [Reactjs](https://fr.reactjs.org) et un ser
 
 La stack est principalement axée sur les performances et le SEO. React via React-dom/server permet de générer du HTML coté serveur qui sera ensuite ["hydrate"](https://fr.reactjs.org/docs/react-dom.html#hydrate) coté client pour assurer une UX réactive.
 
-**TypeScript**
+##### TypeScript
 Nous utilisons fortement [Typescript](https://www.typescriptlang.org).
 
 Les avantages sont les suivants :
@@ -49,28 +49,26 @@ Les avantages sont les suivants :
 [Apollo](https://www.apollographql.com) nous permet de consommer l'API GraphQL exposée par le backend.
 GraphQL code generator génère les composants/hooks Apollo via nos queries/mutations en typescript, ce qui permet de s'assurer que ces requêtes sont valides.
 
-**Helmet**
+##### Helmet
 [Helmet](https://github.com/staylor/react-helmet-async) est la librairie (react-helmet-async et non pas react-helmet) nous permet d'enrichir au fur et a mesure des composants le rendu des balises metas qui aident a la compréhension des robots de moteurs de recherches du contenu de nos pages.
 
-### Performance et Qualité :
-
-**Webpack & Lazyloading**
+##### Webpack & Lazyloading
 Nous utilisons [Webpack](https://webpack.js.org) pour packager nos ressources statiques ( modules, chunk...). Le support du code splitting permet le découpage des fichiers JS pour permettre un chargement de l'application optimisé: seul les resources réellement utilisées à un instant T sont chargées (lazy loading).
 
-**Jest / React Testing Library**
+##### Jest / React Testing Library
 Nous utilisons [Jest](https://jestjs.io) pour nos tests unitaires, ce qui nous permet de vérifier la non-régression du front MYTF1, tout au long du développement de nos features et de garantir la fonctionnalité de composants complexes.
 
 ## APP
 
 Les applications mobiles sont natives et codées en [Swift](https://swift.org) (iOS) et [Kotlin](https://kotlinlang.org) (Android) implémentant une architecture modulaire multi couches.
 
-**Couche Networking**
+##### Couche Networking
 Un client GraphQL [Apollo](https://github.com/apollographql/apollo-ios) intégré dans l'application nous permet de consommer l'API backend GraphQL.
 
-**Couche Core**
+##### Couche Core
 Couche contenant la logique métier et les modèles utiliser dans l'application.
 
-**Couche Présentation**
+##### Couche Présentation
 Implémentant une architecture MVI unidirectionnel qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. Les avantages d'une telle architecture est un flux de données plus facile à suivre et à debugger.
 
 
@@ -107,7 +105,7 @@ Aujourd'hui le backend est constitué d'un ensemble de micro-services écrits en
 
 C'est également un language rapide à apprendre.
 
-### GraphQL
+##### GraphQL
 
 L'API [GraphQL](https://graphql.org) est une brique centrale pour MYTF1. Nous l'utilisons comme source de données des différents fronts. Les avantages sont les suivants :
 
@@ -115,7 +113,7 @@ L'API [GraphQL](https://graphql.org) est une brique centrale pour MYTF1. Nous l'
 - le GraphQL joue le rôle d'API gateway, c'est lui qui rassemble les données des micro-services sous jacents
 - contrat d'interface auto documenté entre le back et les fronts
 
-### Les bases de données
+##### Les bases de données
 
 Nous utilisons [MongoDB](https://www.mongodb.com) et [PostgreSQL](https://www.postgresql.org) pour les bases de données de référence.
 Ces données sont ensuite dénormalisées dans des cluster [Redis](https://redis.io). Nous avons adopté une architecture "event driven" en nous appuyant sur [Kafka](https://kafka.apache.org) pour maintenir une synchronisation constante entre ces bases de données.
@@ -134,3 +132,8 @@ Nous sommes en train de mettre en place l'outil [Spinnaker](https://spinnaker.io
 Nous utilisons l'outil [Grafana](https://grafana.com), associé à [Prometheus](https://prometheus.io), pour faire le monitoring de nos applicatifs et de notre infrastructure. [Graylog](https://www.graylog.org) permet quand à lui de récupérer les logs d'execution. Nous enviseagons d'utiliser [Jaeger](https://www.jaegertracing.io) qui permettrait de restituer une vision cohérente des services en terme de monitoring et de logs.
 
 ![Exemple de dashboard Grafana](images/grafana-graphql.png "Exemple de dashboard Grafana")
+
+# Et la suite ?
+
+Avec cette refonte complète, nous avons une stack qui répond à nos besoins de performances et de maintenabilité. Un long chemin a été parcouru et beaucoup reste à faire. Nous partagerons sur ce blog d'autres articles sur l'évolution de notre stack et de nos applications.
+Nous vous détaillerons aussi différentes problématiques que nous avons pu rencontrer, expliquer plus longuement certain choix technique.
