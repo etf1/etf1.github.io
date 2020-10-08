@@ -135,5 +135,5 @@ Nous utilisons l'outil [Grafana](https://grafana.com), associé à [Prometheus](
 
 # Et la suite ?
 
-Avec cette refonte complète, nous avons une stack qui répond à nos besoins de performances et de maintenabilité. Beaucoup de chemin a été parcouru mais dans une amélioration constante, vous pourrez retrouver sur ce blog d'autres articles sur l'évolution de notre stack et de nos applications.
+Avec cette refonte complète, nous avons une stack qui répond à nos besoins de performances et de maintenabilité. Un long chemin a été parcouru et beaucoup reste à faire. Nous partagerons sur ce blog d'autres articles sur l'évolution de notre stack et de nos applications.
 Nous vous détaillerons aussi différentes problématiques que nous avons pu rencontrer, expliquer plus longuement certain choix technique.
