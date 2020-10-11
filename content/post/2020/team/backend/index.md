@@ -8,11 +8,9 @@ authors:
 ---
 
 ## Avant propos
-
 Cet article a pour objectif de présenter l'équipe Backend et n'est en aucun cas une présentation technique détaillée des entrailles de MYTF1. Les aspects techniques seront abordés en détail dans des articles dédiés. Ici, nous nous concentrerons sur la composition de l'équipe, son histoire et partagerons avec vous quelques unes des décisions que nous avons prises ces dernières années. Bonne lecture.
 
 ## Qui sommes nous ?
-
 Intégrée au sein de e-TF1 (antenne digital du groupe TF1) l’équipe Backend a pour objectif de répondre aux problématiques suivantes :
 - Gérer la mise en ligne et l’animation éditoriale de notre contenu
 - Stocker et restituer les données utilisateurs (historique et progression de lecture, programme favoris, bookmakrs etc..)
@@ -22,7 +20,6 @@ Intégrée au sein de e-TF1 (antenne digital du groupe TF1) l’équipe Backend 
 Elle est composée d’une dizaine de personnes ayant des profils (développeur, product owner, lead tech, internes ou externes) et des niveaux d’expérience (débutant, expérimenté, stagiaire, alternant) différents. Depuis 2018 nous avons fait le choix d’investir fortement dans le langage Go qui représente aujourd’hui la quasi intégralité de notre base de code.
 
 ## Architecture et technologies
-
 Nous avons fait le choix d’une architecture micro-services. Les différentes composantes métier sont réparties en services dédiés, qui communiquent principalement via GRPC.
 Voici une liste non exhaustives de nos briques métier :
 - CMS API : dédiée à l’animation éditoriale de notre contenu
@@ -50,9 +47,7 @@ Cette liste, bien que fournies, peut-être amenée à évoluer en fonction des f
 En effet, une des forces de l’équipe et de savoir se remettre en question et faire table rase du passée. C’est ce que nous allons voir dans le paragraphe suivant.
 
 ## Un peu d’histoire
-
 ### 2018 : Nouvelle expérience IPTV
-
 Début 2018 MYTF1 se lance dans un projet radical de transformation de l’expérience utilisateur sur les box opérateurs (IPTV).
 Un cahier des charges est définit et de nouveaux enjeux apparaissent :
 - Permettre une navigation fluide du contenu
@@ -92,7 +87,6 @@ Niveau infrastucture, toutes nos applications sont packagées sous forme d'image
 Un deuxième jalon important marquera l'année 2018, avec la mise à disposition de notre nouvelle application IPTV sur les box Android de Bouygues Telecom. Mais pour nous, ce n'est que le début...
 
 ### 2019 : De l'IPTV à l'OTT
-
 Mi-2018, émerge chez e-TF1 l'envie de refondre les applications MYTF1 web et mobile (OTT). Au delà de l'aspect esthétique il y a une véritable volonté de repenser le produit et le recentrer autour d'axes stratégiques précis. Le second semestre 2018 est mis à profit pour définir précisément les contours de ce nouveau produit. Au terme de cette réflexion plusieurs priorités sont définies :
 - Un nouveau design pour les applications web et mobile
 - Une expérience de lecture vidéo irréprochable
@@ -131,7 +125,6 @@ Le dernier challenge relevé dans le cadre de la refonte MYTF1 a été la migrat
 Le premier semestre 2019 fût donc riche pour l'ensemble des équipes. Nous avons principalement consacré le second semestre à enrichir le produit (fourniture de nouvelles fonctionnalités) et à généraliser le déploiement IPTV à d'autres opérateurs (SFR et VIDEOFUTUR). Nous avons également, avec le support de l'équipe OPS, généralisé la mise en oeuvre de [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/) sur l'ensemble de nos briques applicatives.
 
 ### 2020 : Vers une architecture "temps réel"
-
 Début 2020, bonnes résolutions obligent, nous avons dressé un bilan de notre architecture, identifié les faiblesses et imaginé des solutions pour y remédier. Un travail qui nous a permis de dresser une feuille de route pour 2020 qui s’articule autour de deux grands axes.
 
 Tout d’abord, l’aspect temps réel. Comme évoqué dans les paragraphes précédents, nous nous basons sur des *indexer* pour dénormaliser les données provenant du CMS dans des instances Elasticsearch. C’est une manière de faire relativement simple qui, bien que fonctionnelle, introduit une latence entre les mises à jour faites par les équipes éditoriales et leurs mises en ligne effectives sur les fronts. En effet nos *indexer* tournent régulièrement ce qui impose, suite à une modification, d’attendre l’indexation suivante pour que celle-ci soit mise en ligne.
@@ -141,26 +134,29 @@ Vient ensuite l’aspect performance. Depuis la refonte des produits MYTF1 (auta
 ![2020 -  Schéma d'architecture backend](images/archi_2020.svg "2020 - Schéma d'architecture backend")
 
 La solution que nous avons retenue pour adresser ces deux points est de basculer progressivement vers une architecture dite événementielle qui s'appuie sur Kafka ([MSK](https://aws.amazon.com/msk/)). Plusieurs sources d'évéments ont été identifiées :
-- le CMS pour la partie contenu/édito, nous nous appuyons sur les [Change Streams](https://docs.mongodb.com/manual/changeStreams/) MongoDB pour cela
-- les fichiers parquet de recommandation que nous injectons dans des topics Kafka
-- les actions des utilisateurs (lecture vidéo, enregistrement de l'avancée de lecture, mise en favoris, etc..)
+- Le CMS pour la partie contenu/édito, nous nous appuyons sur les [Change Streams](https://docs.mongodb.com/manual/changeStreams/) MongoDB pour cela
+- Les fichiers parquet de recommandation que nous injectons dans des topics Kafka
+- Les actions des utilisateurs (lecture vidéo, enregistrement de l'avancée de lecture, mise en favoris, etc..)
 
 Pour la partie CMS, l'idée est de pousser toutes le modifications faites en base dans des topics Kafka dédiés (voir le projet [kafka-mongo-watcher](https://github.com/etf1/kafka-mongo-watcher)). Ensuite ces évnéments sont traités, transformés puis stockés (voir le projet [kafka-transformer](https://github.com/etf1/kafka-transformer)) dans des instances [Elasticache Redis](https://aws.amazon.com/fr/elasticache/redis/). Nous maintenons alors à jour, en quasi temps réel, notre catalogue de contenu dans un cache partagé sur lequel nous avons directement branché nos instances GraphQL. Deux conséquences, nous ne sommes plus dépendants des *indexer* de données et nous avons supprimé la couche de cache in-memory (non partagée) de notre API GraphQL. Des plus nous avons dénormalisé les données dans redis de telle manière que le service catalogue devient superflu. Ainsi nous gagnons sur les deux tableaux (latence liée à l'indexation et performance de l'API GraphQL).
 
 Pour traiter certains cas particuliers, nous avons recours à [Kafka Streams](https://kafka.apache.org/documentation/streams/) pour, par exemple, permettre la jointure et l'aggrégation de données en provenance de plusieurs types d'événénemts différents (exemple : jointure entre les mises à jour des programmes et des vidéos pour produire des curations éditoriales qui sont ensuite stockées dans redis). Enfin, nous avons introduit un composant *scheduler* dont l'objectif est de produire des événements temporels sur lesquels le système va pouvoir réagir (exemple : expiration d'une vidéo).
 
 Pour la partie utilisateur, nous avons conservé globalement la même architecture qu'avant mais en la modernisant : 
-- fusion au sein d'une seule API des données utilisateurs
-- bascule vers DynamoDB (à la place des instances elasticsearch)
-- bascule sur Kafka (à la place de rabbitmq)
-- migration de l'instance redis vers Elasticache
+- Fusion au sein d'une seule API des données utilisateurs
+- Bascule vers DynamoDB (à la place des instances elasticsearch)
+- Bascule sur Kafka (à la place de rabbitmq)
+- Migration de l'instance redis vers Elasticache
 
 Enfin pour la partie recommandation nous avons :
-- injecté les fichiers parquet directement dans kafka
-- remplacé la base elasticsearch par une base DynamoDB pour le stockage à froid
-- ajouté une instance redis qui agit comme cache partagé
-- introduit, gràce à notre équipe data, une nouvelle API de recommandation temps réel
+- Injecté les fichiers parquet directement dans kafka
+- Remplacé la base elasticsearch par une base DynamoDB pour le stockage à froid
+- Ajouté une instance redis qui agit comme cache partagé
+- Introduit, gràce à notre équipe data, une nouvelle API de recommandation temps réel
 
 Dans les deux cas, nous profitons maintenant des possibilités de mise à l'échelle automatique de DynamoDB et des performances accrues des services managés MSK et Elasticache.
 
 Toutes ces modifications permettent donc des gains notables sur la performance, la mise à l'échelle et la réduction des latences de notre architecture. Mais nous sommes encore en phase transitoire et d'autres évolutions sont déjà prévues, notamment autour de la médiathèque et du pré-chargement des données dans notre CDN, mais aussi sur le calcul des tops vidéos et programmes en temps réel.
+
+## Conclusion
+Comme vous avez pu le constater à la lecture de cet article, les dernières années ont été riches pour l'équipe Backend. Je tiens personnellement à remercier toute l'équipe pour son travail, ses compétences et sa capacité à remettre en question ses choix pour oeuvrer à l'amélioration continue de notre architecture (le tout dans une super ambiance 😀). Bien que dense, cet article ne fait qu'effleurer certains aspcets techniques. Nous les développerons dans de futurs articles qui, nous l'espérons, réussiront à capter votre attention.
