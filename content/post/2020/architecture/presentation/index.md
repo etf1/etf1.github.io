@@ -66,15 +66,15 @@ Les applications mobiles sont natives et codées en [Swift](https://swift.org) (
 Un client GraphQL [Apollo](https://github.com/apollographql/apollo-ios) intégré dans l'application nous permet de consommer l'API backend GraphQL.
 
 ##### Couche Core
-Couche contenant la logique métier et les modèles utiliser dans l'application.
+Couche contenant la logique métier et les modèles utilisés dans l'application.
 
 ##### Couche Présentation
-Implémentant une architecture MVI unidirectionnel qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. Les avantages d'une telle architecture est un flux de données plus facile à suivre et à debugger.
+Implémentant une architecture MVI unidirectionnelle qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. Les avantages d'une telle architecture est un flux de données plus facile à suivre et à debugger.
 
 
 ## IPTV
 
-Les techno utilisées sur l'IPTV sont très variées et dépendent du modèle de box, globalement on retrouve trois familles :
+Les techno utilisées sur l'IPTV sont très variées et dépendent du modèle de box. Globalement on retrouve trois familles :
 
 - **HTML/JS**, principalement SFR et Orange
 - **QT/QML**, très utilisé par Free
@@ -88,7 +88,7 @@ Nous développons notre propre player pour différentes plateformes :
 
 - le Web (JS en [ES 2020](https://www.ecma-international.org/ecma-262/)) basé sur **[Shaka](https://github.com/google/shaka-player)**
 - iOS ([Swift](https://swift.org)) basé sur **[AVPlayer](https://developer.apple.com/documentation/avfoundation/avplayer)**
-- Android ([Kotlin](https://kotlinlang.org)) pour les mobiles/tablettes et certaines box opérateurs basé sur **[ExoPlayer](https://exoplayer.dev)**
+- Android ([Kotlin](https://kotlinlang.org)) pour les mobiles/tablettes et certaines box opérateur basés sur **[ExoPlayer](https://exoplayer.dev)**
 
 Nous privilégions le plus possible de code en natif ou JS Vanilla pour avoir le moins de dépendances possible et optimiser les performances.
 
@@ -129,7 +129,7 @@ Nos services sont déployés sur des clusters [Kubernetes](https://kubernetes.io
 Les images Docker des applicatifs sont construites par des pipelines [Jenkins](https://www.jenkins.io/), après exécution des tests.
 Nous sommes en train de mettre en place l'outil [Spinnaker](https://spinnaker.io/) pour permettre des déploiements canary et sécuriser nos mises en production.
 
-Nous utilisons l'outil [Grafana](https://grafana.com), associé à [Prometheus](https://prometheus.io), pour faire le monitoring de nos applicatifs et de notre infrastructure. [Graylog](https://www.graylog.org) permet quant à lui de récupérer les logs d'exécution. Nous envisageons d'utiliser [Jaeger](https://www.jaegertracing.io) qui permettrait de restituer une vision cohérente des services en termes de monitoring et de logs.
+Nous utilisons l'outil [Grafana](https://grafana.com), associé à [Prometheus](https://prometheus.io), pour faire le monitoring de nos applicatifs et de notre infrastructure. [Graylog](https://www.graylog.org) permet quant à lui de récupérer les logs d'exécution. Nous envisageons d'utiliser [Jaeger](https://www.jaegertracing.io) qui permettrait de restituer une vision cohérente des services en terme de monitoring et de logs.
 
 ![Exemple de dashboard Grafana](images/grafana-graphql.png "Exemple de dashboard Grafana")
 
