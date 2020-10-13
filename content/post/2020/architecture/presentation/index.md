@@ -9,7 +9,7 @@ authors:
 
 # MYTF1 quésaco ?
 
-[MYTF1](https://www.tf1.fr/) est le service de replay du [groupe TF1](https://www.groupe-tf1.fr). Il permet à nos utilisateurs de voir ou revoir en streaming les programmes des chaînes suivantes : [TF1](https://www.tf1.fr/tf1), [TMC](https://www.tf1.fr/tmc), [TFX](https://www.tf1.fr/tfx), [TF1 Séries Films](https://www.tf1.fr/tf1-series-films) et [LCI](https://www.lci.fr/). Il est disponible sur la plupart des écrans: Web, Mobile (iOS, Android) et sur les box des principaux opérateurs (IPTV). Ce service gratuit tire principalement ses revenus de la publicité.
+[MYTF1](https://www.tf1.fr/) est le service de replay du [groupe TF1](https://www.groupe-tf1.fr). Il permet à nos utilisateurs de voir ou revoir en streaming les programmes des chaînes suivantes : [TF1](https://www.tf1.fr/tf1), [TMC](https://www.tf1.fr/tmc), [TFX](https://www.tf1.fr/tfx), [TF1 Séries Films](https://www.tf1.fr/tf1-series-films) et [LCI](https://www.lci.fr/). Il est disponible sur la plupart des écrans : Web, Mobile (iOS, Android) et sur les box des principaux opérateurs (IPTV). Ce service gratuit tire principalement ses revenus de la publicité.
 
 MYTF1 englobe un large spectre de sujets :
 
@@ -66,15 +66,15 @@ Les applications mobiles sont natives et codées en [Swift](https://swift.org) (
 Un client GraphQL [Apollo](https://github.com/apollographql/apollo-ios) intégré dans l'application nous permet de consommer l'API backend GraphQL.
 
 ##### Couche Core
-Couche contenant la logique métier et les modèles utiliser dans l'application.
+Couche contenant la logique métier et les modèles utilisés dans l'application.
 
 ##### Couche Présentation
-Implémentant une architecture MVI unidirectionnel qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. Les avantages d'une telle architecture est un flux de données plus facile à suivre et à debugger.
+Implémentant une architecture MVI unidirectionnelle qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. Les avantages d'une telle architecture est un flux de données plus facile à suivre et à debugger.
 
 
 ## IPTV
 
-Les techno utilisées sur l'iptv sont très variées et dépendent du modèle de box, globalement on retrouve trois familles:
+Les techno utilisées sur l'iptv sont très variées et dépendent du modèle de box. Globalement on retrouve trois familles :
 
 - **HTML/JS**, principalement SFR et Orange
 - **QT/QML**, très utilisé par Free
@@ -84,11 +84,11 @@ Dans le cas des box Android, un moteur QT/QML tourne dans l'application afin de 
 
 ## Le player
 
-Nous developpons notre propre player pour différentes plateformes :
+Nous développons notre propre player pour différentes plateformes :
 
 - le Web (JS en [ES 2020](https://www.ecma-international.org/ecma-262/)) basé sur **[Shaka](https://github.com/google/shaka-player)**
 - iOS ([Swift](https://swift.org)) basé sur **[AVPlayer](https://developer.apple.com/documentation/avfoundation/avplayer)**
-- Android ([Kotlin](https://kotlinlang.org)) pour les mobiles/tablettes et certaines box opérateur basé sur **[ExoPlayer](https://exoplayer.dev)**
+- Android ([Kotlin](https://kotlinlang.org)) pour les mobiles/tablettes et certaines box opérateur basés sur **[ExoPlayer](https://exoplayer.dev)**
 
 Nous privilégions le plus possible de code en natif ou JS Vanilla pour avoir le moins de dépendances possibles et optimiser les performances.
 
@@ -126,10 +126,10 @@ Nous avons également développé un CMS maison qui permet à l'équipe édito d
 
 Nos services sont déployés sur des clusters [Kubernetes](https://kubernetes.io/). Nous utilisons le cloud [AWS](https://aws.amazon.com/) pour héberger ces clusters (service [EKS](https://aws.amazon.com/eks/)).
 
-Les images docker des applicatifs sont construits par des pipelines [Jenkins](https://www.jenkins.io/), après execution des tests.
+Les images docker des applicatifs sont construites par des pipelines [Jenkins](https://www.jenkins.io/), après execution des tests.
 Nous sommes en train de mettre en place l'outil [Spinnaker](https://spinnaker.io/) pour permettre des déploiements canary et sécuriser nos mises en production.
 
-Nous utilisons l'outil [Grafana](https://grafana.com), associé à [Prometheus](https://prometheus.io), pour faire le monitoring de nos applicatifs et de notre infrastructure. [Graylog](https://www.graylog.org) permet quand à lui de récupérer les logs d'execution. Nous enviseagons d'utiliser [Jaeger](https://www.jaegertracing.io) qui permettrait de restituer une vision cohérente des services en terme de monitoring et de logs.
+Nous utilisons l'outil [Grafana](https://grafana.com), associé à [Prometheus](https://prometheus.io), pour faire le monitoring de nos applicatifs et de notre infrastructure. [Graylog](https://www.graylog.org) permet quant à lui de récupérer les logs d'execution. Nous enviseagons d'utiliser [Jaeger](https://www.jaegertracing.io) qui permettrait de restituer une vision cohérente des services en terme de monitoring et de logs.
 
 ![Exemple de dashboard Grafana](images/grafana-graphql.png "Exemple de dashboard Grafana")
 
