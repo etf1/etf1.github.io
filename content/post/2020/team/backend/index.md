@@ -43,13 +43,13 @@ Pour répondre aux différents challenges auxquels nous faisons face, nous avons
 - Monitoring : [Prometheus](https://prometheus.io/), [Grafana](https://grafana.com/)
 - CI/CD : [Jenkins](https://www.jenkins.io/)
 
-Cette liste, bien que fournies, peut-être amenée à évoluer en fonction des futurs besoins ou challenges qui se présenteront.
-En effet, une des forces de l’équipe et de savoir se remettre en question et faire table rase du passée. C’est ce que nous allons voir dans le paragraphe suivant.
+Cette liste, bien que fournie, peut-être amenée à évoluer en fonction des futurs besoins qui se présenteront.
+En effet, une des forces de l’équipe et de savoir se remettre en question et faire table rase du passé. C’est ce que nous allons voir dans le paragraphe suivant.
 
 ## Un peu d’histoire
 ### 2018 : Nouvelle expérience IPTV
 Début 2018 MYTF1 se lance dans un projet radical de transformation de l’expérience utilisateur sur les box opérateurs (IPTV).
-Un cahier des charges est définit et de nouveaux enjeux apparaissent :
+Un cahier des charges est défini et de nouveaux enjeux apparaissent :
 - Permettre une navigation fluide du contenu
 - Possibilités d’éditorialisation avancées
 - Recommandation de contenu personnalisée
@@ -61,7 +61,7 @@ Une petite équipe est montée pour relever ce défi. Elle deviendra plus tard l
 
 Nous ferons alors plusieurs choix structurants :
 - Mise en place d’une API GraphQL pour exposer les données au front
-- Utilisation de cache in-memory au niveau de l'API GraphQL
+- Utilisation de cache in-memory (non partagé) au niveau de l'API GraphQL
 - Découpe des différents besoins en micro-services GRPC dédiés
 - Dénormalisation des données catalogue et éditoriales dans elasticsearch
 - Gestion de la session utilisateur dans redis
