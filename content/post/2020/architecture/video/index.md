@@ -55,11 +55,22 @@ des blocs dans une vidéo, si la compression est trop aggressive.
 Souvent, il y a peu de différences entre 2 images successives. On va donc stocker une image et les différences avec les images suivantes plutôt qu'une série d'images. Mais on ne peut pas stocker des
 différences indéfiniment, que ce soit lors d'un changement de plan ou pour sauter plus loin dans la vidéo.
 
-On aura donc des groupes d'images, composés d'une image complète (image de référence, appelée I-frame) et des différences (prédictives - P-frame - ou bi-prédictives - B-frame) nécessaires pour
-reconstruire les images suivantes. Généralement ces groupes ne constituent pas plus de 2 secondes de vidéo.
-Ces groupes sont appelés des GOP (group of pictures).
+On aura donc des groupes d'images, composés d'une image complète (image de référence, appelée _I-frame_, ou keyframe) et des différences (prédictives - _P-frame_ - ou bi-prédictives - _B-frame_) nécessaires pour
+reconstruire les images suivantes.
 
-La compression/décompression, aspect essentiel et très pointu de la diffusion vidéo, est implémentée par des _codecs_: il faut non seulement qu'ils soient connus par le système qui encode les vidéos, mais surtout par les sytèmes de ceux qui les lisent. Avec le développement de la mobilité, un codec n'est
+![Dépendances des images P et B](images/ibp.svg "Dépendances des images P et B")
+
+Généralement ces groupes ne constituent pas plus de 2 secondes de vidéo.
+Ces groupes sont appelés des _GOP_ (group of pictures).
+
+![Un GOP de 15 images](images/gop15t.svg "Un GOP de 15 images")
+
+2 remarques:
+
+- vu que les images B dépendent d'images qui les suivent, l'ordre de transmission des images n'est pas forcément l'ordre d'affichage des images.
+- dans cet exemple de GOP de 15 images, la dernière est une B, qui dépend donc de l'image I qui commence le GOP suivant: on parle de GOP ouvert dans ce cas. On parle de GOP fermé lorsqu'il ne dépend pas des GOPs voisins (il ne commence ni se termine par une image B), ce qui facilite par exemple le _seeking_ (déplacement dans le temps), ou le passage d'un bitrate à un autre en cours de lecture.
+
+La compression/décompression, aspect essentiel et très pointu de la diffusion vidéo, est implémentée par des _codecs_ (mot-valise anglais pour _coder-decoder_): il faut non seulement qu'ils soient connus par le système qui encode les vidéos, mais surtout par les sytèmes de ceux qui les lisent. Avec le développement de la mobilité, un codec n'est
 utilisable en pratique que s'il dispose d'une version accélérée matériellement sur la plupart des smartphones, tablettes et ordinateurs, afin de garantir de bonnes performances et une consommation énergétique raisonnable. Mais ça explique pourquoi les codecs les plus répandus ont toujours au moins 10 ans d'existence, le temps que les implémentations matérielles se généralisent.
 
 Parmi les codecs que nous utilisons actuellement, on peut citer H.264 pour la vidéo, et AAC pour l'audio.
@@ -89,18 +100,23 @@ A noter que le MPEG TS permet de simplement concaténer plusieurs fichiers pour 
 
 ## Formats de diffusion OTT
 
-Au niveau des formats de diffusion OTT (c'est à dire, via Internet), nous supportons les formats suivants:
+Au niveau des formats de diffusion OTT (c'est à dire, via Internet), nous supportons les 2 formats suivants:
 
-- HLS ("HTTP Live Streaming", sur apps iOS et Safari Mobile)
-- DASH ("Dynamic Adaptive Streaming over HTTP", sur le reste)
-- MP4 (pour les courts spots de pub des replays)
+- HLS ("HTTP Live Streaming", sur apps iOS et Safari Mobile), originaire d'Apple
+- DASH ("Dynamic Adaptive Streaming over HTTP", sur le reste), originaire de l'organisation MPEG
 
-HLS et DASH sont des formats de diffusion développés pour la diffusion sur Internet via HTTP: la vidéo est transcodée en différentes qualités et segmentée en petits fichiers vidéos indépendants (_chunks_) de quelques secondes, ce qui permet au player de s'adapter en cours de visionnage en téléchargeant la qualité la plus appropriée à sa capacité actuelle de téléchargement. De plus, la segmentation en petits fichiers permet de faciliter la mise en cache et la robustesse en cas d'erreur (il suffit de redemander le fichier posant problème)
-Le player va d'abord récupérer un fichier contenant du texte (_playlist M3U8_ pour HLS ou _manifest XML_ pour DASH).
-Dans le cas des playlists HLS, le premier fichier est la _main playlist_, qui va référencer d'autres playlists, les _sub playlists_, mais considérons ces playlists comme un seul fichier pour l'explication.
-Ce fichier textuel contient des métadonnées sur la durée des chunks, les bitrates disponibles,
-les différentes pistes disponibles (vidéo, audio, sous-titres) et finalement décrit le moyen de récupérer
-les pistes, soit en listant explicitement les fichiers en HLS, soit par un mécanisme de modèle (_template_) en fonction du timing ou du numéro de séquence du chunk en DASH.
+De plus, nous diffusons les spots de pubs via de simples fichiers MP4.
+
+HLS et DASH sont des formats développés pour la diffusion sur Internet via HTTP: la vidéo est transcodée en différentes qualités et segmentée en petits fichiers vidéos indépendants (_chunks_) de quelques secondes, ce qui permet au player de s'adapter en cours de visionnage en téléchargeant la qualité la plus appropriée à sa capacité actuelle de téléchargement: on parle d'ABR, _Adaptive Bit Rate_.
+
+De plus, la segmentation en petits fichiers permet de faciliter la mise en cache et la robustesse en cas d'erreur (il suffit de redemander le chunk posant problème).
+
+Le player va d'abord récupérer un fichier contenant du texte:
+
+- _main playlist_ (M3U8) pour le HLS, contenant des métadonnées ainsi que des liens vers des _sous playlists_ aux différents bitrates,
+- _manifest_ (XML) pour le DASH, contenant des métadonnées et des liens vers les chunks des différentes pistes et différents bitates
+
+![Exemple de segmentation HLS](images/hls.svg "Exemple de segmentation HLS")
 
 Pour la protection contre la copie, nous utilisons sur les replays en DASH les DRM Widevine (DRM Google: players sous Chrome, Firefox, Android ...) et Playready (DRM Microsoft, donc players sous Edge) et sur les replays en HLS la DRM Fairplay (Apple)
 
@@ -153,3 +169,5 @@ Les transcodeurs sont des Elemental Server. Ce sont des serveurs propriétaires 
 Le système de génération à la demande des différents formats vidéo, avec gestion des DRM et des sous-titres, est également propriétaire, de chez Unified Streaming.
 Nos caches sont basés sur l'excellent serveur Web nginx, avec des serveurs physiques gavés de RAM et de disques SSD.
 Le sytème de commande DVR s'appuie sur ffmpeg et est écrit en Go.
+
+![Architecture vidéo](images/archi-video.svg "Architecture vidéo")
