@@ -47,7 +47,7 @@ of the whole section and append them to our $next slice. */}}
                                 {{ $article.Params.excerpt }}
                             </p>
                             <div class="article-metadata">
-                                {{ $article.Date | dateFormat "01/02/2006" }} · {{ $article.ReadingTime }} min
+                                {{ .Page.Date.Day }}{{ if eq $article.Date.Day 1}}er{{ end }} {{ index $.Site.Data.mois (printf "%d" $article.Date.Month) }} {{ (printf "%.4d" $article.Date.Year) }} • {{ $article.ReadingTime }} minute{{ if gt $article.ReadingTime 1}}s{{ end }}
                             </div>
                         </div>
                     </div>
