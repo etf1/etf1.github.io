@@ -31,7 +31,7 @@ MYTF1 existe depuis 2011 et a été depuis plusieurs fois refondu from scratch.
 
 ## Web
 
-Le front MYTF1 repose sur une SPA en [Reactjs](https://fr.reactjs.org) et un serveur expressjs pour le SSR (server side rendering) pour assurer un bon référencement. Nous utilisons react car la partie SSR est éprouvée ainsi que le large écosystème open source.
+Le front MYTF1 repose sur une SPA en [Reactjs](https://fr.reactjs.org) et un serveur expressjs pour le SSR (server side rendering) pour assurer un bon référencement. Nous utilisons react car la partie SSR est éprouvée et pour son large écosystème open source.
 
 ### Applicatif front
 
@@ -50,15 +50,15 @@ Les avantages sont les suivants :
 GraphQL code generator génère les composants/hooks Apollo via nos queries/mutations en typescript, ce qui permet de s'assurer que ces requêtes sont valides.
 
 ##### Helmet
-[Helmet](https://github.com/staylor/react-helmet-async) est la librairie (react-helmet-async et non pas react-helmet) nous permet d'enrichir au fur et à mesure des composants le rendu des balises metas qui aident a la compréhension des robots de moteurs de recherches du contenu de nos pages.
+[Helmet](https://github.com/staylor/react-helmet-async) est la librairie (react-helmet-async et non pas react-helmet) qui nous permet d'enrichir au fur et à mesure des composants le rendu des balises metas qui aident a la compréhension des robots de moteurs de recherches du contenu de nos pages.
 
 ##### Webpack & Lazyloading
-Nous utilisons [Webpack](https://webpack.js.org) pour packager nos ressources statiques (modules, chunk...). Le support du code splitting permet le découpage des fichiers JS pour permettre un chargement de l'application optimisée : seul les resources réellement utilisées à un instant T sont chargées (lazy loading).
+Nous utilisons [Webpack](https://webpack.js.org) pour packager nos ressources statiques (modules, chunk...). Le support du code splitting permet le découpage des fichiers JS pour permettre un chargement de l'application optimisé : seules les ressources réellement utilisées à un instant T sont chargées (lazy loading).
 
 ##### Jest / React Testing Library
 Nous utilisons [Jest](https://jestjs.io) pour nos tests unitaires, ce qui nous permet de vérifier la non-régression du front MYTF1, tout au long du développement de nos features et de garantir la fonctionnalité de composants complexes.
 
-## APP
+## Applications Mobiles
 
 Les applications mobiles sont natives et codées en [Swift](https://swift.org) (iOS) et [Kotlin](https://kotlinlang.org) (Android) implémentant une architecture modulaire multi-couches.
 
@@ -69,12 +69,12 @@ Un client GraphQL [Apollo](https://github.com/apollographql/apollo-ios) intégr�
 Couche contenant la logique métier et les modèles utilisés dans l'application.
 
 ##### Couche Présentation
-Implémentant une architecture MVI unidirectionnelle qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. Les avantages d'une telle architecture est un flux de données plus facile à suivre et à debugger.
+Implémentant une architecture MVI unidirectionnelle qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. L'avantage d'une telle architecture est un flux de données plus facile à suivre et debugger.
 
 
 ## IPTV
 
-Les techno utilisées sur l'IPTV sont très variées et dépendent du modèle de box. Globalement on retrouve trois familles :
+Les technologies utilisées sur l'IPTV sont très variées et dépendent du modèle de box. Globalement on retrouve trois familles :
 
 - **HTML/JS**, principalement SFR et Orange
 - **QT/QML**, très utilisé par Free
@@ -103,7 +103,7 @@ Aujourd'hui le backend est constitué d'un ensemble de micro-services écrits en
 - taille des images docker réduite
 - idéal pour des services HTTP / [gRPC](https://grpc.io)
 
-C'est également un language rapide à apprendre.
+C'est également un langage rapide à apprendre.
 
 ##### GraphQL
 
