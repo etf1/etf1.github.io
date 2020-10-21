@@ -7,6 +7,9 @@ authors:
   - rpinsonneau
 ---
 
+# Avant propos
+Cet article a pour objectif de présenter la stack technique et les technos utilisés dans les coulisses de MYTF1. Il s'agit d'un tour d'horizon sur l'ensemble du périmètre des fronts au backend qui répond en partie a la question: on fait quoi à eTF1 ?
+
 # MYTF1 quésaco ?
 
 [MYTF1](https://www.tf1.fr/) est le service de replay du [groupe TF1](https://www.groupe-tf1.fr). Il permet à nos utilisateurs de voir ou revoir en streaming les programmes des chaînes suivantes : [TF1](https://www.tf1.fr/tf1), [TMC](https://www.tf1.fr/tmc), [TFX](https://www.tf1.fr/tfx), [TF1 Séries Films](https://www.tf1.fr/tf1-series-films) et [LCI](https://www.lci.fr/). Il est disponible sur la plupart des écrans : Web, Mobile (iOS, Android) et sur les box des principaux opérateurs (IPTV). Ce service gratuit tire principalement ses revenus de la publicité.
@@ -23,11 +26,11 @@ MYTF1 englobe un large spectre de sujets :
 
 MYTF1 existe depuis 2011 et a été depuis plusieurs fois refondu from scratch.
 
-| Période            | Technos                                              |
-| ------------------ | ---------------------------------------------------- |
-| 2011 - 2015        | PHP, MySQL                                           |
-| 2015 - 2019        | NodeJS, PostgreSQL                                   |
-| 2019 - Aujourd'hui | Go, GraphQL, gRPC, MongoDB, Kafka, Redis, Kubernetes |
+| Période            | Technos                                                                    |
+| ------------------ | -------------------------------------------------------------------------- |
+| 2011 - 2015        | html/JS, Android, iOS, PHP, MySQL                                          |
+| 2015 - 2019        | html/JS, Android, iOS, NodeJS, PostgreSQL                                  |
+| 2019 - Aujourd'hui | React, Swift, Kotlin, Go, GraphQL, gRPC, MongoDB, Kafka, Redis, Kubernetes |
 
 ## Web
 
