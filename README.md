@@ -13,7 +13,7 @@ hugo server
 
 ## Schema
 
-We used excalidraw to produce our schemas : https://excalidraw.com/
+We used excalidraw to produce our schemas: [https://excalidraw.com/](https://excalidraw.com/)
 
 Don't forget to push the original file to the repository (example : https://github.com/etf1/etf1.github.io/blob/prez-archi-mytf1/content/post/2020/architecture/presentation/images/persisted-queries.excalidraw)
 
