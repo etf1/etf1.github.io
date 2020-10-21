@@ -11,7 +11,7 @@ authors:
 Cet article a pour objectif de présenter l'équipe Backend et n'est en aucun cas une présentation technique détaillée des entrailles de MYTF1. Les aspects techniques seront abordés en détail dans des articles dédiés. Ici, nous nous concentrerons sur la composition de l'équipe, son histoire et partagerons avec vous quelques unes des décisions que nous avons prises ces dernières années. Bonne lecture.
 
 ## Qui sommes nous ?
-Intégrée au sein de e-TF1 (antenne digital du groupe TF1) l’équipe Backend a pour objectif de répondre aux problématiques suivantes :
+Intégrée au sein de e-TF1 (antenne digitale du groupe TF1) l’équipe Backend a pour objectif de répondre aux problématiques suivantes :
 - Gérer la mise en ligne et l’animation éditoriale de notre contenu
 - Stocker et restituer les données utilisateurs (historique et progression de lecture, programme favoris, bookmarks etc.)
 - Exporter/partager notre catalogue de contenu avec nos partenaires (FAI, Salto, etc.)
@@ -33,7 +33,7 @@ Pour les applications MYTF1, nous avons fait le choix d’exposer à travers une
 En effet, l’API GraphQL agit comme une API Gateway et se charge d’exposer un modèle de données cohérent et unifié qui répond aux besoins exprimés par les équipes produit/métier.
 Elle a été conçue et créée avec une vision multi-écran et doit être capable de fonctionner aussi bien pour nos applications Web, que pour les applications mobiles ou encore les box opérateurs.
 
-Pour répondre aux différents challenges auxquels nous faisons face, nous avons choisies les technologies suivantes : 
+Pour répondre aux différents challenges auxquels nous faisons face, nous avons choisi les technologies suivantes : 
 - Langages : [Go](https://golang.org/), [Java](https://www.java.com/)
 - Base de données : [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/), [DynamoDB](https://aws.amazon.com/dynamodb/), [Redis](https://redis.io/)
 - Event/Message broker : [RabbitMQ](https://www.rabbitmq.com/), [Kafka](https://kafka.apache.org/)
@@ -44,7 +44,7 @@ Pour répondre aux différents challenges auxquels nous faisons face, nous avons
 - CI/CD : [Jenkins](https://www.jenkins.io/)
 
 Cette liste, bien que fournie, peut-être amenée à évoluer en fonction des futurs besoins qui se présenteront.
-En effet, une des forces de l’équipe et de savoir se remettre en question et faire table rase du passé. C’est ce que nous allons voir dans le paragraphe suivant.
+En effet, une des forces de l’équipe est de savoir se remettre en question et faire table rase du passé. C’est ce que nous allons voir dans le paragraphe suivant.
 
 ## Un peu d’histoire
 ### 2018 : Nouvelle expérience IPTV
@@ -133,23 +133,23 @@ Vient ensuite l’aspect performance. Depuis la refonte des produits MYTF1 (auta
 
 ![2020 -  Schéma d'architecture backend](images/archi_2020.svg "2020 - Schéma d'architecture backend")
 
-La solution que nous avons retenue pour adresser ces deux points est de basculer progressivement vers une architecture dite événementielle qui s'appuie sur Kafka ([MSK](https://aws.amazon.com/msk/)). Plusieurs sources d'évéments ont été identifiées :
+La solution que nous avons retenue pour adresser ces deux points est de basculer progressivement vers une architecture dite événementielle qui s'appuie sur Kafka ([MSK](https://aws.amazon.com/msk/)). Plusieurs sources d'événements ont été identifiées :
 - Le CMS pour la partie contenu/édito, nous nous appuyons sur les [Change Streams](https://docs.mongodb.com/manual/changeStreams/) MongoDB pour cela
 - Les fichiers parquet de recommandation que nous injectons dans des topics Kafka
 - Les actions des utilisateurs (lecture vidéo, enregistrement de l'avancée de lecture, mise en favoris, etc..)
 
-Pour la partie CMS, l'idée est de pousser toutes le modifications faites en base dans des topics Kafka dédiés (voir le projet [kafka-mongo-watcher](https://github.com/etf1/kafka-mongo-watcher)). Ensuite ces évnéments sont traités, transformés puis stockés (voir le projet [kafka-transformer](https://github.com/etf1/kafka-transformer)) dans des instances [Elasticache Redis](https://aws.amazon.com/fr/elasticache/redis/). Nous maintenons alors à jour, en quasi temps réel, notre catalogue de contenu dans un cache partagé sur lequel nous avons directement branché nos instances GraphQL. Deux conséquences, nous ne sommes plus dépendants des *indexers* de données et nous avons supprimé la couche de cache in-memory (non partagée) de notre API GraphQL. Des plus nous avons dénormalisé les données dans redis de telle manière que le service catalogue devient superflu. Ainsi nous gagnons sur les deux tableaux (latence liée à l'indexation et performance de l'API GraphQL).
+Pour la partie CMS, l'idée est de pousser toutes le modifications faites en base dans des topics Kafka dédiés (voir le projet [kafka-mongo-watcher](https://github.com/etf1/kafka-mongo-watcher)). Ensuite ces événements sont traités, transformés puis stockés (voir le projet [kafka-transformer](https://github.com/etf1/kafka-transformer)) dans des instances [Elasticache Redis](https://aws.amazon.com/fr/elasticache/redis/). Nous maintenons alors à jour, en quasi temps réel, notre catalogue de contenu dans un cache partagé sur lequel nous avons directement branché nos instances GraphQL. Deux conséquences, nous ne sommes plus dépendants des *indexers* de données et nous avons supprimé la couche de cache in-memory (non partagée) de notre API GraphQL. Des plus nous avons dénormalisé les données dans redis de telle manière que le service catalogue devient superflu. Ainsi nous gagnons sur les deux tableaux (latence liée à l'indexation et performance de l'API GraphQL).
 
 Pour traiter certains cas particuliers, nous avons recours à [Kafka Streams](https://kafka.apache.org/documentation/streams/) pour, par exemple, permettre la jointure et l'aggrégation de données en provenance de plusieurs types d'événénemts différents (exemple : jointure entre les mises à jour des programmes et des vidéos pour produire des curations éditoriales qui sont ensuite stockées dans redis). Enfin, nous avons introduit un composant *scheduler* dont l'objectif est de produire des événements temporels sur lesquels le système va pouvoir réagir (exemple : expiration d'une vidéo).
 
 Pour la partie utilisateur, nous avons conservé globalement la même architecture qu'avant mais en la modernisant : 
 - Fusion au sein d'une seule API des données utilisateurs
-- Bascule vers DynamoDB (à la place des instances elasticsearch)
-- Bascule sur Kafka (à la place de rabbitmq)
-- Migration de l'instance redis vers Elasticache
+- Bascule vers DynamoDB (à la place des instances Elasticsearch)
+- Bascule sur Kafka (à la place de RabbitMQ)
+- Migration de l'instance Redis vers Elasticache
 
 Enfin pour la partie recommandation nous avons :
-- Injecté les fichiers parquet directement dans kafka
+- Injecté les fichiers parquet directement dans Kafka
 - Remplacé la base elasticsearch par une base DynamoDB pour le stockage à froid
 - Ajouté une instance redis qui agit comme cache partagé
 - Introduit, gràce à notre équipe data, une nouvelle API de recommandation temps réel
@@ -159,4 +159,4 @@ Dans les deux cas, nous profitons maintenant des possibilités de mise à l'éch
 Toutes ces modifications permettent donc des gains notables sur la performance, la mise à l'échelle et la réduction des latences de notre architecture. Mais nous sommes encore en phase transitoire et d'autres évolutions sont déjà prévues, notamment autour de la médiathèque et du pré-chargement des données dans notre CDN, mais aussi sur le calcul des tops vidéos et programmes en temps réel.
 
 ## Conclusion
-Comme vous avez pu le constater à la lecture de cet article, les dernières années ont été riches pour l'équipe Backend. Je tiens personnellement à remercier toute l'équipe pour son travail, ses compétences et sa capacité à remettre en question ses choix pour oeuvrer à l'amélioration continue de notre architecture (le tout dans une super ambiance 😀). Bien que dense, cet article ne fait qu'effleurer certains aspcets techniques. Nous les développerons dans de futurs articles qui, nous l'espérons, réussiront à capter votre attention.
+Comme vous avez pu le constater à la lecture de cet article, les dernières années ont été riches pour l'équipe Backend. Je tiens personnellement à remercier toute l'équipe pour son travail, ses compétences et sa capacité à remettre en question ses choix pour oeuvrer à l'amélioration continue de notre architecture (le tout dans une super ambiance 😀). Bien que dense, cet article ne fait qu'effleurer certains aspects techniques. Nous les développerons dans de futurs articles qui, nous l'espérons, réussiront à capter votre attention.
