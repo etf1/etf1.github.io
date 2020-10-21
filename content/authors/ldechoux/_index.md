@@ -8,7 +8,7 @@ avatar: /authors/ldechoux/avatar.jpg
 featured: true
 social:
   - title: blog
-    url: http://laurent-dechoux.fr
+    url: https://laurent-dechoux.fr
   - title: github
     url: https://github.com/iotafr
   - title: linkedin
