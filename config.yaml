@@ -7,3 +7,7 @@ paginate: 6
 social:
   linkedin: "https://www.linkedin.com/company/e-tf1/"
   github: "https://github.com/etf1"
+markup:
+  defaultMarkdownHandler: blackFriday
+  blackFriday:
+    hrefTargetBlank: 1
