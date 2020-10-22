@@ -10,7 +10,6 @@ table{
     transition: var(--color-mode-transition);
     background: var(--card);
     margin: 45px auto 85px;
-    width: 100%;
     max-width: 1004px;
     border: 1px solid var(--horizontalRule);
     border-radius: 5px;
@@ -41,7 +40,7 @@ table{
 
 /*************************************TABLE CELL************************************/
 
-td{
+td, th{
     border-top: 1px solid var(--horizontalRule);
     padding: 15px 30px;
     font-size: 16px;
@@ -50,14 +49,14 @@ td{
 
 /*DESKTOP*/
 @media screen and (max-width: 1070px){
-    td{
+    td, th{
         padding: 14px 20px;
     }
 }
 
 /*TABLET*/
 @media screen and (max-width: 735px){
-    td{
+    td, th{
         font-size: 14px;
     }
 }

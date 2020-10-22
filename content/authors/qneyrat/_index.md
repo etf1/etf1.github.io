@@ -1,7 +1,10 @@
 ---
 title: Quentin Neyrat
+excerpt: Développeur Backend
 bio: |
-avatar: /images/qneyrat.jpg
+  Développeur Backend chez e-TF1
+hero: /authors/qneyrat/avatar.jpg
+avatar: /authors/qneyrat/avatar.jpg
 featured: true
 social:
   - title: blog

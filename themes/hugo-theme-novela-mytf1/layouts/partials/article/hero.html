@@ -5,7 +5,7 @@
             <div class="article-hero-subtitle">
                 <div class="article-meta">
                     {{ partial "article/authors.html" . }}
-                    Article publié le {{ .Page.Date.Day }} {{ index $.Site.Data.mois (printf "%d" .Page.Date.Month) }} {{ .Page.Date.Year }} • {{ .ReadingTime }} min{{ if gt .ReadingTime 1}}s{{ end }}
+                    Publié le {{ .Page.Date.Day }}{{ if eq .Page.Date.Day 1}}er{{ end }} {{ index $.Site.Data.mois (printf "%d" .Page.Date.Month) }} {{ (printf "%.4d" .Page.Date.Year) }} • {{ .ReadingTime }} minute{{ if gt .ReadingTime 1}}s{{ end }}
                 </div>
             </div>
         </header>
