@@ -12,7 +12,7 @@ Après plusieurs mois de réflexion, nous lançons enfin notre blog (il était t
 
 Une plateforme de streaming vidéo c'est quoi exactement ? Et comment ça marche ? Nous allons essayer de répondre à ces questions en abordant le plus d'aspects possibles comme : l'encodage et la lecture des vidéos, la créations des fronts (web, applications mobiles et box opérateurs), la publicité, la data, les services backend, l'infrastucture, etc.
 
-Un grand merci à toutes les personnes qui ont contribuées à la réalisation de ce projet. Nous avons pour ambition de proposer régulièrement de nouveaux contenus, n'hésitez donc pas à venir faire un tour de temps en temps 😀
+Un grand merci à toutes les personnes qui ont contribuées à la réalisation de ce projet. Nous avons pour ambition de proposer régulièrement de nouveaux contenus, n'hésitez donc pas à venir faire un tour de temps en temps 😀.
 
 Et pour commencer, nous vous propons un petit [tour d'horizon technique](/post/2020/architecture/presentation/) de la plateforme MYTF1.
 
