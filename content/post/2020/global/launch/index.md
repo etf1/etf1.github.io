@@ -14,4 +14,6 @@ Une plateforme de streaming vidéo c'est quoi exactement ? Et comment ça marche
 
 Un grand merci à toutes les personnes qui ont contribuées à la réalisation de ce projet. Nous avons pour ambition de proposer régulièrement de nouveaux contenus, n'hésitez donc pas à venir faire un tour de temps en temps 😀
 
+Et pour commencer, nous vous propons un petit [tour d'horizon technique](/post/2020/architecture/presentation/) de la plateforme MYTF1.
+
 Bonne lecture !
