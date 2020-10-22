@@ -1,6 +1,6 @@
 ---
 title: Tour d'horizon technique
-date: 2020-09-01
+date: 2020-10-22
 hero: /post/2020/architecture/presentation/images/hero.jpg
 excerpt: Découvrez les coulisses techniques de MYTF1
 authors:
