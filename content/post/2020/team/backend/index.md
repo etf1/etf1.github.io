@@ -1,6 +1,6 @@
 ---
 title: L'équipe Backend
-date: 2020-09-20
+date: 2020-10-22
 hero: /post/2020/architecture/presentation/images/hero.jpg
 excerpt: Welcome to the other side
 authors:
@@ -22,6 +22,7 @@ Elle est composée d’une dizaine de personnes ayant des profils (développeur,
 ## Architecture et technologies
 Nous avons fait le choix d’une architecture micro-services. Les différentes composantes métier sont réparties en services dédiés, qui communiquent principalement via GRPC.
 Voici une liste non exhaustives de nos briques métier :
+
 - CMS API : dédiée à l’animation éditoriale de notre contenu
 - Catalog API : dédiée à la gestion de notre catalogue de contenu
 - User API : dédiée à la gestion des données utilisateur
@@ -33,7 +34,8 @@ Pour les applications MYTF1, nous avons fait le choix d’exposer à travers une
 En effet, l’API GraphQL agit comme une API Gateway et se charge d’exposer un modèle de données cohérent et unifié qui répond aux besoins exprimés par les équipes produit/métier.
 Elle a été conçue et créée avec une vision multi-écran et doit être capable de fonctionner aussi bien pour nos applications Web, que pour les applications mobiles ou encore les box opérateurs.
 
-Pour répondre aux différents challenges auxquels nous faisons face, nous avons choisi les technologies suivantes : 
+Pour répondre aux différents challenges auxquels nous faisons face, nous avons choisi les technologies suivantes :
+
 - Langages : [Go](https://golang.org/), [Java](https://www.java.com/)
 - Base de données : [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/), [DynamoDB](https://aws.amazon.com/dynamodb/), [Redis](https://redis.io/)
 - Event/Message broker : [RabbitMQ](https://www.rabbitmq.com/), [Kafka](https://kafka.apache.org/)
@@ -50,6 +52,7 @@ En effet, une des forces de l’équipe est de savoir se remettre en question et
 ### 2018 : Nouvelle expérience IPTV
 Début 2018 MYTF1 se lance dans un projet radical de transformation de l’expérience utilisateur sur les box opérateurs (IPTV).
 Un cahier des charges est défini et de nouveaux enjeux apparaissent :
+
 - Permettre une navigation fluide du contenu
 - Possibilités d’éditorialisation avancées
 - Recommandation de contenu personnalisée
@@ -60,6 +63,7 @@ Un cahier des charges est défini et de nouveaux enjeux apparaissent :
 Une petite équipe est montée pour relever ce défi. Elle deviendra plus tard l'équipe Backend.
 
 Nous ferons alors plusieurs choix structurants :
+
 - Mise en place d’une API GraphQL pour exposer les données au front
 - Utilisation de cache in-memory (non partagé) au niveau de l'API GraphQL
 - Découpe des différents besoins en micro-services GRPC dédiés
@@ -88,6 +92,7 @@ Un deuxième jalon important marquera l'année 2018, avec la mise à disposition
 
 ### 2019 : De l'IPTV à l'OTT
 Mi-2018, émerge chez e-TF1 l'envie de refondre les applications MYTF1 web et mobile (dites [OTT](https://fr.wikipedia.org/wiki/Service_par_contournement)). Au delà de l'aspect esthétique il y a une véritable volonté de repenser le produit et le recentrer autour d'axes stratégiques précis. Le second semestre 2018 est mis à profit pour définir précisément les contours de ce nouveau produit. Au terme de cette réflexion plusieurs priorités sont définies :
+
 - Un nouveau design pour les applications web et mobile
 - Une expérience de lecture vidéo irréprochable
 - Mettre la personnalisation au centre de l'expérience MYTF1
@@ -98,6 +103,7 @@ Mi-2018, émerge chez e-TF1 l'envie de refondre les applications MYTF1 web et mo
 Le choix de notre nouvelle architecture backend comme socle de cette nouvelle vision du produit se fait naturellement. C'est un nouveau challenge pour nous et là encore beaucoup de travail nous attend.
 
 En parallèle, le second semestre 2018 nous permet de renforcer l'équipe avec de nouveaux membres. Nous en profitons pour retravailler et améliorer certains aspects techniques de notre architecture pour préparer le futur. C'est également l'occasion de réfléchir aux différents choix techniques que nous allons devoir faire pour généraliser le backend à l'ensemble des écrans MYTF1. Les principaux choix effectués sont les suivants :
+
 - Migration vers AWS
 - Rendre l'API GraphQL publique (exposée sur internet, jusqu'alors elle est exposée sur des IP privées pour les différents opérateurs IPTV)
 - Gestion du cache HTTP et mise en place des *Persisted Queries* GraphQL
@@ -134,6 +140,7 @@ Vient ensuite l’aspect performance. Depuis la refonte des produits MYTF1 (auta
 ![2020 -  Schéma d'architecture backend](images/archi_2020.svg "2020 - Schéma d'architecture backend")
 
 La solution que nous avons retenue pour adresser ces deux points est de basculer progressivement vers une architecture dite événementielle qui s'appuie sur Kafka ([MSK](https://aws.amazon.com/msk/)). Plusieurs sources d'événements ont été identifiées :
+
 - Le CMS pour la partie contenu/édito, nous nous appuyons sur les [Change Streams](https://docs.mongodb.com/manual/changeStreams/) MongoDB pour cela
 - Les fichiers parquet de recommandation que nous injectons dans des topics Kafka
 - Les actions des utilisateurs (lecture vidéo, enregistrement de l'avancée de lecture, mise en favoris, etc..)
@@ -143,12 +150,14 @@ Pour la partie CMS, l'idée est de pousser toutes les modifications faites en ba
 Pour traiter certains cas particuliers, nous avons recours à [Kafka Streams](https://kafka.apache.org/documentation/streams/) pour, par exemple, permettre la jointure et l'aggrégation de données en provenance de plusieurs types d'événements différents (exemple : jointure entre les mises à jour des programmes et des vidéos pour produire des curations éditoriales qui sont ensuite stockées dans Redis). Enfin, nous avons introduit un composant *scheduler* dont l'objectif est de produire des événements temporels sur lesquels le système va pouvoir réagir (exemple : expiration d'une vidéo).
 
 Pour la partie utilisateur, nous avons conservé globalement la même architecture qu'avant mais en la modernisant : 
+
 - Fusion au sein d'une seule API des données utilisateurs
 - Bascule vers DynamoDB (à la place des instances Elasticsearch)
 - Bascule sur Kafka (à la place de RabbitMQ)
 - Migration de l'instance Redis vers Elasticache
 
 Enfin pour la partie recommandation nous avons :
+
 - Injecté les fichiers parquet directement dans Kafka
 - Remplacé la base Elasticsearch par une base DynamoDB pour le stockage à froid
 - Ajouté une instance Redis qui agit comme cache partagé
@@ -160,3 +169,6 @@ Toutes ces modifications permettent donc des gains notables sur la performance, 
 
 ## Conclusion
 Comme vous avez pu le constater à la lecture de cet article, les dernières années ont été riches pour l'équipe Backend. Je tiens personnellement à remercier toute l'équipe pour son travail, ses compétences et sa capacité à remettre en question ses choix pour oeuvrer à l'amélioration continue de notre architecture (le tout dans une super ambiance 😀). Bien que dense, cet article ne fait qu'effleurer certains aspects techniques. Nous les développerons dans de futurs articles qui, nous l'espérons, réussiront à capter votre attention.
+
+## Remerciements
+Merci aux relecteurs de l'article : Sabine, Déborah, Guillaume, Richard, Thierry et Vincent.

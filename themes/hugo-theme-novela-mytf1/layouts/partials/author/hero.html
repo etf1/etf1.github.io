@@ -1,14 +1,18 @@
 <section class="section narrow">
-    <div class="author-hero">
-        {{ with .Params.avatar }}
-            <div class="author-hero-image">
-                <img src="{{ . }}" />
+    {{if eq .Title "Authors"}}
+        <h1 class="author-heading">L'équipe</h1>
+    {{ else }}
+        <div class="author-hero">
+            {{ with .Params.avatar }}
+                <div class="author-hero-image">
+                    <img src="{{ . }}" />
+                </div>
+            {{ end }}
+            <h1 class="author-heading">{{ .Title }}</h1>
+            <p class="author-subheading">{{ .Params.bio }}</p>
+            <div class="author-social">
+                {{ partial "author/social_links.html" . }}
             </div>
-        {{ end }}
-        <h1 class="author-heading">{{ .Title }}</h1>
-        <p class="author-subheading">{{ .Params.bio }}</p>
-        <div class="author-social">
-            {{ partial "author/social_links.html" . }}
         </div>
-    </div>
+    {{ end }}
 </section>
