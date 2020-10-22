@@ -10,4 +10,4 @@ social:
 markup:
    defaultMarkdownHandler: blackFriday
    blackFriday:
-     hrefTargetBlank: 1 
+     hrefTargetBlank: 1
