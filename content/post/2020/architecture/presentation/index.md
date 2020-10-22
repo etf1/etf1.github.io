@@ -8,7 +8,7 @@ authors:
 ---
 
 # Avant propos
-Cet article a pour objectif de présenter la stack technique et les technos utilisées dans les coulisses de MYTF1. Il s'agit d'un tour d'horizon sur l'ensemble du périmètre des fronts au backend et qui répond en partie a la question: on fait quoi à eTF1 ?
+Cet article a pour objectif de présenter la stack technique et les technos utilisées dans les coulisses de MYTF1. Il s'agit d'un tour d'horizon sur l'ensemble du périmètre des fronts au backend et qui répond en partie a la question: on fait quoi chez eTF1 ?
 
 # MYTF1 quésaco ?
 
