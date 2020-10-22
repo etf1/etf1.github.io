@@ -61,19 +61,18 @@ Nous utilisons [Webpack](https://webpack.js.org) pour packager nos ressources st
 ##### Jest / React Testing Library
 Nous utilisons [Jest](https://jestjs.io) pour nos tests unitaires, ce qui nous permet de vérifier la non-régression du front MYTF1, tout au long du développement de nos features et de garantir la fonctionnalité de composants complexes.
 
-## Applications Mobiles
+## Les Applications Mobiles
 
 Les applications mobiles sont natives et codées en [Swift](https://swift.org) (iOS) et [Kotlin](https://kotlinlang.org) (Android) implémentant une architecture modulaire multi-couches.
 
-##### Couche Networking
+### Couche Networking
 Un client GraphQL [Apollo](https://github.com/apollographql/apollo-ios) intégré dans l'application nous permet de consommer l'API backend GraphQL.
 
-##### Couche Core
+### Couche Core
 Couche contenant la logique métier et les modèles utilisés dans l'application.
 
-##### Couche Présentation
+### Couche Présentation
 Implémentant une architecture MVI unidirectionnelle qui représente une évolution de l'architecture MVVM avec des bindings en RxSwift & RxJava. L'avantage d'une telle architecture est un flux de données plus facile à suivre et debugger.
-
 
 ## L'IPTV
 
