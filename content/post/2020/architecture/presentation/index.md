@@ -41,9 +41,8 @@ Le front MYTF1 repose sur une SPA en [Reactjs](https://fr.reactjs.org) et un ser
 La stack est principalement axée sur les performances et le SEO. React via React-dom/server permet de générer du HTML coté serveur qui sera ensuite ["hydrate"](https://fr.reactjs.org/docs/react-dom.html#hydrate) coté client pour assurer une UX réactive.
 
 ##### TypeScript
-Nous utilisons fortement [Typescript](https://www.typescriptlang.org).
+Nous utilisons fortement [Typescript](https://www.typescriptlang.org), les avantages sont les suivants :
 
-Les avantages sont les suivants :
 - meilleure lisibilité du code
 - cohérence des signatures de fonctions (typage fort)
 - meilleure complétion dans l'IDE
