@@ -52,7 +52,7 @@ Nous utilisons fortement [Typescript](https://www.typescriptlang.org), les avant
 GraphQL code generator génère les composants/hooks Apollo via nos queries/mutations en typescript, ce qui permet de s'assurer que ces requêtes sont valides.
 
 ##### Helmet
-[Helmet](https://github.com/staylor/react-helmet-async) est la librairie (react-helmet-async et non pas react-helmet) qui nous permet d'enrichir au fur et à mesure des composants le rendu des balises metas qui aident a la compréhension des robots de moteurs de recherches du contenu de nos pages.
+[Helmet](https://github.com/staylor/react-helmet-async) est la librairie (react-helmet-async et non pas react-helmet) dédiée au SEO. Elle nous permet d'enrichir au fur et à mesure de la profondeur des composants le rendu des balises metas. Les balises metas sont la pour aider les robots des moteurs de recherches à comprendre le contenu de nos pages et faire des affichages "riches".
 
 ##### Webpack & Lazyloading
 Nous utilisons [Webpack](https://webpack.js.org) pour packager nos ressources statiques (modules, chunk...). Le support du code splitting permet le découpage des fichiers JS pour permettre un chargement de l'application optimisé : seules les ressources réellement utilisées à un instant T sont chargées (lazy loading).
