@@ -229,3 +229,7 @@ div.code-toolbar > .toolbar span:focus {
 	text-decoration: none;
 }
 
+.post-content > p > img {
+	max-width: 680px;
+	width: 100%;
+}
