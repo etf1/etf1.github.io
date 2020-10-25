@@ -34,7 +34,7 @@ Pour les applications MYTF1, nous avons fait le choix d’exposer à travers une
 En effet, l’API GraphQL agit comme une API Gateway et se charge d’exposer un modèle de données cohérent et unifié qui répond aux besoins exprimés par les équipes produit/métier.
 Elle a été conçue et créée avec une vision multi-écran et doit être capable de fonctionner aussi bien pour nos applications Web, que pour les applications mobiles ou encore les box opérateurs.
 
-Pour répondre aux différents challenges auxquels nous faisons face, nous avons choisi les technologies suivantes :
+Pour répondre aux différents challenges auxquels nous faisons face, nous avons choisi les technologies suivantes : 
 
 - Langages : [Go](https://golang.org/), [Java](https://www.java.com/)
 - Base de données : [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/), [DynamoDB](https://aws.amazon.com/dynamodb/), [Redis](https://redis.io/)
