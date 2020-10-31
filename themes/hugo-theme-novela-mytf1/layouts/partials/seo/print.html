@@ -140,6 +140,12 @@ square of 800x800 */}}
 {{- $.Scratch.SetInMap "seo" "locale" "en_US" -}}
 {{ end }}
 
+{{/* Keywords 
+	---------------------------- */}}
+{{ with .Site.Params.seo.keywords }}
+{{- $.Scratch.SetInMap "seo" "keywords" . -}}
+{{ end }}
+
 {{/* Canonical
 ---------------------------- */}}
 {{ with .Params.seo.canonical }}
