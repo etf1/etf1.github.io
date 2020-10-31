@@ -122,7 +122,8 @@ Ces données sont ensuite dénormalisées dans des cluster [Redis](https://redis
 
 ## La vidéo
 
-C'est le coeur de métier de MYTF1. Cette partie se compose:
+C'est le coeur de métier de MYTF1. Cette partie se compose :
+
 - d'un backoffice codé en PHP, pour gérer les commandes de replay et éditer les métadonnées des vidéos
 - du workflow vidéo, un ensemble de micro-services GO qui pilotent notamment nos encodeurs elemental
 - des flux vidéo en DASH et HLS
