@@ -5,6 +5,7 @@ hero: /post/2020/global/launch/images/hero.jpg
 excerpt: Bienvenue sur le blog de la direction technique de e-TF1
 authors:
   - rpinsonneau
+description: "Voilà ! Il est enfin là ! Le blog de la direction technique de e-TF1."
 ---
 
 ## Voilà ! Il est enfin là ! Le blog de la direction technique de e-TF1. 
