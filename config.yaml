@@ -13,6 +13,7 @@ markup:
      hrefTargetBlank: 1
 enableRobotsTXT: true
 params:
-  description: "Découvrez les coulisses techniques de MYTF1, la plateforme de streaming vidéo de TF1"
+  description: "Découvrez les coulisses de MYTF1, la plateforme de streaming vidéo de TF1"
   seo:
     default_image: "/images/mytf1.png"
+    locale: "fr_FR"
