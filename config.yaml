@@ -1,9 +1,18 @@
-baseURL: "/"
+baseURL: "https://tech.tf1.fr/"
 languageCode: "fr-FR"
-title: "Blog technique eTF1"
+title: "Blog technique e-TF1"
 theme: "hugo-theme-novela-mytf1"
 pygmentsstyle: "monokai"
 paginate: 6
 social:
   linkedin: "https://www.linkedin.com/company/e-tf1/"
   github: "https://github.com/etf1"
+markup:
+   defaultMarkdownHandler: blackFriday
+   blackFriday:
+     hrefTargetBlank: 1
+enableRobotsTXT: true
+params:
+  description: "Découvrez les coulisses techniques de MYTF1, la plateforme de streaming vidéo de TF1"
+  seo:
+    default_image: "/images/mytf1.png"
