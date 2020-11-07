@@ -1,6 +1,6 @@
 ---
 title: 3, 2, 1... Liftoff ! 🚀
-date: 2020-10-22
+date: 2020-10-22T14:00:00
 hero: /post/2020/global/launch/images/hero.jpg
 excerpt: Bienvenue sur le blog de la direction technique de e-TF1
 authors:

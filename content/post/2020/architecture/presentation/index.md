@@ -1,6 +1,6 @@
 ---
 title: Tour d'horizon technique
-date: 2020-10-22
+date: 2020-10-22T12:00:00
 hero: /post/2020/architecture/presentation/images/hero.jpg
 excerpt: Découvrez les coulisses techniques de MYTF1
 authors:
@@ -127,6 +127,8 @@ C'est le coeur de métier de MYTF1. Cette partie se compose :
 - d'un backoffice codé en PHP, pour gérer les commandes de replay et éditer les métadonnées des vidéos
 - du workflow vidéo, un ensemble de micro-services GO qui pilotent notamment nos encodeurs elemental
 - des flux vidéo en DASH et HLS
+
+Le sujet étant vaste, nous lui avons consacré [un article dédié](/post/2020/architecture/video).
 
 ## Le CMS
 
