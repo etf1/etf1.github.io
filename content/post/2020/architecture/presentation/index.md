@@ -5,6 +5,7 @@ hero: /post/2020/architecture/presentation/images/hero.jpg
 excerpt: Découvrez les coulisses techniques de MYTF1
 authors:
   - rpinsonneau
+description: "Cet article a pour objectif de présenter la stack technique et les technos utilisées dans les coulisses de MYTF1."
 ---
 
 ## Avant propos

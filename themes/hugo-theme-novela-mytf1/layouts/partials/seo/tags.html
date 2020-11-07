@@ -14,6 +14,7 @@
 
 <title>{{ $seo.title }}</title>
 <meta name="description" content="{{ $seo.description }}">
+<meta name="robots" content="index, follow">
 <meta name="google-site-verification" content="8mELmXNpnm-09GtDb3i1kq4Jfq_iR94-yqgo5wN9CdY" />
 <meta property="og:title" content="{{ $seo.title }}">
 <meta property="og:site_name" content="{{ $seo.site_name }}">
@@ -43,3 +44,6 @@
 {{- with $seo.updated_time }}
 <meta property="article:updated_time" content="{{- $seo.updated_time }}">
 {{- end }}
+{{- with $seo.keywords }}
+<meta property="keywords" content="{{- $seo.keywords }}">
+{{- end}}
