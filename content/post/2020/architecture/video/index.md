@@ -138,7 +138,7 @@ Les manifests et chunks pour les différents formats (et chiffrements, pour la D
 
 Les vidéos peuvent provenir de différentes sources:
 
-- le MAM TF1 (media assets manager), notre bibliothèque de programmes prêts à être diffusés (séries, émissions enregistrées ...), avec éventuellement plusieurs pistes audio (VO et/ou audiodescription) et sous-titres (pour VOST et/ou pour sourds et malentendants). Les contenus sont receptionnés quelques heures avant la diffusion, ce qui généralement nous permet une mise en ligne dès la fin de la diffusion antenne.
+- le MAM TF1 (media assets manager), notre bibliothèque de programmes prêts à être diffusés (séries, émissions enregistrées ...), avec éventuellement plusieurs pistes audio (VO et/ou audiodescription) et sous-titres (pour VOST et/ou pour sourds et malentendants). Les contenus sont réceptionnés quelques heures avant la diffusion, ce qui généralement nous permet une mise en ligne dès la fin de la diffusion antenne.
 - le DVR (digital video recorder): nous enregistrons en HLS le direct des chaines et le gardons quelques jours. C'est à partir de là que nous livrons les replays des émissions en direct (JT notamment). Nous commandons une vidéo d'un intervalle de temps (à l'image près) d'une chaine. Ce système va identifier les chunks vidéos nécessaires, puis les recoller (facile avec les chunks en MPEG-TS) et rogner les bouts superflus afin de livrer un MP4 correspondant parfaitement à l'intervalle demandé.
 - le FTP: on peut livrer une vidéo par simple transfert de fichier. C'est utilisé pour les contenus uniquement digitaux (AVOD, SVOD, extraits, pubs, ...)
 
