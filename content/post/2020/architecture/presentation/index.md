@@ -23,6 +23,10 @@ MYTF1 englobe un large spectre de sujets :
 - l'animation des contenus (l'éditorialisation)
 - la gestion des données utilisateurs (historique de lecture, mise en favoris, etc...)
 
+Les principales briques sont les suivantes :
+
+![Schéma architecture](images/archi.svg "Les principales briques de MYTF1.")
+
 ## Les technos utilisées
 
 MYTF1 existe depuis 2011 et a été depuis plusieurs fois refondu from scratch.
