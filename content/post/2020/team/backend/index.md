@@ -1,6 +1,6 @@
 ---
 title: L'équipe Backend
-date: 2020-10-22
+date: 2020-11-22T14:00:00
 hero: /post/2020/architecture/presentation/images/hero.jpg
 excerpt: Welcome to the other side
 authors:
@@ -36,7 +36,7 @@ Elle a été conçue et créée avec une vision multi-écran et doit être capab
 
 Pour répondre aux différents challenges auxquels nous faisons face, nous avons choisi les technologies suivantes : 
 
-- Langages : [Go](https://golang.org/), [Java](https://www.java.com/)
+- Langage : [Go](https://golang.org/)
 - Base de données : [MongoDB](https://www.mongodb.com/), [Elasticsearch](https://www.elastic.co/), [DynamoDB](https://aws.amazon.com/dynamodb/), [Redis](https://redis.io/)
 - Event/Message broker : [RabbitMQ](https://www.rabbitmq.com/), [Kafka](https://kafka.apache.org/)
 - Frameworks Fronts : [Vue.js](https://vuejs.org/), [React](https://reactjs.org/)
@@ -149,7 +149,7 @@ Pour ce faire, nous avons décidé de nous appuyer sur Kafka (plus précisément
 
 Pour la partie CMS, l'idée est de pousser toutes les modifications faites en base dans des topics Kafka dédiés (voir notre projet open source [kafka-mongo-watcher](https://github.com/etf1/kafka-mongo-watcher)). Ensuite ces événements sont traités, transformés puis stockés (voir notre projet open source [kafka-transformer](https://github.com/etf1/kafka-transformer)) dans des instances [Elasticache Redis](https://aws.amazon.com/fr/elasticache/redis/). Nous maintenons alors à jour, en quasi temps réel, notre catalogue de contenu dans un cache partagé sur lequel nous avons directement branché nos instances GraphQL. Deux conséquences : nous ne sommes plus dépendants des *indexers* de données et nous avons supprimé la couche de cache in-memory (non partagée) de notre API GraphQL. Des plus nous avons dénormalisé les données dans Redis de telle manière que le service catalogue devient superflu. Ainsi nous gagnons sur les deux tableaux (latence liée à l'indexation et performance de l'API GraphQL).
 
-Pour traiter certains cas particuliers, nous avons recours à [Kafka Streams](https://kafka.apache.org/documentation/streams/) pour, par exemple, permettre la jointure et l'aggrégation de données en provenance de plusieurs types d'événements différents (exemple : jointure entre les mises à jour des programmes et des vidéos pour produire des curations éditoriales qui sont ensuite stockées dans Redis). Enfin, nous avons introduit un composant *scheduler* dont l'objectif est de produire des événements temporels sur lesquels le système va pouvoir réagir (exemple : expiration d'une vidéo).
+Pour traiter certains cas particuliers, nous avons recours à [Goka](https://github.com/lovoo/goka) pour, par exemple, permettre la jointure et l'aggrégation de données en provenance de plusieurs types d'événements différents (exemple : jointure entre les mises à jour des programmes et des vidéos pour produire des curations éditoriales qui sont ensuite stockées dans Redis). Enfin, nous avons introduit un composant *scheduler* dont l'objectif est de produire des événements temporels sur lesquels le système va pouvoir réagir (exemple : expiration d'une vidéo).
 
 Pour la partie utilisateur, nous avons conservé globalement la même architecture qu'avant mais en la modernisant : 
 
