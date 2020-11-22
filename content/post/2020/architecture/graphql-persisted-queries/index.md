@@ -34,7 +34,7 @@ Les avantages sont les suivants:
 - le GraphQL est vérouillé en production, on ne peut pas explorer le schema avec des requêtes non présentes dans le code
 - le GraphQL n'est pas vérouillé sur les environnment hors production, on garde donc toute la souplesse de l'API pour les developpeurs
 - les requêtes publiques sont connues à l'avance et associées à un TTL qui est transmis dans un header [Cache-Control](https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/Cache-Control) et donc exploité par les CDN
-- réduction des payloads des requêtes (le front n'envoyant plus qu'un ID par appel)
+- réduction des *payloads* des requêtes (le front n'envoyant plus qu'un ID par appel)
 
 Côté serveur, comme nous utilisons une implémentation Go de GraphQL (et non la stack serveur Apollo), nous avons dû réimplémenter toute cette mécanique de gestion des *persisted queries* et en avons profité pour l'adapter à nos besoins.
 
