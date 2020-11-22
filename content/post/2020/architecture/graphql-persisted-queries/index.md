@@ -6,6 +6,7 @@ excerpt: La gestion du cache et l'utilisation des persisted queries avec GraphQL
 authors:
   - rpinsonneau
   - ldechoux
+description: "La gestion du cache et l'utilisation des persisted queries avec GraphQL"
 ---
 
 ## Avant propos
