@@ -18,4 +18,4 @@ jobs:
         uses: chabad360/hugo-gh-pages@master
         with:
           githubToken: ${{ secrets.PERSONAL_TOKEN }}
-          cname: https://etf1.github.io/
+          cname: tech.tf1.fr

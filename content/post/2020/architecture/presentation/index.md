@@ -1,10 +1,11 @@
 ---
 title: Tour d'horizon technique
-date: 2020-10-22
+date: 2020-10-22T12:00:00
 hero: /post/2020/architecture/presentation/images/hero.jpg
 excerpt: Découvrez les coulisses techniques de MYTF1
 authors:
   - rpinsonneau
+description: "Cet article a pour objectif de présenter la stack technique et les technos utilisées dans les coulisses de MYTF1."
 ---
 
 ## Avant propos
@@ -21,6 +22,10 @@ MYTF1 englobe un large spectre de sujets :
 - la recommandation de contenu (la data)
 - l'animation des contenus (l'éditorialisation)
 - la gestion des données utilisateurs (historique de lecture, mise en favoris, etc...)
+
+Les principales briques sont les suivantes :
+
+![Schéma architecture](images/archi.svg "Les principales briques de MYTF1.")
 
 ## Les technos utilisées
 
@@ -99,7 +104,7 @@ Tous les players sont constitués d'une couche métier (Core) et d'une couche pr
 
 Aujourd'hui le backend est constitué d'un ensemble de micro-services écrits en [Go](https://golang.org). Après la période [NodeJS](https://nodejs.org/), nous avons décidé de retourner à un langage fortement typé. La façon dont Go gère la concurrence (Goroutine) permet de tenir le fort trafic de MYTF1 et est particulièrement adapté à un écosystème **kubernetes** :
 
-- emprunte mémoire faible
+- empreinte mémoire faible
 - démarrage rapide (binaire compilé)
 - taille des images docker réduite
 - idéal pour des services HTTP / [gRPC](https://grpc.io)
@@ -118,6 +123,17 @@ L'API [GraphQL](https://graphql.org) est une brique centrale pour MYTF1. Nous l'
 
 Nous utilisons [MongoDB](https://www.mongodb.com) et [PostgreSQL](https://www.postgresql.org) pour les bases de données de référence.
 Ces données sont ensuite dénormalisées dans des cluster [Redis](https://redis.io). Nous avons adopté une architecture "Event Driven" en nous appuyant sur [Kafka](https://kafka.apache.org) pour maintenir une synchronisation constante entre ces bases de données.
+
+
+## La vidéo
+
+C'est le coeur de métier de MYTF1. Cette partie se compose :
+
+- d'un backoffice codé en PHP, pour gérer les commandes de replay et éditer les métadonnées des vidéos
+- du workflow vidéo, un ensemble de micro-services GO qui pilotent notamment nos encodeurs elemental
+- des flux vidéo en DASH et HLS
+
+Le sujet étant vaste, nous lui avons consacré [un article dédié](/post/2020/architecture/video).
 
 ## Le CMS
 
