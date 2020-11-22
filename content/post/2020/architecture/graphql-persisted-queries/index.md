@@ -19,7 +19,7 @@ Sur MYTF1 nous manipulons deux grandes catégories de données, celles dites pub
 Pour tenir la charge, différents niveaux de caches sont utilisés:
 
 - le cache client [Apollo](https://www.apollographql.com/), permet d'avoir un cache cohérent au niveau d'un front pour un utilisateur (données privées et publiques)
-- les CDN ([cloudfront](https://aws.amazon.com/cloudfront/)) permettent de mettre en cache les données publiques et le flux vidéo coté backend
+- les CDN ([CloudFront](https://aws.amazon.com/cloudfront/)) permettent de mettre en cache les données publiques et le flux vidéo coté backend
 - les bases de données [Redis](https://redis.io/) permettent de stockée les sessions utilisateurs (avec leur données privées) ou d'avoir une vision dénormalisée des données publiques (répliquées depuis le CMS)
 
 ### GraphQL et les persisted queries
