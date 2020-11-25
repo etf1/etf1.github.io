@@ -1,7 +1,7 @@
 ---
 title: GraphQL et les persisted queries
 date: 2020-11-25T07:45:00
-hero: /post/2020/architecture/graphql-persisted-queries/images/hero-v2.jpg
+hero: /post/2020/architecture/graphql-and-persisted-queries/images/hero-v2.jpg
 excerpt: La gestion du cache et l'utilisation des persisted queries avec GraphQL
 authors:
   - rpinsonneau
