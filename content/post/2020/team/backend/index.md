@@ -1,6 +1,6 @@
 ---
 title: L'équipe Backend
-date: 2020-12-16T10:00:00
+date: 2020-12-17T10:00:00
 hero: /post/2020/team/backend/images/hero.jpg
 excerpt: Welcome to the other side
 authors:
