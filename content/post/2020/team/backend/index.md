@@ -13,6 +13,7 @@ Cet article a pour objectif de présenter l'équipe Backend et n'est en aucun ca
 
 ## Qui sommes nous ?
 Intégrée au sein de e-TF1 (antenne digitale du groupe TF1) l’équipe Backend a pour objectif de répondre aux problématiques suivantes :
+
 - Gérer la mise en ligne et l’animation éditoriale de notre contenu
 - Stocker et restituer les données utilisateurs (historique et progression de lecture, programme favoris, bookmarks etc.)
 - Exporter/partager notre catalogue de contenu avec nos partenaires (FAI, Salto, etc.)
