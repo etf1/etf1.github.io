@@ -5,6 +5,7 @@ hero: /post/2020/team/backend/images/hero.jpg
 excerpt: Welcome to the other side
 authors:
   - ldechoux
+description: "Découvrez l'équipe backend qui se cache derrière MYTF1"
 ---
 
 ## Avant propos
