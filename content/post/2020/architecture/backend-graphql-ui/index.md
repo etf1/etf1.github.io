@@ -1,5 +1,5 @@
 ---
-title: Notre utilisation du langage GraphQL pour nos UI BACKEND
+title: L'utilisation du langage GraphQL pour nos UI BACKEND
 date: 2020-12-21T09:00:00
 hero: /post/2020/architecture/backend-graphql-ui/images/graphql.png
 excerpt: Nos différentes manières d’ajouter GraphQL à nos applications Intranets
