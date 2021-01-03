@@ -61,7 +61,7 @@ Un cahier des charges est défini et de nouveaux enjeux apparaissent :
 - Gestion de l’historique et de la reprise de lecture
 - Mise en favoris des programmes
 
-À ce stade, nous sentons bien que le socle technologique existant a atteint ses limites et qu’il faut envisager des changements radicaux.
+À ce stade, nous sentons bien que le socle technologique existant a atteint ses limites et qu’il faut envisager des changements drastiques.
 Une petite équipe est montée pour relever ce défi. Elle deviendra plus tard l'équipe Backend.
 
 Nous ferons alors plusieurs choix structurants :
@@ -149,7 +149,7 @@ Pour ce faire, nous avons décidé de nous appuyer sur Kafka (plus précisément
 - Les fichiers parquet de recommandation que nous injectons dans des topics Kafka
 - Les actions des utilisateurs (lecture vidéo, enregistrement de l'avancée de lecture, mise en favoris, etc..)
 
-Pour la partie CMS, l'idée est de pousser toutes les modifications faites en base dans des topics Kafka dédiés (voir notre projet open source [kafka-mongo-watcher](https://github.com/etf1/kafka-mongo-watcher)). Ensuite ces événements sont traités, transformés puis stockés (voir notre projet open source [kafka-transformer](https://github.com/etf1/kafka-transformer)) dans des instances [Elasticache Redis](https://aws.amazon.com/fr/elasticache/redis/). Nous maintenons alors à jour, en quasi temps réel, notre catalogue de contenu dans un cache partagé sur lequel nous avons directement branché nos instances GraphQL. Deux conséquences : nous ne sommes plus dépendants des *indexers* de données et nous avons supprimé la couche de cache in-memory (non partagée) de notre API GraphQL. Des plus nous avons dénormalisé les données dans Redis de telle manière que le service catalogue devient superflu. Ainsi nous gagnons sur les deux tableaux (latence liée à l'indexation et performance de l'API GraphQL).
+Pour la partie CMS, l'idée est de pousser toutes les modifications faites en base dans des topics Kafka dédiés (voir notre projet open source [kafka-mongo-watcher](https://github.com/etf1/kafka-mongo-watcher)). Ensuite ces événements sont traités, transformés puis stockés (voir notre projet open source [kafka-transformer](https://github.com/etf1/kafka-transformer)) dans des instances [Elasticache Redis](https://aws.amazon.com/fr/elasticache/redis/). Nous maintenons alors à jour, en quasi temps réel, notre catalogue de contenu dans un cache partagé sur lequel nous avons directement branché nos instances GraphQL. Deux conséquences : nous ne sommes plus dépendants des *indexers* de données et nous avons supprimé la couche de cache in-memory (non partagée) de notre API GraphQL. De plus nous avons dénormalisé les données dans Redis de telle manière que le service catalogue devient superflu. Ainsi nous gagnons sur les deux tableaux (latence liée à l'indexation et performance de l'API GraphQL).
 
 Pour traiter certains cas particuliers, nous avons recours à [Goka](https://github.com/lovoo/goka) pour, par exemple, permettre la jointure et l'aggrégation de données en provenance de plusieurs types d'événements différents (exemple : jointure entre les mises à jour des programmes et des vidéos pour produire des curations éditoriales qui sont ensuite stockées dans Redis). Enfin, nous avons introduit un composant *scheduler* dont l'objectif est de produire des événements temporels sur lesquels le système va pouvoir réagir (exemple : expiration d'une vidéo).
 
