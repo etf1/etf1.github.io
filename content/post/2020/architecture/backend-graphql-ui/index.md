@@ -14,9 +14,10 @@ Nous avons déjà eu l’occasion de montrer que les échanges de données entre
 
 ## Pourquoi GraphQL
 
+
 ![Logo GraphQL](images/graphql.png "GraphQL")
 
-D’abord pour la souplesse apportée par GraphQL. GraphQL met de l’huile dans les rouages Back - Front. Côté back, nos développeurs mettent à disposition les données métier de manière suffisamment exhaustive. Côté Front, une fois l’api GraphQL disponible, les développeurs peuvent parcourir la documentation à l’aide de Graphiql et y piocher uniquement les champs dont ils ont besoin.
+D’abord pour la souplesse apportée par GraphQL. GraphQL met de l’huile dans les rouages Back - Front. Côté back, nos développeurs mettent à disposition les données métier de manière suffisamment exhaustive. Côté Front, une fois l’api GraphQL disponible, les développeurs peuvent parcourir la documentation à l’aide de [Graphiql](https://github.com/graphql/graphiql) et y piocher uniquement les champs dont ils ont besoin.
 
 Ensuite, GraphQL normalise la composition de requêtes/mutations à l’aide de Fragments. Ce qui évite les répétitions parfois sources de bugs.
 
@@ -24,7 +25,7 @@ Ensuite, GraphQL normalise la composition de requêtes/mutations à l’aide de 
 <span style="color:grey;margin-left:10px">Einstein</span>
 </p>
 
-Un autre avantage de GraphQL est l’utilisation d’alias permettant plus de souplesse encore pour transformer un model serveur vers un modèle client. Cela permet, par exemple de découper un tableau en propriétés métiers côté client :
+Un autre avantage de GraphQL est l’utilisation d’alias permettant une meilleure identification des requêtes pour transformer un modèle serveur vers un modèle client. Cela permet de découper un tableau en propriétés métiers côté client. Comme dans l'exemple qui suit :
 
 ```javascript
 webProps: streamProperties(forScreen: WEB) {
@@ -40,7 +41,7 @@ iptvProps: streamProperties(forScreen: IPTV) {
 
 Bien entendu, même si dans nos projets nous n’avons pas eu besoin de plus, le langage GraphQL est encore plus riche, on pourra s’en rendre compte ici: [2 More GraphQL Concepts](https://www.howtographql.com/advanced/2-more-graphql-concepts/).
 
-La documentation Graphiql est également un vrai plus pour parcourir les modèles de requêtes et de mutations possibles. Comme ce composant est en React et en open source, nous avons pu le customiser un peu pour y ajouter un header d’authentification ou encore la prévisualisation pour certaines URL d’images.
+La documentation Graphiql est également un vrai plus pour parcourir les modèles de requêtes et de mutations possibles. Comme ce composant est en React et en open source, nous avons pu le personnaliser un peu pour y ajouter un header d’authentification ou encore la prévisualisation pour certaines URL d’images.
 
 Par chance, le langage GraphQL est relativement simple à implémenter côté back et encore plus simple côté front, avec des librairies riches et abouties déjà disponibles.
 
@@ -48,7 +49,7 @@ Par chance, le langage GraphQL est relativement simple à implémenter côté ba
 
 ![Logo Apollo](images/apollo.png "Apollo")
 
-Lorsqu’on parle de GraphQL, aujourd’hui, il n’est pas rare de lui associer la librairie Apollo tout simplement parce que cette implémentation GraphQL est complète, riche et adaptée à tous les frameworks (en ce qui nous concerne Vue et React) par ailleurs Apollo dispose déjà des définitions de types pour Typescript, la majorité de nos projets React sont en Typescript.
+Lorsqu’on parle de GraphQL, aujourd’hui, il n’est pas rare de lui associer la librairie Apollo tout simplement parce que cette implémentation GraphQL est complète, riche et adaptée à tous les frameworks (en ce qui nous concerne Vue et React). Par ailleurs, Apollo dispose déjà des définitions de types pour Typescript, la majorité de nos projets React sont en Typescript.
 
 ### La gestion du cache de données
 
@@ -68,7 +69,7 @@ Nous avons eu à plusieurs reprises besoin d’ajouter ce paramètre “fetchPol
 
 ### Les composants UI Apollo et les requêtes depuis le client Apollo
 
-Pour nos applications React, nous avons aussi bien utilisé les composants disponibles dans la librairie Apollo, que des appels directs en utilisant le client Apollo. Avec l’apparition des hooks, il serait toutefois assez logique que notre utilisation de composants pour représenter des requêtes GraphQL décline.
+Pour nos applications React, nous avons aussi bien utilisé les composants disponibles dans la librairie Apollo que des appels directs en utilisant le client Apollo. Avec l’apparition des hooks, il serait toutefois assez logique que notre utilisation de composants pour représenter des requêtes GraphQL décline.
 
 ### Ajout des headers aux requêtes Apollo
 
@@ -76,7 +77,7 @@ En voulant sécuriser par tokens JWT, certaines de nos applications intranet, no
 
 ![Apollo Link](images/apollo-link.png "Apollo Link")
 
-Les Links peuvent être enchaînées. Nous avons utilisés en particulier le Link “createHttpLink” avec l’opération “setContext” pour ajouter, lors de la création du client Apollo, le header d'autorisation avec le token en quelques lignes:
+Les Links peuvent être enchaînés. Nous avons utilisés en particulier le Link “createHttpLink” avec l’opération “setContext” pour ajouter, lors de la création du client Apollo, le header d'autorisation avec le token en quelques lignes:
 
 ```javascript
     …
@@ -107,11 +108,11 @@ Les Links peuvent être enchaînées. Nous avons utilisés en particulier le Lin
 
 Pour en savoir plus sur le middleware Link d’Apollo : [Apollo Link Overview](https://www.apollographql.com/docs/link/overview/)
 
-Bref, Apollo est une librairie à la fois riche et de haut niveau, tout en restant hautement configurable. Mais as-t-on toujours besoin d’Apollo pour faire du GraphQL ?
+Bref, Apollo est une librairie à la fois riche et de haut niveau, tout en restant hautement configurable. Mais a-t-on toujours besoin d’Apollo pour faire du GraphQL ?
 
 ## Début d’implémentation d’un client GraphQL simple
 
-Nous avons des applications pour lesquelles la liaison avec l’api GraphQL du serveur se résume à deux trois requêtes GraphQL simples. Faut-il ajouter une librairie riche comme Apollo pour de simples appels ? Pas forcément, et d’ailleurs, pour l’un de nos projets en React, nous avons fait le choix de l’éviter. Nous sommes parti d’un simple “fetch”, y avons ajouté un header application/json, et voici nos requêtes :
+Nous avons des applications pour lesquelles la liaison avec l’API GraphQL se résume simplement à deux ou trois requêtes. Faut-il ajouter une librairie riche comme Apollo pour cela ? Pas forcément, et d’ailleurs, pour l’un de nos projets en React, nous avons fait le choix de l’éviter. Nous sommes parti d’un simple “fetch”, y avons ajouté un header application/json, et voici nos requêtes :
 
 ```javascript
   const getMediaById = `query getMediaById($mediaID: String!) {
