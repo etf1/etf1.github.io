@@ -159,4 +159,4 @@ Et pour l’upload GraphQL côté Backend ? Il se trouve que nous avons des spé
 
 ## Conclusion
 
-Le choix initial d’utiliser GraphQL se révèle aujourd’hui encore un choix judicieux tant il apporte de fluidité dans l’interaction entre les développeurs back et front. Au final, côté client, l’effort pour passer d’une expérience REST classique au langage Graphql, aura été vraiment minime notamment grâce à des librairies comme Apollo, compatibles pour nos projets Vue, React, en Javascript comme en Typescript. Dans certains cas assez simples, on peut tout aussi bien se passer de librairies complémentaires.
+Le choix initial d’utiliser GraphQL se révèle aujourd’hui encore un choix judicieux tant il apporte de fluidité dans l’interaction entre les développeurs back et front. Au final, côté client, l’effort pour passer d’une expérience REST classique au langage GraphQL, aura été vraiment minime notamment grâce à des librairies comme Apollo, compatibles pour nos projets Vue, React, en Javascript comme en Typescript. Dans certains cas assez simples, on peut tout aussi bien se passer de librairies complémentaires.
