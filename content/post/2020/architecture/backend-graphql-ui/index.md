@@ -12,7 +12,6 @@ description: "Comment nous intégrons GraphQL à nos applications internes"
 
 Nous avons déjà eu l’occasion de montrer que les échanges de données entre les fronts MYTF1 et les API back, s’effectuent au travers d'une gateway GraphQL (voir: [GraphQL et les persisted queries](https://tech.tf1.fr/post/2020/architecture/graphql-and-persisted-queries/)). Plus encore, le langage GraphQL est également majoritairement utilisé dans nos applications internes (CMS MYTF1, Administration, Configurations, Gestion des droits). Nous proposons ici, de vous présenter nos différentes manières d’ajouter GraphQL à nos applications internes.
 
-(Cet article n'est pas tout à fait une introduction au langage GraphQL, une connaissance rudimentaire de ce langage serait un plus.)
 
 ## Pourquoi GraphQL
 
