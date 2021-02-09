@@ -12,6 +12,8 @@ description: "Comment nous intégrons GraphQL à nos applications internes"
 
 Nous avons déjà eu l’occasion de montrer que les échanges de données entre les fronts MYTF1 et les API back, s’effectuent au travers d'une gateway GraphQL (voir: [GraphQL et les persisted queries](https://tech.tf1.fr/post/2020/architecture/graphql-and-persisted-queries/)). Plus encore, le langage GraphQL est également majoritairement utilisé dans nos applications internes (CMS MYTF1, Administration, Configurations, Gestion des droits). Nous proposons ici, de vous présenter nos différentes manières d’ajouter GraphQL à nos applications internes.
 
+(Cet article n'est pas tout à fait une introduction au langage GraphQL, une connaissance rudimentaire de ce langage serait un plus.)
+
 ## Pourquoi GraphQL
 
 
@@ -39,7 +41,7 @@ iptvProps: streamProperties(forScreen: IPTV) {
 }
 ```
 
-Bien entendu, même si dans nos projets nous n’avons pas eu besoin de plus, le langage GraphQL est encore plus riche, on pourra s’en rendre compte ici: [2 More GraphQL Concepts](https://www.howtographql.com/advanced/2-more-graphql-concepts/).
+On trouvera plus de détails sur ces avantages ici par exemple: [2 More GraphQL Concepts](https://www.howtographql.com/advanced/2-more-graphql-concepts/).
 
 La documentation Graphiql est également un vrai plus pour parcourir les modèles de requêtes et de mutations possibles. Comme ce composant est en React et en open source, nous avons pu le personnaliser un peu pour y ajouter un header d’authentification ou encore la prévisualisation pour certaines URL d’images.
 
@@ -104,7 +106,7 @@ Les Links peuvent être enchaînés. Nous avons utilisés en particulier le Link
     …
 ```
 
-(A noter que l’on peut également passer un context spécifiquement pour une requête en particulier).
+A noter que l’on peut également passer un context spécifiquement pour une requête en particulier.
 
 Pour en savoir plus sur le middleware Link d’Apollo : [Apollo Link Overview](https://www.apollographql.com/docs/link/overview/)
 
