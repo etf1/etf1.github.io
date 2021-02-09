@@ -17,7 +17,7 @@ Nous avons déjà eu l’occasion de montrer que les échanges de données entre
 
 ![Logo GraphQL](images/graphql.png "GraphQL")
 
-D’abord pour la souplesse apportée par GraphQL. GraphQL met de l’huile dans les rouages Back - Front. Côté back, nos développeurs mettent à disposition les données métier de manière suffisamment exhaustive. Côté Front, une fois l’api GraphQL disponible, les développeurs peuvent parcourir la documentation à l’aide de [Graphiql](https://github.com/graphql/graphiql) et y piocher uniquement les champs dont ils ont besoin.
+D’abord pour la souplesse apportée par GraphQL. GraphQL met de l’huile dans les rouages Back - Front. Côté back, nos développeurs mettent à disposition les données métier de manière suffisamment exhaustive. Côté Front, une fois l’api GraphQL disponible, les développeurs peuvent parcourir la documentation à l’aide de [GraphiQL](https://github.com/graphql/graphiql) et y piocher uniquement les champs dont ils ont besoin.
 
 Ensuite, GraphQL normalise la composition de requêtes/mutations à l’aide de Fragments. Ce qui évite les répétitions parfois sources de bugs.
 
