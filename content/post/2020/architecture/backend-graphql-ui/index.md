@@ -73,7 +73,7 @@ Pour nos applications React, nous avons aussi bien utilisé les composants dispo
 
 ### Ajout des headers aux requêtes Apollo
 
-En voulant sécuriser par tokens JWT, certaines de nos applications intranet, nous avons utilisé un peu du middleware Link d’Apollo. Dans la terminologie Apollo, un Link est une fonction qui prend une opération et retourne un observable.
+En voulant sécuriser par tokens JWT certaines de nos applications internes, nous avons utilisé un peu du middleware Link d’Apollo. Dans la terminologie Apollo, un Link est une fonction qui prend une opération et retourne un observable.
 
 ![Apollo Link](images/apollo-link.png "Apollo Link")
 
