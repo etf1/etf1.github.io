@@ -5,7 +5,7 @@ hero: /post/2020/architecture/backend-graphql-ui/images/graphql.png
 excerpt: Nos différentes manières d’ajouter GraphQL à nos applications internes
 authors:
   - eferte
-description: "Nos différentes manières d’ajouter GraphQL à nos applications Intranets côté BACKEND"
+description: "Comment nous intégrons GraphQL à nos applications internes"
 ---
 
 ## Avant propos
