@@ -155,7 +155,7 @@ const body = {
 
 Pour les curieux, la norme est spécifiée ici : [Spécifications](https://github.com/jaydenseric/graphql-multipart-request-spec).
 
-Et pour l’upload GraphQL côté Backend ? Il se trouve que nous avons des spécialistes du Go qui l’ont implémenté avec brio comme expliqué ici: [Uploader des fichiers via un middleware GraphQL](https://vincent.composieux.fr/article/uploader-des-fichiers-via-un-middleware-graphql) ;-)
+Et pour l’upload GraphQL côté Backend ? Il se trouve que nous avons des spécialistes du Go qui l’ont implémenté avec brio comme expliqué ici: [Uploader des fichiers via un middleware GraphQL](https://vincent.composieux.fr/article/uploader-des-fichiers-via-un-middleware-graphql) 😉
 
 ## Conclusion
 
