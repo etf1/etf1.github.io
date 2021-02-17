@@ -12,6 +12,7 @@ description: "Comment nous intégrons GraphQL à nos applications internes"
 
 Nous avons déjà eu l’occasion de montrer que les échanges de données entre les fronts MYTF1 et les API back, s’effectuent au travers d'une gateway GraphQL (voir: [GraphQL et les persisted queries](https://tech.tf1.fr/post/2020/architecture/graphql-and-persisted-queries/)). Plus encore, le langage GraphQL est également majoritairement utilisé dans nos applications internes (CMS MYTF1, Administration, Configurations, Gestion des droits). Nous proposons ici, de vous présenter nos différentes manières d’ajouter GraphQL à nos applications internes.
 
+(Cet article n'est pas tout à fait une introduction au langage GraphQL, une connaissance rudimentaire de ce langage serait un plus.)
 
 ## Pourquoi GraphQL
 
@@ -160,4 +161,4 @@ Et pour l’upload GraphQL côté Backend ? Il se trouve que nous avons des spé
 
 ## Conclusion
 
-Le choix initial d’utiliser GraphQL se révèle aujourd’hui encore un choix judicieux tant il apporte de fluidité dans l’interaction entre les développeurs back et front. Au final, côté client, l’effort pour passer d’une expérience REST classique au langage GraphQL, aura été vraiment minime notamment grâce à des librairies comme Apollo, compatibles pour nos projets Vue, React, en Javascript comme en Typescript. Dans certains cas assez simples, on peut tout aussi bien se passer de librairies complémentaires.
+Le choix initial d’utiliser GraphQL se révèle aujourd’hui encore un choix judicieux tant il apporte de fluidité dans l’interaction entre les développeurs back et front. Au final, côté client, l’effort pour passer d’une expérience REST classique au langage GraphQL, aura été vraiment minime notamment grâce à des librairies comme Apollo, compatibles pour nos projets Vue, React, en Javascript comme en Typescript. Dans certains cas assez simples (pas de problématiques de sécurité, de performance...), on peut tout aussi bien se passer de librairies complémentaires.
