@@ -128,10 +128,10 @@ Nous avons des applications pour lesquelles la liaison avec l’API GraphQL se r
      variables: { mediaID: fileSlug },
    };
 
-   const data = await postGraphql(body);
+   const data = await postGraphql(body); // 'postGraphql()' effecture un simple fetch...
 ```
 
-Cette implémentation est un peu trop simpliste, nous perdons notamment le cache Apollo. Mais a-t-on nécessairement besoin de plus ? Bon, en réalité, on a fini par implémenter un mini cache en quelques dizaines de lignes pour éviter de faire deux appels identiques en un temps très court… :-) On notera l’utilisation des “Templates strings” qui simulent l’ajout de Fragments GraphQL.
+Cette implémentation est un peu trop simpliste, nous perdons notamment le cache Apollo. Mais a-t-on nécessairement besoin de plus ? Bon, en réalité, on a fini par implémenter un mini cache en quelques dizaines de lignes pour éviter de faire deux appels identiques en un temps très court… :-). Pour un cache plus sophistiqué, on pourrait peut-être se tourner vers [react-query](https://react-query.tanstack.com/) par exemple. On notera l’utilisation des “Templates strings” qui simulent l’ajout de Fragments GraphQL.
 
 D’accord, mais comment fait-on, par exemple, pour uploader un fichier en GraphQL ? Avec Apollo, la chose était aisée. Or, en y regardant de plus près, après quelques recherches sur le net, il se trouve que c’est tout aussi facile d’implémenter l’upload GraphQL sans Apollo. Il faut juste connaître un peu la norme utilisée par Apollo et, en quelques lignes, nous pouvons ajouter l’Upload pour un fichier :
 
