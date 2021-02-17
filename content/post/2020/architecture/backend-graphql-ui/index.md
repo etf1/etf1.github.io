@@ -79,7 +79,7 @@ En voulant sécuriser par tokens JWT certaines de nos applications internes, nou
 
 ![Apollo Link](images/apollo-link.png "Apollo Link")
 
-Les Links peuvent être enchaînés. Nous avons utilisés en particulier le Link “createHttpLink” avec l’opération “setContext” pour ajouter, lors de la création du client Apollo, le header d'autorisation avec le token en quelques lignes:
+Les Links peuvent être enchaînés. Nous avons utilisé en particulier le Link “createHttpLink” avec l’opération “setContext” pour ajouter, lors de la création du client Apollo, le header d'autorisation avec le token en quelques lignes:
 
 ```javascript
     …
@@ -114,7 +114,7 @@ Bref, Apollo est une librairie à la fois riche et de haut niveau, tout en resta
 
 ## Début d’implémentation d’un client GraphQL simple
 
-Nous avons des applications pour lesquelles la liaison avec l’API GraphQL se résume simplement à deux ou trois requêtes. Faut-il ajouter une librairie riche comme Apollo pour cela ? Pas forcément, et d’ailleurs, pour l’un de nos projets en React, nous avons fait le choix de l’éviter. Nous sommes parti d’un simple “fetch”, y avons ajouté un header application/json, et voici nos requêtes :
+Nous avons des applications pour lesquelles la liaison avec l’API GraphQL se résume simplement à deux ou trois requêtes. Faut-il ajouter une librairie riche comme Apollo pour cela ? Pas forcément, et d’ailleurs, pour l’un de nos projets en React, nous avons fait le choix de l’éviter. Nous sommes partis d’un simple “fetch”, y avons ajouté un header application/json, et voici nos requêtes :
 
 ```javascript
   const getMediaById = `query getMediaById($mediaID: String!) {
