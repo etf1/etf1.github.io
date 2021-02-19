@@ -1,6 +1,6 @@
 ---
 title: La vidéo
-date: 2020-10-22T10:00:00
+date: 2020-10-22T16:00:00
 hero: /post/2020/architecture/video/images/archi-video.svg
 excerpt: Le fonctionnement de la plateforme vidéo de MYTF1
 authors:
