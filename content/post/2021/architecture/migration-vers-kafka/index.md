@@ -1,6 +1,6 @@
 ---
 title: Migration du backend MYTF1 vers Kafka
-date: 2021-02-19T12:00:00
+date: 2021-02-19T08:30:00
 hero: /post/2021/architecture/migration-vers-kafka/images/hero.jpeg
 excerpt: Nous avons orienté le backend MYTF1 vers du temps réel avec Kafka, voici comment nous avons procédé.
 authors:
