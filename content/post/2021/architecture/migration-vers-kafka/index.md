@@ -167,3 +167,7 @@ Il reste toutefois de nombreux challenges que nous sommes en train de relever, n
 N'hésitez pas à nous contacter si vous souhaitez avoir plus d'informations sur cette migration vers Kafka, nous serons ravis d'échanger sur ces problématiques.
 
 Nous reviendrons également plus en détail sur nos briques open-source dans de futurs articles.
+
+## Crédits
+
+L'image utilisée pour illustrer cet article est fournie par [John Baker](https://unsplash.com/photos/3To9V42K0Ag).
