@@ -1,6 +1,6 @@
 ---
 title: Tour d'horizon technique
-date: 2020-10-22T12:00:00
+date: 2020-10-22T15:00:00
 hero: /post/2020/architecture/presentation/images/hero.jpg
 excerpt: Découvrez les coulisses techniques de MYTF1
 authors:
@@ -32,7 +32,7 @@ Les principales briques sont les suivantes :
 MYTF1 existe depuis 2011 et a été depuis plusieurs fois refondu from scratch.
 
 | Période            | Technos                                                                    |
-| ------------------ | -------------------------------------------------------------------------- |
+|--------------------|----------------------------------------------------------------------------|
 | 2011 - 2015        | html/JS, Android, iOS, PHP, MySQL                                          |
 | 2015 - 2019        | html/JS, Android, iOS, NodeJS, PostgreSQL                                  |
 | 2019 - Aujourd'hui | React, Swift, Kotlin, Go, GraphQL, gRPC, MongoDB, Kafka, Redis, Kubernetes |
