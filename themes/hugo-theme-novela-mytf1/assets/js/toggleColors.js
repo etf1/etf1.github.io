@@ -69,6 +69,7 @@ function toggleColors(){
 }
 
 function makeDark(){
+    be.classList.add('dark');
     bodyElement.style.setProperty('--primary', "#fff");
     bodyElement.style.setProperty('--secondary', "#fff");
     bodyElement.style.setProperty('--grey', "#73737D");
@@ -94,6 +95,7 @@ function makeDark(){
 }
 
 function makeLight(){
+    be.classList.remove('dark');
     bodyElement.style.setProperty('--primary', "");
     bodyElement.style.setProperty('--secondary', "");
     bodyElement.style.setProperty('--grey', "");

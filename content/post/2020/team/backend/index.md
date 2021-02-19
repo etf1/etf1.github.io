@@ -83,7 +83,7 @@ L'application sera finalement lancée en Juillet 2018, pour les utilisateurs de 
 
 La première mouture de notre nouvelle architecture backend est enfin prête :
 
-![2018 - Première version de la nouvelle architecture backend](images/archi_2018.svg "2018 - Première version de la nouvelle architecture backend")
+![2018 - Première version de la nouvelle architecture backend](images/archi_2018.svg#darkmode "2018 - Première version de la nouvelle architecture backend")
 
 Concrétement, nous avons deux sources de données principales, le CMS et les fichiers de recommandation (au format [Parquet](https://parquet.apache.org/)). Via des *indexers*, nous dénormalisons régulièrement ces données dans des bases Elasticsearch qui sont ensuite exposées via des API GRPC dédiées (Catalog et Reco sur le schéma). Pour les données utilisateur, elles sont également stockées dans des bases Elasticsearch. Lorsqu'un utilisateur se connecte, les données qui lui sont associées sont copiées dans des instances Redis qui agissent comme un cache de session. Toutes les écritures sont maintenues à jour de manière synchrone dans Redis puis propagées de manière asynchrone vers nos bases Elasticsearch via des notifications RabbitMQ.
 Les données utilisateur sont accessibles via des API GRPC dédiées (History et Favorites sur le schéma). Au dessus de ces services nous avons notre API GraphQL qui se charge d'unifier les données des différentes briques et en exposer une vision consolidée aux fronts (les box opérateurs dans le cas présent). Pour l'identification des utilisateurs, nous avons fait le choix du token JWT. Un service dédié se charge de générer un token (sur demande du front) qui est ensuite propagé dans tous les appels GraphQL puis vers les services concernés (History et Favorites par exemple). Ainsi nous pouvons facilement identifier l'utilisateur à l'origine de la requête et retrouver, par exemple, son historique de lecture.
@@ -118,7 +118,7 @@ Le gros des travaux commence réellement fin 2018 et concerne l'ensemble des éq
 
 Notre architecture cuvée 2019 ressemble alors à ça :
 
-![2019 -  Schéma d'architecture backend](images/archi_2019.svg "2019 - Schéma d'architecture backend")
+![2019 -  Schéma d'architecture backend](images/archi_2019.svg#darkmode "2019 - Schéma d'architecture backend")
 
 Comme vous pouvez le voir, nous avons enrichi le socle de plusieurs nouveaux composants. Une grosse partie de nos efforts s'est concentrée autour de nos outils internes. En particulier le CMS que nous avons entièrement refondu pour répondre aux nouveaux besoins des équipes éditoriales. Nous avons fait le choix de créer un CMS headless (ie : l'aspect templating est totalement géré par le front) autour de MongoDB et Elasticsearch (pour le stockage des données) et de Vue.js (pour la partie interface graphique). Pour la gestion des images nous avons également créé une nouvelle médiathèque profitant des possibilités de stockages offertes par S3. De plus nous avons introduit un nouveau composant *Image proxy* dont le but est de permettre la mise à l'échelle automatique des images (il est possible d'obtenir une version d'une image à une résolution différente de celle d'origine) et leur conversion dans plusieurs formats (webp, jpeg, png, etc.). Nous avons également ajouté une mécanique de *crop intelligent* qui préserve les parties importantes d'une image (détection des visages, entropie, etc.). Pour ce faire nous nous appuyons sur [OpenCV](https://github.com/opencv/opencv).
 
@@ -141,7 +141,7 @@ Vient ensuite l’aspect performance. Depuis la refonte des produits MYTF1 (auta
 
 La solution que nous avons imaginée est de basculer vers une architecture événementielle :
 
-![2020 -  Schéma d'architecture backend](images/archi_2020.svg "2020 - Schéma d'architecture backend")
+![2020 -  Schéma d'architecture backend](images/archi_2020.svg#darkmode "2020 - Schéma d'architecture backend")
 
 Pour ce faire, nous avons décidé de nous appuyer sur Kafka (plus précisément, l'offre managée [MSK](https://aws.amazon.com/msk/) d'AWS). Plusieurs sources d'événements ont été identifiées :
 

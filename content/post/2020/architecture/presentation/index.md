@@ -25,7 +25,7 @@ MYTF1 englobe un large spectre de sujets :
 
 Les principales briques sont les suivantes :
 
-![Schéma architecture](images/archi.svg "Les principales briques de MYTF1.")
+![Schéma architecture](images/archi.svg#darkmode "Les principales briques de MYTF1.")
 
 ## Les technos utilisées
 
