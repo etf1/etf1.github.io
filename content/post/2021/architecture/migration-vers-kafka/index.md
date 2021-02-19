@@ -5,6 +5,7 @@ hero: /post/2021/architecture/migration-vers-kafka/images/hero.jpeg
 excerpt: Nous avons orienté le backend MYTF1 vers du temps réel avec Kafka, voici comment nous avons procédé.
 authors:
   - vcomposieux
+description: "Venez découvrir pourquoi et comment nous avons mis en oeuvre Kafka sur MYTF1"
 ---
 
 ## Historique
