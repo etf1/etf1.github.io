@@ -1,5 +1,9 @@
 /**************************************ARTICLE HEAD**************************************/
 
+body.dark article img[src*=darkmode]  {
+    filter: invert(100%);
+}
+
 .article-hero{
     @media screen and (max-width: $phablet){
         &::before {
