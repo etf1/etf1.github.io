@@ -36,7 +36,9 @@ Nous allons vous partager notre utilisation d'ExternalDNS.
 ### Contexte eTF1
 Nous voulions être capable de faire du déploiment blue/green de cluster EKS.
 
-La solution que nous avons choisie se base sur l'utilisation de 4 ExternalDNS.
+### La solution adoptée
+
+Nous avons choisi de se baser sur l'utilisation de 4 ExternalDNS.
 
 Pourquoi 4? Explication:
 
