@@ -19,7 +19,7 @@ Le rôle de l'équipe backend est d'**éditorialiser et transformer les données
 
 Jusque là, notre architecture ressemblait à la suivante :
 
-![Architecture avec indexation](images/archi-indexeur.svg "Architecture avec indexation")
+![Architecture avec indexation](images/archi-indexeur.svg#darkmode "Architecture avec indexation")
 
 Globalement, après récupération des données fournies par l'équipe vidéo, nous les stockons dans la base [MongoDB](https://www.mongodb.org) dédiée au CMS qui se charge ensuite de les éditorialiser.
 
@@ -66,7 +66,7 @@ Nous avons donc réfléchi à la mise en place de notre premier lot, pour rappel
 
 Notre architecture évoluerait donc vers ceci :
 
-![Architecture Kafka lot1](images/archi-kafka-lot1.svg "Architecture Kafka lot1")
+![Architecture Kafka lot1](images/archi-kafka-lot1.svg#darkmode "Architecture Kafka lot1")
 
 ### Récupérer les données MongoDB en temps réel
 
@@ -91,7 +91,7 @@ MongoDB dispose en effet d'une mécanique de [Change Streams](https://docs.mongo
 
 Une brique de transformation (Transformer sur le schéma) prend ensuite le relai et récupère donc depuis le topic Kafka les oplogs MongoDB afin de les transformer en objet Protobuf. À ce stade, nous allons alors produire dans un nouveau topic Kafka l'objet Protobuf en question :
 
-![Kafka transformer / projecteur](images/kafka-transformer-projector.svg "Kafka transformer / projecteur")
+![Kafka transformer / projecteur](images/kafka-transformer-projector.svg#darkmode "Kafka transformer / projecteur")
 
 Nous avons ensuite déterminé deux types d'applications pour la suite du traitement :
 
@@ -167,3 +167,7 @@ Il reste toutefois de nombreux challenges que nous sommes en train de relever, n
 N'hésitez pas à nous contacter si vous souhaitez avoir plus d'informations sur cette migration vers Kafka, nous serons ravis d'échanger sur ces problématiques.
 
 Nous reviendrons également plus en détail sur nos briques open-source dans de futurs articles.
+
+## Crédits
+
+L'image utilisée pour illustrer cet article est fournie par [John Baker](https://unsplash.com/photos/3To9V42K0Ag).

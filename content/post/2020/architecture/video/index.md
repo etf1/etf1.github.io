@@ -1,7 +1,7 @@
 ---
 title: La vidéo
 date: 2020-10-22T16:00:00
-hero: /post/2020/architecture/video/images/archi-video.svg
+hero: /post/2020/architecture/video/images/hero.jpg
 excerpt: Le fonctionnement de la plateforme vidéo de MYTF1
 authors:
   - dlecorfec
@@ -68,12 +68,12 @@ différences indéfiniment, que ce soit lors d'un changement de plan ou pour sau
 On aura donc des groupes d'images, composés d'une image complète (image de référence, appelée _I-frame_, ou keyframe) et des différences (prédictives - _P-frame_ - ou bi-prédictives - _B-frame_) nécessaires pour
 reconstruire les images suivantes.
 
-![Dépendances des images P et B](images/ibp.svg "Dépendances des images P et B")
+![Dépendances des images P et B](images/ibp.svg#darkmode "Dépendances des images P et B")
 
 Généralement ces groupes ne constituent pas plus de 2 secondes de vidéo.
 Ces groupes sont appelés des _GOP_ (group of pictures).
 
-![Un GOP de 15 images](images/gop15t.svg "Un GOP de 15 images")
+![Un GOP de 15 images](images/gop15t.svg#darkmode "Un GOP de 15 images")
 
 2 remarques:
 
@@ -126,7 +126,7 @@ Le player va d'abord récupérer un fichier contenant du texte:
 - _main playlist_ (au format [M3U8](https://fr.wikipedia.org/wiki/M3U)) pour le HLS, contenant des métadonnées ainsi que des liens vers des _sous playlists_ M3U8 pour les différents bitrates,
 - _manifest_ (au format [XML](https://fr.wikipedia.org/wiki/Extensible_Markup_Language)) pour le DASH, contenant des métadonnées et des liens vers les chunks des différentes pistes et différents bitates
 
-![Exemple de segmentation HLS](images/hls.svg "Exemple de segmentation HLS")
+![Exemple de segmentation HLS](images/hls.svg#darkmode "Exemple de segmentation HLS")
 
 Pour la protection, nous avons mis en place de la [DRM](https://fr.wikipedia.org/wiki/Gestion_des_droits_num%C3%A9riques) sur certains contenus.
 
@@ -188,4 +188,4 @@ Le système de génération à la demande des différents formats vidéo, avec g
 Nos caches sont basés sur l'excellent serveur Web [nginx](http://nginx.org/), avec des serveurs physiques gavés de RAM et de disques SSD.
 Le sytème de commande DVR s'appuie sur ffmpeg et est écrit en Go.
 
-![Architecture vidéo](images/archi-video.svg "Architecture vidéo")
+![Architecture vidéo](images/archi-video.svg#darkmode "Architecture vidéo")

@@ -18,6 +18,7 @@ function initColors(){
 
 
 function makeDark(){
+    be.classList.add('dark');
     be.style.setProperty('--primary', "#fff");
     be.style.setProperty('--secondary', "#fff");
     be.style.setProperty('--grey', "#73737D");
@@ -38,6 +39,7 @@ function makeDark(){
 }
 
 function makeLight(){
+    be.classList.remove('dark');
     be.style.setProperty('--primary', "");
     be.style.setProperty('--secondary', "");
     be.style.setProperty('--grey', "");

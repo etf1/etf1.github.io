@@ -27,7 +27,7 @@ Historiquement, MYTF1 s'appuie beaucoup sur le cache des CDN. En effet, une gran
 
 Nous avons réutilisé la mécanique de *persisted queries* d'Apollo que nous avons légèrement modifiée. Celle-ci consiste à sauvegarder le corps des requêtes dans une base de données. [Le client Apollo](https://www.apollographql.com/blog/persisted-graphql-queries-with-apollo-client-119fd7e6bba5/) n'envoit qu'un ID (en général un hash du corps de la requête) dans une requête GET pour intérroger le GraphQL. Ce dernier récupére alors le corps de la requête associé à cet ID puis procéde à son exécution. De cette façon il est plus simple de mettre en place du cache CDN. Ce fonctionnement est activé en production, sur les environnements de developpement il reste desactivé pour garder toute la souplesse de GraphQL. Les corps des requêtes sont sauvegardés en base de données au moment du build par notre CI/CD.
 
-![Diagramme explicatif du fonctionnement des persisted queries](images/persisted-queries.svg "Diagramme explicatif du fonctionnement des persisted queries")
+![Diagramme explicatif du fonctionnement des persisted queries](images/persisted-queries.svg#darkmode "Diagramme explicatif du fonctionnement des persisted queries")
 
 Les avantages sont les suivants:
 
