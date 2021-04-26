@@ -385,4 +385,4 @@ On peu conclure que nous déployons 1 pod 1cpu/2Go de ram sur un node tous les 2
 
 ## En conclusion
 Nous sommes satisfait de EKS.  
-Mais nous sommes toujours à la recherche de plus résilience et d'une scalabilités plus inteligente que le cpu/ram et réduire les coûts AWS.  
+Mais nous sommes toujours à la recherche de plus de résilience et d'une scalabilité plus intelligente qu'un simple monitoring des consommations cpu/ram et ainsi réduire les coûts AWS.  
