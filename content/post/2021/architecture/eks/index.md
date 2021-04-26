@@ -244,7 +244,7 @@ On stop les ExternalDNS de production sur eks-blue afin d'arrêter les mises à 
 ![Stop ingress eks-blue](images/stop-ingress-eks-blue.png#darkmode "Stop Ingress EKS blue")
 
 
-On start les ExternalDNS de production sur eks-green afin de mettre à jours tous les entrées DNS
+On start les ExternalDNS de production sur eks-green afin de mettre à jours toutes les entrées DNS
 ![Start ingress eks-blue](images/start-ingress-eks-green.png#darkmode "Start Ingress EKS green")
 
 Il reste plus qu'à vérifier que les anciens ingress n'ont plus de requête et on peut les supprimés.
