@@ -34,7 +34,7 @@ Les outils déployés dans notre cluster EKS:
 Nous allons vous partager notre utilisation d'ExternalDNS.
 
 ### Contexte eTF1
-Nous voulions être capable de faire du déploiment blue/green de cluster EKS.
+Nous voulions être capables de faire du déploiment blue/green de cluster EKS.
 
 ### La solution adoptée
 
@@ -386,6 +386,5 @@ On peu conclure que nous déployons 1 pod 1cpu/2Go de ram sur un node tous les 2
 ## En conclusion
 Nous sommes satisfait de EKS.  
 Mais nous sommes toujours à la recherche de plus résilience et d'une scalabilités plus inteligente que le cpu/ram et réduire les coûts AWS.  
-
 
 
