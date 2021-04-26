@@ -239,7 +239,7 @@ eks-blue est actuellement le cluster actif.
 
 ![Ingress eks-blue](images/ingress-eks-blue.png#darkmode "Ingress EKS blue")
 
-On stop les ExternalDNS de production sur eks-blue afin d'arreter d'update les entrées DNS de production.  
+On stop les ExternalDNS de production sur eks-blue afin d'arrêter les mises à jour des entrées DNS de production.  
 
 ![Stop ingress eks-blue](images/stop-ingress-eks-blue.png#darkmode "Stop Ingress EKS blue")
 
