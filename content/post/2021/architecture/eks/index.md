@@ -247,7 +247,7 @@ On stop les ExternalDNS de production sur eks-blue afin d'arrêter les mises à 
 On start les ExternalDNS de production sur eks-green afin de mettre à jours toutes les entrées DNS
 ![Start ingress eks-blue](images/start-ingress-eks-green.png#darkmode "Start Ingress EKS green")
 
-Il reste plus qu'à vérifier que les anciens ingress n'ont plus de requête et on peut les supprimés.
+Il ne reste plus qu'à vérifier que les anciens ingress ne reçoivent plus de trafic avant de les supprimer.
 
 #### Pour la partie kubeconfig.  
 Les entrées DNS pour l'API et le champs TXT sont mise à jours via le pipeline CI/CD.
