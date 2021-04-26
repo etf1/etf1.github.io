@@ -187,7 +187,7 @@ spec:
         fsGroup: 65534
 ```  
 
-Le fichier Deploy de l'ExternalDNS publique production
+Le fichier Deploy de l'ExternalDNS publique de production
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -386,4 +386,3 @@ On peu conclure que nous déployons 1 pod 1cpu/2Go de ram sur un node tous les 2
 ## En conclusion
 Nous sommes satisfait de EKS.  
 Mais nous sommes toujours à la recherche de plus résilience et d'une scalabilités plus inteligente que le cpu/ram et réduire les coûts AWS.  
-
