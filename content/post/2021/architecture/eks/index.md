@@ -6,8 +6,19 @@ authors:
   - koguchi
 description: "Venez découvrir EKS chez eTF1"
 ---
+## Avant propos
 
-## L'architecture
+Cet article a pour objectif de présenter le cluster EKS qui héberge les applications de e-TF1.  
+Avec un focus sur le mécanisme de blue/green de cluster et la scalabilité chez e-TF1. 
+
+## EKS
+
+EKS est le service Kubernetes géré par AWS.  
+AWS fournit le controle plane (master) et également de workload (worker).
+
+Nous utilisons actuellement uniquement la partie controle plane.  
+Car lors de notre début sur EKS, il n'y avait pas de gestion de la partie worker.
+
 
 ![Architecture EKS](images/EKS.png#darkmode "Architecture EKS")
 
@@ -30,7 +41,7 @@ Les outils déployés dans notre cluster EKS:
 * Metrics Server
 * FluentD
 
-## Focus ExternalDNS et Autoscaling.
+## Focus ExternalDNS et Scaling.
 Nous allons vous partager notre utilisation d'ExternalDNS.
 
 ### Contexte eTF1
