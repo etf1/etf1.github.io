@@ -380,7 +380,7 @@ spec:
 ```
 
 Avec la configuration de cluster-proportional-autoscaler + la configuration du deploy overprovisoning.  
-On peu conclure que nous déployons 1 pod 1cpu/2Go de ram sur un node tous les 20cores ou 6 nodes. 
+On peu conclure que nous déployons 1 pod 1cpu/2Go de ram sur un node tous les 20 cores ou 6 nodes. 
 
 
 ## En conclusion
