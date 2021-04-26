@@ -250,7 +250,7 @@ On start les ExternalDNS de production sur eks-green afin de mettre à jours tou
 Il ne reste plus qu'à vérifier que les anciens ingress ne reçoivent plus de trafic avant de les supprimer.
 
 #### Pour la partie kubeconfig.  
-Les entrées DNS pour l'API et le champs TXT sont mise à jours via le pipeline CI/CD.
+Les entrées DNS pour l'API et le champs TXT sont mis à jours via le pipeline CI/CD.
 
 Le champs TXT est utilisé pour connaître la partie cluster name pour aws-authenticator de façon transparente avec un wrapper comme ci-dessous.
 
