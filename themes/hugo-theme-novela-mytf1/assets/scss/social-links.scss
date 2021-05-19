@@ -1,6 +1,6 @@
 .social-icon-outer{
     width: 20px;
-    min-width: 10%;
+    min-width: 15%;
 }
 
 /*TABLET*/
@@ -58,6 +58,8 @@
 }
 
 .social-icon-image{
+    width: 1.5em !important;
+    height: 1.5em !important;
     path{
         fill: var(--grey);
     }
