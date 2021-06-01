@@ -7,8 +7,8 @@ hero: /authors/eferte/avatar.jpg
 avatar: /authors/eferte/avatar.jpg
 featured: true
 social:
-  - title: github
+  - title: 3_github
     url: https://github.com/eferte
-  - title: linkedin
+  - title: 2_linkedin
     url: https://www.linkedin.com/in/emmanuel-ferté-96a19b3/
 ---

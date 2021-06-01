@@ -7,6 +7,6 @@ hero: /authors/dlecorfec/avatar.jpg
 avatar: /authors/dlecorfec/avatar.jpg
 featured: true
 social:
-  - title: github
+  - title: 3_github
     url: https://github.com/dlecorfec
 ---

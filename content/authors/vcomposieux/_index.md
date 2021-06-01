@@ -9,8 +9,8 @@ featured: true
 social:
   - title: blog
     url: https://vincent.composieux.fr
-  - title: github
+  - title: 3_github
     url: https://github.com/eko
-  - title: linkedin
+  - title: 2_linkedin
     url: https://www.linkedin.com/in/vincentcomposieux/
 ---
