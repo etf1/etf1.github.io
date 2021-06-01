@@ -9,8 +9,8 @@ featured: true
 social:
   - title: blog
     url: https://laurent-dechoux.fr
-  - title: github
+  - title: 3_github
     url: https://github.com/iotafr
-  - title: linkedin
+  - title: 2_linkedin
     url: https://www.linkedin.com/in/laurent-dechoux-7b0b02146/
 ---
