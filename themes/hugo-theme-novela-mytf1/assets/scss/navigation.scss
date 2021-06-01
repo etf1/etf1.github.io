@@ -39,6 +39,11 @@
     border-bottom: 1px solid var(--horizontalRule);
 }
 
+.footer-logo {
+    height: 3rem;
+    margin-right: 1.5rem;
+}
+
 /*TABLET*/
 @media screen and (max-width: 735px){
     .footer-hr{
