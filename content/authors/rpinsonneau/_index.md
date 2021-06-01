@@ -7,8 +7,8 @@ hero: /authors/rpinsonneau/avatar.jpg
 avatar: /authors/rpinsonneau/avatar.jpg
 featured: true
 social:
-  - title: github
+  - title: 3_github
     url: https://github.com/rpinsonneau
-  - title: linkedin
+  - title: 2_linkedin
     url: https://www.linkedin.com/in/rémy-pinsonneau-5251abb/
 ---

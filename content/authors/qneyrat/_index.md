@@ -9,8 +9,8 @@ featured: true
 social:
   - title: blog
     url: https://quentin.neyrat.io
-  - title: github
+  - title: 3_github
     url: https://github.com/qneyrat
-  - title: linkedin
+  - title: 2_linkedin
     url: https://www.linkedin.com/in/quentin-neyrat/
 ---

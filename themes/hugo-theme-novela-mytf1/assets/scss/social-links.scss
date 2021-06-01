@@ -8,6 +8,10 @@
     .authors-sio{
         width: 60%;
     }
+    .social-icon-outer{
+        width: 20px;
+        min-width: 30%;
+    }
 }
 
 .social-icon-container{
@@ -21,7 +25,6 @@
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;
-    min-width: 100%;
     position: relative;
     margin-left: 3.2rem;
     text-decoration: none;
