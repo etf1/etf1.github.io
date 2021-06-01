@@ -5,9 +5,10 @@ theme: "hugo-theme-novela-mytf1"
 pygmentsstyle: "monokai"
 paginate: 6
 social:
-  linkedin: "https://www.linkedin.com/company/e-tf1/"
-  github: "https://github.com/etf1"
-  rss: "https://tech.tf1.fr/index.xml"
+  2_linkedin: "https://www.linkedin.com/company/e-tf1/"
+  3_github: "https://github.com/etf1"
+  4_rss: "https://tech.tf1.fr/index.xml"
+  1_welcome_to_the_jungle: "https://www.welcometothejungle.com/fr/companies/groupe-tf1"
 markup:
    defaultMarkdownHandler: blackFriday
    blackFriday:
