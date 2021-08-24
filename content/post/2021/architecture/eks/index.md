@@ -66,7 +66,7 @@ Les outils déployés dans notre cluster EKS:
 
 ## Gestion des droits au sein d'EKS
 
-Notre besoin pour la gestion de droit est classigue.
+Notre besoin pour la gestion de droit est classique.  
 Nous avons:
 
 * Les Ops qui ont besoin d'avoir un  contrôle total sur EKS.
