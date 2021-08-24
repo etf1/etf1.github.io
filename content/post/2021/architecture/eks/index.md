@@ -8,63 +8,83 @@ description: "Venez découvrir EKS chez eTF1"
 ---
 ## Avant propos
 
-Cet article a pour objectif de présenter le cluster EKS qui héberge les applications de e-TF1.  
-Avec un focus sur le mécanisme de blue/green de cluster et le scaling chez e-TF1. 
+Cet article présente le cluster EKS qui héberge les applications d'e-TF1 qui sont:  
+( Le site de replay de [TF1](https://www.tf1.fr)
+- Le site d'info [LCI](https://www.lci.fr)
+- Le site jeunesse [TFOUMAX](https://www.tfoumax.fr) )   
+Et plus précisement notre gestion de droit au sein du cluster eks et le modèle de déploiement blue/green du cluster kubernetes managé par AWS (EKS) que nous utilisons. 
 
-## EKS
+## Bref description de kubernetes à la sauce EKS
 
-EKS est le service Kubernetes géré par AWS.  
-AWS fournit le control plane (master) et également de workload (worker).
+Kubernetes est un orchestrateur de container.  
+Pour faire simple, il s'occupe de lancer un container docker et de vérifier ça bonne santé.  
+La plus petite ressource est le pod (il est chargé de vérifier que le container fonctionne)  
+Le deploiement s'occupe de deployer un nombre X de pod.  
+Le daemonset est un deploiement qui deploie un pod par node.  
+Le namespace est une segmentation logique de pod.  
+Le node est une machine qui execute des pods.
+
+Toutes les définitions des ressources kubernetes sont stockées dans API kubernets qui est dans notre cas EKS
+![Bref EKS](images/bref-kubernetes.png#darkmode "Bref EKS").
+
+### Le cluster EKS e-TF1
 
 Nous utilisons actuellement uniquement la partie control plane.  
-Car lors de notre début sur EKS, il n'y avait pas de gestion de la partie worker.
+Il est également possible de faire gérer la gestion des nodes par AWS via
+les managed node groups pour plus d'explication.  
+Je vous laisse parcourir la documentation AWS https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html
 
-## Architecture EKS
+
+## Architecture EKS e-TF1
+
+Nous avons des nodes privés qui passent par la nat gateway pour l'accès internet et des nodes publiques qui permettent aux pods de communiquer directement avec internet sans passer par la nat gateway.  
+Et nous avons des subnets dédiés pour les pod kubernetes afin de s'affranchir des problèmes de range ip dans les subnets privé ou publique. 
+<br>
 ![Architecture EKS](images/EKS.png#darkmode "Architecture EKS")
 
-## Le Déploiement & les outils déployés
+## Le déploiement & les outils déployés
 
 Nous déployons le contrôle plane EKS et les nodes via terraform.
 
-Les outils déployés dans notre cluster EKS:  
+Les outils déployés dans notre cluster EKS:
+ 
+* [aws-auth](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html) pour la gestion de droit 
+* [External Secrets] (https://github.com/external-secrets/kubernetes-external-secrets) pour récuperer les secrets stockés dans secrets manager AWS
+* [AWS VPC CNI](https://github.com/aws/amazon-vpc-cni-k8s) pour le réseaux kubernetes
+* [LinkerD](https://linkerd.io/) comme load balancer interne pour GRPC
+* [Node-Local DNS](https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/) pour améliorer les performances DNS.
+* [ALB Ingress Controller](https://github.com/kubernetes-sigs/aws-load-balancer-controller) pour créer les load balanceurs afin d'accéder aux services lancés dans kubernetes.
+* [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) pour lier un dns aux load blalanceurs créés
+* [AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) pour détecter les interruptions d'instance spot
+* [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws) pour permettre l'augmentation/réduction du nombre de node suivant la charge.
+* [Descheduler](https://github.com/kubernetes-sigs/descheduler) pour une meilleur répartition des pods au sein du cluster kubernetes
+* [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) pour récuper les metrics des containers
+* [FluentD](https://docs.fluentd.org/container-deployment/kubernetes) pour récuper les logs des containers.
 
-* [aws-auth](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html) 
-* [External Secrets] (https://github.com/external-secrets/kubernetes-external-secrets)
-* [Cilium](https://cilium.io/) 
-* [LinkerD](https://linkerd.io/)
-* [Node-Local DNS](https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/)
-* [ALB Ingress Controller](https://github.com/kubernetes-sigs/aws-load-balancer-controller)
-* [ExternalDNS](https://github.com/kubernetes-sigs/external-dns)
-* [AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler)
-* [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws)
-* [Descheduler](https://github.com/kubernetes-sigs/descheduler)
-* [Metrics Server](https://github.com/kubernetes-sigs/metrics-server)
-* [FluentD](https://docs.fluentd.org/container-deployment/kubernetes)
 
+## Gestion des droits au sein d'EKS
 
-## Gestion de droit au sein d'EKS
+Notre besoin pour la gestion de droit est classigue.
+Nous avons:
 
-Notre besoin pour la gestion de droit est simple.
-Nous avons :
+* Les Ops qui ont besoin d'avoir un  contrôle total sur EKS.
+* Les Leads Devs qui doivent pouvoir modifier leurs ressources EKS.
+* Les Devs qui ont seulement besoin de consulter.
 
-* Les Ops avec un besoin de controle total sur EKS.
-* Les Leaddevs avec un besoin de modification des ressources EKS.
-* Les Devs avec un besoin de consultation.
+Nous avons donc défini 3 rôles IAM.
 
-Nous avons donc définit 3 role IAM.
+* Le rôle IAM etf1-crossaccount-k8sadmin pour les Ops.
+* Le rôle IAM etf1-crossaccount-k8sreadwrite pour les Leads Devs.
+* Le rôle IAM etf1-crossaccount-k8sreadonly pour les Devs.
 
-* Le role IAM etf1-crossaccount-k8sadmin pour les Ops.
-* Le role IAM etf1-crossaccount-k8sreadwrite pour les Leaddevs.
-* Le role IAM etf1-crossaccount-k8sreadonly pour les devs.
-
-On configure aws-auth pour associcer le role IAM à un/des groupes kubernetes.  
-Dans notre cas, nous utilisons les groupes kubernetes custom suivant:
+On configure aws-auth pour associer le rôle IAM à un/des groupes kubernetes.  
+Dans notre cas, nous utilisons les groupes kubernetes custom suivants:
 
 * readwrite
 * readonly
 * debugmode
 
-La configmap aws-auth sur l'association role IAM et groupe kubernetes.
+Voici la configmap aws-auth sur l'association role IAM et groupe kubernetes.
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -92,9 +112,7 @@ data:
         - debugmode
 ```
 
-La définition des droits des differents groupes.
-
-Le groupe readonly est déployé sur le cluster:
+Et la définition des droits des différents groupes (clusterrolebinding/clusterrole/role).
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -111,6 +129,7 @@ subjects:
   name: readonly
 
 ```
+Le clusterrole view est builtin et ressemble à ci-dessous
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -248,26 +267,402 @@ rules:
   - get
   - list
   - watch
-
 ```
 
-le groupe debugmode est 
+Le groupe debugmode défini par namespace
 ```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+  name: debug-mode
+  namespace: namespace-X
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: debug-mode
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: debugmode
+  namespace: namespace-X
 
+```
+Le rôle debug-mode défini par namespace
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations:
+  name: debug-mode
+  namespace: namespace-X
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/portforward
+  verbs:
+  - get
+  - list
+  - create
+- apiGroups:
+  - ""
+  resources:
+  - pods/exec
+  verbs:
+  - create
+```
+
+Le groupe readwrite est également défini par namespace et associé à 2 roles.  
+Le rôle edit qui est buildin et le rôle spécifique readwrite-secrets pour les external secrets 
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  annotations:
+  name: readwrite
+  namespace: namespace-X
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: edit
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: readwrite
+  namespace: namespace-X
 ```
 
 ```yaml
+kind: RoleBinding
+metadata:
+  annotations:
+  name: readwrite-secrets
+  namespace: namespace-X
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: readwrite-secrets
+subjects:
+- apiGroup: rbac.authorization.k8s.io
+  kind: Group
+  name: readwrite
+  namespace: namespace-X
+
+```
+Le rôle edit builtin
+```yaml
+aggregationRule:
+  clusterRoleSelectors:
+  - matchLabels:
+      rbac.authorization.k8s.io/aggregate-to-edit: "true"
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  annotations:
+    rbac.authorization.kubernetes.io/autoupdate: "true"
+  labels:
+    kubernetes.io/bootstrapping: rbac-defaults
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+  name: edit
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods/attach
+  - pods/exec
+  - pods/portforward
+  - pods/proxy
+  - secrets
+  - services/proxy
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - serviceaccounts
+  verbs:
+  - impersonate
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - pods/attach
+  - pods/exec
+  - pods/portforward
+  - pods/proxy
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - endpoints
+  - persistentvolumeclaims
+  - replicationcontrollers
+  - replicationcontrollers/scale
+  - secrets
+  - serviceaccounts
+  - services
+  - services/proxy
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - apps
+  resources:
+  - daemonsets
+  - deployments
+  - deployments/rollback
+  - deployments/scale
+  - replicasets
+  - replicasets/scale
+  - statefulsets
+  - statefulsets/scale
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  - jobs
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - extensions
+  resources:
+  - daemonsets
+  - deployments
+  - deployments/rollback
+  - deployments/scale
+  - ingresses
+  - networkpolicies
+  - replicasets
+  - replicasets/scale
+  - replicationcontrollers/scale
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  - networkpolicies
+  verbs:
+  - create
+  - delete
+  - deletecollection
+  - patch
+  - update
+- apiGroups:
+  - metrics.k8s.io
+  resources:
+  - pods
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  - endpoints
+  - persistentvolumeclaims
+  - persistentvolumeclaims/status
+  - pods
+  - replicationcontrollers
+  - replicationcontrollers/scale
+  - serviceaccounts
+  - services
+  - services/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - bindings
+  - events
+  - limitranges
+  - namespaces/status
+  - pods/log
+  - pods/status
+  - replicationcontrollers/status
+  - resourcequotas
+  - resourcequotas/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - apps
+  resources:
+  - controllerrevisions
+  - daemonsets
+  - daemonsets/status
+  - deployments
+  - deployments/scale
+  - deployments/status
+  - replicasets
+  - replicasets/scale
+  - replicasets/status
+  - statefulsets
+  - statefulsets/scale
+  - statefulsets/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - autoscaling
+  resources:
+  - horizontalpodautoscalers
+  - horizontalpodautoscalers/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - batch
+  resources:
+  - cronjobs
+  - cronjobs/status
+  - jobs
+  - jobs/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - extensions
+  resources:
+  - daemonsets
+  - daemonsets/status
+  - deployments
+  - deployments/scale
+  - deployments/status
+  - ingresses
+  - ingresses/status
+  - networkpolicies
+  - replicasets
+  - replicasets/scale
+  - replicasets/status
+  - replicationcontrollers/scale
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - policy
+  resources:
+  - poddisruptionbudgets
+  - poddisruptionbudgets/status
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - networking.k8s.io
+  resources:
+  - ingresses
+  - ingresses/status
+  - networkpolicies
+  verbs:
+  - get
+  - list
+  - watch
+```
+Le rôle readwrtie-secrets 
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  annotations:
+  name: readwrite-secrets
+  namespace: namespace-X
+rules:
+- apiGroups:
+  - kubernetes-client.io
+  resources:
+  - externalsecrets
+  verbs:
+  - get
+  - watch
+  - list
+  - create
+  - update
+  - patch
 
 ```
 
-## Focus ExternalDNS et Scaling.
-Nous allons vous partager notre utilisation d'ExternalDNS.
+# Le deploiement du cluster EKS en mode blue/green.
 
-### Contexte eTF1
-Nous voulions être capables de faire du déploiment blue/green de cluster EKS.
+## Contexte eTF1
+Nous voulions être capables d'apporter des changements dans de cluster EKS et une capacité de rollback en cas d'effet non désirable.  
+Nous avons optés pour un déploiement en mode blue/green.  
+C'est à dire à avoir 2 infrastructures parallèles de cluster EKS et basculer le traffic entre le cluster N (blue) et le cluster N+1 (green) lors de nos changements majeur (changement de CNI,upgrade de version,etc...). 
 
-### La solution adoptée
+## Illustation d'un blue/green  
+<br> 
+![Blue green](images/aws-blue-green-simple.png#darkmode "Blue green simple")
 
+
+## 
+
+Notre solution se base sur l'utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.
+
+
+ 
 Nous avons choisi d'utiliser quatre ExternalDNS.
 
 Pourquoi 4? Explication:
