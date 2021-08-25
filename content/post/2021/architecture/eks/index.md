@@ -9,9 +9,10 @@ description: "Venez découvrir EKS chez eTF1"
 ## Avant propos
 
 Cet article présente le cluster EKS qui héberge les applications d'e-TF1:  
-- Le site de streaming de [TF1](https://www.tf1.fr)
-- Le site d'info [LCI](https://www.lci.fr)
-- Le site jeunesse [TFOUMAX](https://www.tfoumax.fr) 
+
+* Le site de streaming de [TF1](https://www.tf1.fr)
+* Le site d'info [LCI](https://www.lci.fr)
+* Le site jeunesse [TFOUMAX](https://www.tfoumax.fr)   
 Et plus précisement notre gestion de droit au sein du cluster eks ainsi que le modèle de déploiement blue/green du cluster kubernetes managé par AWS (EKS) que nous utilisons. 
 
 ## Brève description de kubernetes à la sauce EKS
@@ -19,32 +20,30 @@ Et plus précisement notre gestion de droit au sein du cluster eks ainsi que le 
 Kubernetes est un orchestrateur de container.  
 Pour simplifier, il s'agit d'un logiciel qui s'occupe de gérer la vie d'un ensemble de containers docker. 
 Un peu de vocabulaire pour commencer:
-- Un cluster est un ensemble de containers géré par Kubernetes
-- Un Node est une machine de travail d'un cluster (physique ou virtuelle)
-- Un Pod est le composant le plus petit. Il gère directement un ou plusieurs containers qui partagent la même adresse IP. (1cpu/2Go de RAM pour nous)
-- Le Deployment définit l'état cible du cluster.  
-- Un Daemonset est un deployment qui deploie un pod par node.  
-- Un Namespace (ou service) est une segmentation logique de pods (avec un nom DNS unique).  
 
+* Un cluster est un ensemble des ressources géré par Kubernetes
+* Un Node est une machine de travail d'un cluster (physique ou virtuelle)
+* Un Pod est le composant le plus petit. Il gère directement un ou plusieurs containers qui partagent la même adresse IP.
+* Le Deployment définit l'état cible des pods du cluster.  
+* Un Daemonset est un deployment qui deploie un pod par node.  
+* Un Namespace est une segmentation logique de ressources.  
 
 Toutes les définitions des ressources kubernetes sont stockées dans API kubernets qui est dans notre cas EKS
 ![Bref EKS](images/bref-kubernetes.png#darkmode "Bref EKS").
 
-### Le cluster EKS e-TF1
+
+## Architecture EKS e-TF1
 
 Nous utilisons actuellement uniquement la partie control plane.  
 Il est également possible de faire gérer la gestion des nodes par AWS via
 les managed node groups. Pour plus d'explication je vous invite à lire https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html
 
-
-## Architecture EKS e-TF1
-
-Nous avons des nodes privés qui passent par la nat gateway pour l'accès internet et des nodes publics qui permettent aux pods de communiquer directement avec internet sans passer par la nat gateway.  
+Au sein de notre cluster, nous avons des nodes privés qui passent par la nat gateway pour l'accès internet et des nodes publics qui permettent aux pods l'accès internet sans passer par la nat gateway.  
 Et nous avons des subnets dédiés pour les pod kubernetes afin de s'affranchir des problèmes de range ip dans les subnets privés ou publics. 
 <br>
 ![Architecture EKS](images/EKS.png#darkmode "Architecture EKS")
 
-## Le déploiement & les outils déployés
+## Le déploiement & les outils utilisés
 
 Nous déployons le contrôle plane EKS et les nodes via terraform.
 
@@ -659,22 +658,24 @@ C'est à dire à avoir 2 infrastructures parallèles de cluster EKS et basculer 
 ![Blue green](images/aws-blue-green-simple.png#darkmode "Blue green simple")
 
 
-## 
+## La solution utilisée 
 
-Notre solution se base sur l'utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.
+Notre solution se base sur l'utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.  
+Nous avons pour chaque cluster EKS blue/green un sous domaine privé et un sous domaine public.  
+Et nous avons un domaine privé et un domaine public partagé entre les clusters blue/green qui correspond aux domains en production.
 
+Schéma d'explication pour les domaines privés
+![EKS blue green etf1](images/eks-blue-green-etf1.png#darkmode "EKS Blue green etf1")
 
- 
-Nous avons choisi d'utiliser quatre ExternalDNS:
+Techniquement ça se matérialise sur l'utilisation de quatre ExternalDNS:
 
 * 1 ExternalDNS pour le domaine privé du cluster. (*.eks-blue.devinfra.local)
 * 1 ExternalDNS pour le domaine public du cluster. (*.eks-blue.devinfra.fr)
-* 1 ExternalDNS pour le domaine privé en production. (*.devinfra.local)
-* 1 ExternalDNS pour le domaine public en production. (*.devinfra.fr)
+* 1 ExternalDNS pour le domaine privé partagé. (*.devinfra.local)
+* 1 ExternalDNS pour le domaine public partagé. (*.devinfra.fr)
 
-![Ingress eks](images/ingress.png#darkmode "Ingress EKS")
 
-Le fichier deploy de l'ExternalDNS privé
+Le fichier deploy de l'ExternalDNS privé du cluster
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -720,7 +721,7 @@ spec:
         fsGroup: 65534
 ```  
 
-Le fichier Deploy de l'ExternalDNS public
+Le fichier Deploy de l'ExternalDNS public du cluster
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -766,7 +767,7 @@ spec:
     fsGroup: 65534
 ```
 
-Le fichier deploy de l'ExternalDNS privé de production
+Le fichier deploy de l'ExternalDNS privé partagé en production
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -812,7 +813,7 @@ spec:
         fsGroup: 65534
 ```  
 
-Le fichier Deploy de l'ExternalDNS public de production
+Le fichier Deploy de l'ExternalDNS public partagé en production
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -857,10 +858,15 @@ spec:
   securityContext:
     fsGroup: 65534
 ```
-### Bascule blue/green eks
+### Exemple de bascule blue/green eks
 
-Exemple:  
-eks-blue est actuellement le cluster actif.  
+Dans cette exemple simplifié, nous avons un cluster EKS eks-blue et un cluster EKS eks-green.  
+Ils sont tous les deux un ingress privé hello et un ingress public world.  
+Le domaine partagé est devinfra.local pour le domaine privé et devinfra.fr pour le domaine public.  
+Nous avons une entrée DNS api.devinfra.local qui correspond à api EKS en production.  
+L'entrée DNS hello.devinfra.local vers une applicatition interne et l'entrée DNS world.devinfra.fr vers une application accessible depuis internet.
+
+Les entrées DNS de production pointent vers blue..  
 
 ![Ingress eks-blue](images/ingress-eks-blue.png#darkmode "Ingress EKS blue")
 
@@ -868,18 +874,26 @@ On arrête les ExternalDNS de production sur eks-blue afin d'arrêter les mises 
 
 ![Stop ingress eks-blue](images/stop-ingress-eks-blue.png#darkmode "Stop Ingress EKS blue")
 
+On met à jours l'entré dns de API EKS sur le domaine partagé pour pointer vers API EKS green.
+
+![change api eks](images/change-api-eks.png#darkmode "Change API EKS")
 
 On démarre les ExternalDNS de production sur eks-green afin de mettre à jours toutes les entrées DNS
 ![Start ingress eks-blue](images/start-ingress-eks-green.png#darkmode "Start Ingress EKS green")
 
 Il ne reste plus qu'à vérifier que les anciens ingress ne reçoivent plus de trafic avant de les supprimer.
 
-#### Pour la partie kubeconfig.  
-Les entrées DNS pour l'API et le champs TXT sont mis à jours via le pipeline CI/CD.
+On a réalisé un blue/green de cluster eks. 
+ 
+Mais en basculant de cluster, il y a un problème avec l'authentification kubectl car il est nécessaire de définir le cluster name du cluster eks.
 
-Le champs TXT est utilisé pour connaître la partie cluster name pour aws-authenticator de façon transparente avec un wrapper comme ci-dessous.
 
-#### Le wrapper
+### Tricks pour avoir le cluster name dynamique.
+
+Pour cela nous avons introduit une entrées DNS de type TXT qui a pour valeur le nom du cluster.  
+Et developper un petit script qui récupere la valeur du champs TXT et le remplace lors de l'appel à aws-iam-authenticator.
+
+Le script entre kubectl et aws-iam-authenticator s'appelle aws-iam-authenticator-wrapper
 ```bash
 #!/bin/bash
 target_cluster=$(dig +short -t TXT "$3" | tr -d '"')
@@ -888,7 +902,7 @@ set -- "${@:1:2}" "$target_cluster" "${@:4}"
 aws-iam-authenticator "$@"
 ```
 
-#### Le kubeconfig
+exemple de kubeconfig (l'entré DNS avec le champs TXT défini est eks.devinfra.info)
 ```yaml
 apiVersion: v1
 clusters:
@@ -921,92 +935,7 @@ users:
       - name: AWS_PROFILE
         value: awsaccess
 ```
-### Le scaling
-
-Pour gérer les problématiques de scaling, nous utilisons des HPA, le cluster autoscaler ainsiq ue de l'overprovisioning.
-
-Nous utilisons actuellement uniquement les métriques cpu/ram pour les HPA.  
-Exemple d'évolution d'un deployment dans le temps:
-![Hpa action](images/hpa-action.png#darkmode "Hpa en action")
-
-L'évolution du nombre de nodes dans le temps:
-![cluster autoscaler action](images/k8s-nodes.png#darkmode "cluster autoscaler en action")
-
-
-Actuellement nous avons configuré le cluster-proportional-autoscaler en mode linear
-```yaml
- linear: "{ \n  \"coresPerReplica\": 20,\n  \"nodesPerReplica\": 6,\n  \"min\": 6\n}"
-```
-
-Le deployment du pod overprovisionning est le suivant:
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: overprovisioning
-  namespace: overprovisioning
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: overprovisioning
-  template:
-    metadata:
-      labels:
-        app: overprovisioning
-    spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - preference:
-              matchExpressions:
-              - key: node-role.kubernetes.io/spot
-                operator: In
-                values:
-                - spot
-            weight: 1
-        podAntiAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-          - podAffinityTerm:
-              labelSelector:
-                matchExpressions:
-                - key: app
-                  operator: In
-                  values:
-                  - overprovisioning
-              topologyKey: failure-domain.beta.kubernetes.io/zone
-            weight: 100
-          requiredDuringSchedulingIgnoredDuringExecution:
-          - labelSelector:
-              matchExpressions:
-              - key: app
-                operator: In
-                values:
-                - overprovisioning
-            topologyKey: kubernetes.io/hostname
-      containers:
-      - image: k8s.gcr.io/pause
-        name: reserve-resources
-        resources:
-          limits:
-            cpu: "1"
-            memory: 2Gi
-          requests:
-            cpu: "1"
-            memory: 2Gi
-      nodeSelector:
-        node-role.kubernetes.io/spot: spot
-      priorityClassName: overprovisioning
-      tolerations:
-      - effect: NoSchedule
-        key: spot
-        operator: Exists
-
-```
-
-Avec la configuration de cluster-proportional-autoscaler et la configuration du deploy overprovisoning, nous pouvons constater que nous déployons un pod sur un node tous les 20 cores ou 6 nodes. 
-
-
-## Conclusion
+## En Conclusion
 Nous sommes globalement satisfait de EKS.  
-Nos axe d'améliorations principaux est d'améliorer la résilience ainsi que de mettre en place une scalabilité plus intelligente. Ceci nous permettra non seulement de réduire nos coûts mais aussi de mieux contrôler l'empreinte carbone de nos services.
+Nous partagerons prochainement la partie scaling des pods.  
+
