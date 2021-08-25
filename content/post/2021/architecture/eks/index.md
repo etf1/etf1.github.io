@@ -8,21 +8,24 @@ description: "Venez découvrir EKS chez eTF1"
 ---
 ## Avant propos
 
-Cet article présente le cluster EKS qui héberge les applications d'e-TF1 qui sont:  
-( Le site de replay de [TF1](https://www.tf1.fr)
+Cet article présente le cluster EKS qui héberge les applications d'e-TF1:  
+- Le site de streaming de [TF1](https://www.tf1.fr)
 - Le site d'info [LCI](https://www.lci.fr)
-- Le site jeunesse [TFOUMAX](https://www.tfoumax.fr) )   
-Et plus précisement notre gestion de droit au sein du cluster eks et le modèle de déploiement blue/green du cluster kubernetes managé par AWS (EKS) que nous utilisons. 
+- Le site jeunesse [TFOUMAX](https://www.tfoumax.fr) 
+Et plus précisement notre gestion de droit au sein du cluster eks ainsi que le modèle de déploiement blue/green du cluster kubernetes managé par AWS (EKS) que nous utilisons. 
 
-## Bref description de kubernetes à la sauce EKS
+## Brève description de kubernetes à la sauce EKS
 
 Kubernetes est un orchestrateur de container.  
-Pour faire simple, il s'occupe de lancer un container docker et de vérifier ça bonne santé.  
-La plus petite ressource est le pod (il est chargé de vérifier que le container fonctionne)  
-Le deploiement s'occupe de deployer un nombre X de pod.  
-Le daemonset est un deploiement qui deploie un pod par node.  
-Le namespace est une segmentation logique de pod.  
-Le node est une machine qui execute des pods.
+Pour simplifier, il s'agit d'un logiciel qui s'occupe de gérer la vie d'un ensemble de containers docker. 
+Un peu de vocabulaire pour commencer:
+- Un cluster est un ensemble de containers géré par Kubernetes
+- Un Node est une machine de travail d'un cluster (physique ou virtuelle)
+- Un Pod est le composant le plus petit. Il gère directement un ou plusieurs containers qui partagent la même adresse IP. (1cpu/2Go de RAM pour nous)
+- Le Deployment définit l'état cible du cluster.  
+- Un Daemonset est un deployment qui deploie un pod par node.  
+- Un Namespace (ou service) est une segmentation logique de pods (avec un nom DNS unique).  
+
 
 Toutes les définitions des ressources kubernetes sont stockées dans API kubernets qui est dans notre cas EKS
 ![Bref EKS](images/bref-kubernetes.png#darkmode "Bref EKS").
@@ -31,14 +34,13 @@ Toutes les définitions des ressources kubernetes sont stockées dans API kubern
 
 Nous utilisons actuellement uniquement la partie control plane.  
 Il est également possible de faire gérer la gestion des nodes par AWS via
-les managed node groups pour plus d'explication.  
-Je vous laisse parcourir la documentation AWS https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html
+les managed node groups. Pour plus d'explication je vous invite à lire https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html
 
 
 ## Architecture EKS e-TF1
 
-Nous avons des nodes privés qui passent par la nat gateway pour l'accès internet et des nodes publiques qui permettent aux pods de communiquer directement avec internet sans passer par la nat gateway.  
-Et nous avons des subnets dédiés pour les pod kubernetes afin de s'affranchir des problèmes de range ip dans les subnets privé ou publique. 
+Nous avons des nodes privés qui passent par la nat gateway pour l'accès internet et des nodes publics qui permettent aux pods de communiquer directement avec internet sans passer par la nat gateway.  
+Et nous avons des subnets dédiés pour les pod kubernetes afin de s'affranchir des problèmes de range ip dans les subnets privés ou publics. 
 <br>
 ![Architecture EKS](images/EKS.png#darkmode "Architecture EKS")
 
@@ -49,17 +51,17 @@ Nous déployons le contrôle plane EKS et les nodes via terraform.
 Les outils déployés dans notre cluster EKS:
  
 * [aws-auth](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html) pour la gestion de droit 
-* [External Secrets] (https://github.com/external-secrets/kubernetes-external-secrets) pour récuperer les secrets stockés dans secrets manager AWS
-* [AWS VPC CNI](https://github.com/aws/amazon-vpc-cni-k8s) pour le réseaux kubernetes
+* [External Secrets](https://github.com/external-secrets/kubernetes-external-secrets) pour récuperer les secrets stockés dans secrets manager AWS
+* [AWS VPC CNI](https://github.com/aws/amazon-vpc-cni-k8s) pour le réseau kubernetes
 * [LinkerD](https://linkerd.io/) comme load balancer interne pour GRPC
 * [Node-Local DNS](https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/) pour améliorer les performances DNS.
-* [ALB Ingress Controller](https://github.com/kubernetes-sigs/aws-load-balancer-controller) pour créer les load balanceurs afin d'accéder aux services lancés dans kubernetes.
-* [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) pour lier un dns aux load blalanceurs créés
+* [ALB Ingress Controller](https://github.com/kubernetes-sigs/aws-load-balancer-controller) pour créer les load balancers afin d'accéder aux services lancés dans kubernetes.
+* [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) pour lier un dns aux load blalancers créés
 * [AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) pour détecter les interruptions d'instance spot
-* [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws) pour permettre l'augmentation/réduction du nombre de node suivant la charge.
+* [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws) pour permettre l'augmentation/réduction du nombre de node suivant la charge
 * [Descheduler](https://github.com/kubernetes-sigs/descheduler) pour une meilleur répartition des pods au sein du cluster kubernetes
 * [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) pour récuper les metrics des containers
-* [FluentD](https://docs.fluentd.org/container-deployment/kubernetes) pour récuper les logs des containers.
+* [FluentD](https://docs.fluentd.org/container-deployment/kubernetes) pour récuper les logs des containers
 
 
 ## Gestion des droits au sein d'EKS
@@ -84,7 +86,7 @@ Dans notre cas, nous utilisons les groupes kubernetes custom suivants:
 * readonly
 * debugmode
 
-Voici la configmap aws-auth sur l'association role IAM et groupe kubernetes.
+Voici la configmap aws-auth sur l'association rôle IAM et groupe kubernetes.
 ```yaml
 apiVersion: v1
 kind: ConfigMap
@@ -129,7 +131,7 @@ subjects:
   name: readonly
 
 ```
-Le clusterrole view est builtin et ressemble à ci-dessous
+Le clusterrole view est builtin et ressemble à ceci:
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -314,7 +316,7 @@ rules:
   - create
 ```
 
-Le groupe readwrite est également défini par namespace et associé à 2 roles.  
+Le groupe readwrite est également défini par namespace et est associé à 2 rôles:
 Le rôle edit qui est buildin et le rôle spécifique readwrite-secrets pour les external secrets 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
@@ -622,7 +624,7 @@ rules:
   - list
   - watch
 ```
-Le rôle readwrtie-secrets 
+Le rôle readwrite-secrets 
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -648,9 +650,9 @@ rules:
 # Le deploiement du cluster EKS en mode blue/green.
 
 ## Contexte eTF1
-Nous voulions être capables d'apporter des changements dans de cluster EKS et une capacité de rollback en cas d'effet non désirable.  
+Nous voulons être capables d'apporter des changements dans de cluster EKS avec une capacité de rollback rapide en cas d'effet non désirable.  
 Nous avons optés pour un déploiement en mode blue/green.  
-C'est à dire à avoir 2 infrastructures parallèles de cluster EKS et basculer le traffic entre le cluster N (blue) et le cluster N+1 (green) lors de nos changements majeur (changement de CNI,upgrade de version,etc...). 
+C'est à dire à avoir 2 infrastructures parallèles de cluster EKS et basculer le traffic entre le cluster N (blue) et le cluster N+1 (green) lors de nos changements majeurs (changement de CNI, upgrade de version, etc). 
 
 ## Illustation d'un blue/green  
 <br> 
@@ -663,14 +665,12 @@ Notre solution se base sur l'utilisation du projet open source ExternalDNS qui p
 
 
  
-Nous avons choisi d'utiliser quatre ExternalDNS.
-
-Pourquoi 4? Explication:
+Nous avons choisi d'utiliser quatre ExternalDNS:
 
 * 1 ExternalDNS pour le domaine privé du cluster. (*.eks-blue.devinfra.local)
-* 1 ExternalDNS pour le domaine publique du cluster. (*.eks-blue.devinfra.fr)
+* 1 ExternalDNS pour le domaine public du cluster. (*.eks-blue.devinfra.fr)
 * 1 ExternalDNS pour le domaine privé en production. (*.devinfra.local)
-* 1 ExternalDNS pour le domaine publique en production. (*.devinfra.fr)
+* 1 ExternalDNS pour le domaine public en production. (*.devinfra.fr)
 
 ![Ingress eks](images/ingress.png#darkmode "Ingress EKS")
 
@@ -720,7 +720,7 @@ spec:
         fsGroup: 65534
 ```  
 
-Le fichier Deploy de l'ExternalDNS publique
+Le fichier Deploy de l'ExternalDNS public
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -812,7 +812,7 @@ spec:
         fsGroup: 65534
 ```  
 
-Le fichier Deploy de l'ExternalDNS publique de production
+Le fichier Deploy de l'ExternalDNS public de production
 ```yaml
 apiVersion: apps/v1
 kind: Deployment
@@ -864,12 +864,12 @@ eks-blue est actuellement le cluster actif.
 
 ![Ingress eks-blue](images/ingress-eks-blue.png#darkmode "Ingress EKS blue")
 
-On stop les ExternalDNS de production sur eks-blue afin d'arrêter les mises à jour des entrées DNS de production.  
+On arrête les ExternalDNS de production sur eks-blue afin d'arrêter les mises à jour des entrées DNS de production.  
 
 ![Stop ingress eks-blue](images/stop-ingress-eks-blue.png#darkmode "Stop Ingress EKS blue")
 
 
-On start les ExternalDNS de production sur eks-green afin de mettre à jours toutes les entrées DNS
+On démarre les ExternalDNS de production sur eks-green afin de mettre à jours toutes les entrées DNS
 ![Start ingress eks-blue](images/start-ingress-eks-green.png#darkmode "Start Ingress EKS green")
 
 Il ne reste plus qu'à vérifier que les anciens ingress ne reçoivent plus de trafic avant de les supprimer.
@@ -923,13 +923,13 @@ users:
 ```
 ### Le scaling
 
-Nous utilisons les HPA + cluster autoscaler + overprovisioning 
+Pour gérer les problématiques de scaling, nous utilisons des HPA, le cluster autoscaler ainsiq ue de l'overprovisioning.
 
-Nous utilisons actuellement les metrics cpu/ram pour les HPA.  
-L'évolution d'un deployment dans le temps.
+Nous utilisons actuellement uniquement les métriques cpu/ram pour les HPA.  
+Exemple d'évolution d'un deployment dans le temps:
 ![Hpa action](images/hpa-action.png#darkmode "Hpa en action")
 
-L'évolution du nombre de node dans le temps.
+L'évolution du nombre de nodes dans le temps:
 ![cluster autoscaler action](images/k8s-nodes.png#darkmode "cluster autoscaler en action")
 
 
@@ -1004,10 +1004,9 @@ spec:
 
 ```
 
-Avec la configuration de cluster-proportional-autoscaler + la configuration du deploy overprovisoning.  
-On peu conclure que nous déployons 1 pod 1cpu/2Go de ram sur un node tous les 20 cores ou 6 nodes. 
+Avec la configuration de cluster-proportional-autoscaler et la configuration du deploy overprovisoning, nous pouvons constater que nous déployons un pod sur un node tous les 20 cores ou 6 nodes. 
 
 
-## En conclusion
-Nous sommes satisfait de EKS.  
-Mais nous sommes toujours à la recherche de plus de résilience et d'une scalabilité plus intelligente qu'un simple monitoring des consommations cpu/ram et ainsi réduire les coûts AWS.  
+## Conclusion
+Nous sommes globalement satisfait de EKS.  
+Nos axe d'améliorations principaux est d'améliorer la résilience ainsi que de mettre en place une scalabilité plus intelligente. Ceci nous permettra non seulement de réduire nos coûts mais aussi de mieux contrôler l'empreinte carbone de nos services.
