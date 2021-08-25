@@ -13,20 +13,22 @@ Cet article présente le cluster EKS qui héberge les applications d'e-TF1:
 * Le site de streaming de [TF1](https://www.tf1.fr)
 * Le site d'info [LCI](https://www.lci.fr)
 * Le site jeunesse [TFOUMAX](https://www.tfoumax.fr)   
+
 Et plus précisement notre gestion de droit au sein du cluster eks ainsi que le modèle de déploiement blue/green du cluster kubernetes managé par AWS (EKS) que nous utilisons. 
 
 ## Brève description de kubernetes à la sauce EKS
 
 Kubernetes est un orchestrateur de container.  
-Pour simplifier, il s'agit d'un logiciel qui s'occupe de gérer la vie d'un ensemble de containers docker. 
+Pour simplifier, il s'agit d'un logiciel qui s'occupe de gérer la vie d'un ensemble de containers docker.   
 Un peu de vocabulaire pour commencer:
 
-* Un cluster est un ensemble des ressources géré par Kubernetes
-* Un Node est une machine de travail d'un cluster (physique ou virtuelle)
-* Un Pod est le composant le plus petit. Il gère directement un ou plusieurs containers qui partagent la même adresse IP.
-* Le Deployment définit l'état cible des pods du cluster.  
-* Un Daemonset est un deployment qui deploie un pod par node.  
-* Un Namespace est une segmentation logique de ressources.  
+* Un cluster kubernetes est un ensemble de machines (node) qui permettent d'exécuter des containers.
+* Un Node est une machine de travail (physique ou virtuelle) d'un cluster.
+* Un Pod est le composant le plus petit qui gère directement un ou plusieurs containers qui partagent la même adresse IP.
+* Un Deployment définit l'état cible des pods du cluster.
+* Un Daemonset est un deployment qui deploie un pod par node.
+* Un Ingress est une ressources kubernetes qui gère l'accès externe aux sercies dans un cluster.
+* Un Namespace est une segmentation dans le nommmage de ressources car les noms de ressouces doivent être uniques dans un namespace.
 
 Toutes les définitions des ressources kubernetes sont stockées dans API kubernets qui est dans notre cas EKS
 ![Bref EKS](images/bref-kubernetes.png#darkmode "Bref EKS").
@@ -45,9 +47,8 @@ Et nous avons des subnets dédiés pour les pod kubernetes afin de s'affranchir 
 
 ## Le déploiement & les outils utilisés
 
-Nous déployons le contrôle plane EKS et les nodes via terraform.
-
-Les outils déployés dans notre cluster EKS:
+Nous déployons le contrôle plane EKS et les nodes via terraform.  
+Les outils additionnels déployés dans notre cluster EKS:
  
 * [aws-auth](https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html) pour la gestion de droit 
 * [External Secrets](https://github.com/external-secrets/kubernetes-external-secrets) pour récuperer les secrets stockés dans secrets manager AWS
