@@ -655,7 +655,7 @@ Nous avons optés pour un déploiement en mode blue/green.
 C'est à dire à avoir 2 infrastructures parallèles de cluster EKS et basculer le traffic entre le cluster N (blue) et le cluster N+1 (green) lors de nos changements majeurs (changement de CNI, upgrade de version, etc). 
 
 ## Illustation d'un blue/green  
-<br> 
+   
 ![Blue green](images/aws-blue-green-simple.png#darkmode "Blue green simple")
 
 
