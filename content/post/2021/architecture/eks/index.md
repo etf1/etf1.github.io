@@ -69,7 +69,7 @@ Les outils additionnels déployés dans notre cluster EKS:
 Notre besoin pour la gestion de droit est classique.  
 Nous avons:
 
-* Les Ops qui ont besoin d'avoir un  contrôle total sur EKS.
+* Les Ops qui ont besoin d'avoir un contrôle total sur EKS.
 * Les Leads Devs qui doivent pouvoir modifier leurs ressources EKS.
 * Les Devs qui ont seulement besoin de consulter.
 
@@ -659,16 +659,16 @@ C'est à dire à avoir 2 infrastructures parallèles de cluster EKS et basculer 
 ![Blue green](images/aws-blue-green-simple.png#darkmode "Blue green simple")
 
 
-## La solution utilisée 
+## Implémentation
 
 Notre solution se base sur l'utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.  
 Nous avons pour chaque cluster EKS blue/green un sous domaine privé et un sous domaine public.  
-Et nous avons un domaine privé et un domaine public partagé entre les clusters blue/green qui correspond aux domains en production.
+Et nous avons un domaine privé et un domaine public partagé entre les clusters blue/green qui correspond aux domaines en production.
 
 Schéma d'explication pour les domaines privés
 ![EKS blue green etf1](images/eks-blue-green-etf1.png#darkmode "EKS Blue green etf1")
 
-Techniquement ça se matérialise sur l'utilisation de quatre ExternalDNS:
+Techniquement cela se matérialise par l'utilisation de quatre ExternalDNS:
 
 * 1 ExternalDNS pour le domaine privé du cluster. (*.eks-blue.devinfra.local)
 * 1 ExternalDNS pour le domaine public du cluster. (*.eks-blue.devinfra.fr)
@@ -862,12 +862,12 @@ spec:
 ### Exemple de bascule blue/green eks
 
 Dans cette exemple simplifié, nous avons un cluster EKS eks-blue et un cluster EKS eks-green.  
-Ils sont tous les deux un ingress privé hello et un ingress public world.  
+Ils ont tous les deux un ingress privé hello et un ingress public world.  
 Le domaine partagé est devinfra.local pour le domaine privé et devinfra.fr pour le domaine public.  
-Nous avons une entrée DNS api.devinfra.local qui correspond à api EKS en production.  
+Nous avons une entrée DNS api.devinfra.local qui correspond à une API EKS en production.  
 L'entrée DNS hello.devinfra.local vers une applicatition interne et l'entrée DNS world.devinfra.fr vers une application accessible depuis internet.
 
-Les entrées DNS de production pointent vers blue..  
+Les entrées DNS de production pointent vers blue.  
 
 ![Ingress eks-blue](images/ingress-eks-blue.png#darkmode "Ingress EKS blue")
 
@@ -875,7 +875,7 @@ On arrête les ExternalDNS de production sur eks-blue afin d'arrêter les mises 
 
 ![Stop ingress eks-blue](images/stop-ingress-eks-blue.png#darkmode "Stop Ingress EKS blue")
 
-On met à jours l'entré dns de API EKS sur le domaine partagé pour pointer vers API EKS green.
+On met à jours l'entré DNS de l'API EKS sur le domaine partagé pour pointer vers l'API EKS green.
 
 ![change api eks](images/change-api-eks.png#darkmode "Change API EKS")
 
@@ -884,15 +884,15 @@ On démarre les ExternalDNS de production sur eks-green afin de mettre à jours 
 
 Il ne reste plus qu'à vérifier que les anciens ingress ne reçoivent plus de trafic avant de les supprimer.
 
-On a réalisé un blue/green de cluster eks. 
+On a réalisé une bascule blue/green de cluster EKS. 
  
-Mais en basculant de cluster, il y a un problème avec l'authentification kubectl car il est nécessaire de définir le cluster name du cluster eks.
+Mais en basculant de cluster, il y a un problème avec l'authentification kubectl car il est nécessaire de définir le cluster name du cluster EKS.
 
 
-### Tricks pour avoir le cluster name dynamique.
+### Comment avoir un cluster name dynamique
 
 Pour cela nous avons introduit une entrées DNS de type TXT qui a pour valeur le nom du cluster.  
-Et developper un petit script qui récupere la valeur du champs TXT et le remplace lors de l'appel à aws-iam-authenticator.
+Nous avons développé un petit script qui récupere la valeur du champ TXT et le remplace lors de l'appel à aws-iam-authenticator.
 
 Le script entre kubectl et aws-iam-authenticator s'appelle aws-iam-authenticator-wrapper
 ```bash
@@ -903,7 +903,7 @@ set -- "${@:1:2}" "$target_cluster" "${@:4}"
 aws-iam-authenticator "$@"
 ```
 
-exemple de kubeconfig (l'entré DNS avec le champs TXT défini est eks.devinfra.info)
+exemple de kubeconfig (l'entré DNS avec le champ TXT défini est eks.devinfra.info)
 ```yaml
 apiVersion: v1
 clusters:
@@ -936,7 +936,8 @@ users:
       - name: AWS_PROFILE
         value: awsaccess
 ```
-## En Conclusion
-Nous sommes globalement satisfait de EKS.  
-Nous partagerons prochainement la partie scaling des pods.  
+## Conclusion
+Nous sommes globalement satisfaits de EKS. Il fournit un bon support des outils dont nous avons besoin et nous a permis la mise en place d'un processus de déploiement continu nécessaire pour nos applications. 
+Notre prochain article décrira ce que nous avons mis en place pour gérer la scalabilité. Ceci est d’autant plus important car cela nous permet non seulement de réduire les coûts et mais aussi l’empreinte carbone de notre activité.
+
 
