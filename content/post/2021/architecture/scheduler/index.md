@@ -5,7 +5,7 @@ hero: /post/2021/architecture/scheduler/images/hero.jpeg
 excerpt: technical introduction to the kafka message scheduler
 authors:
   - fkarakas
-description: "Venez découvrir pourquoi et comment nous avons mis en oeuvre Kafka sur MYTF1"
+description: "Why and how we made a scheduler for kafka messages"
 ---
 
 kafka message scheduler
