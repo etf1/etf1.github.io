@@ -92,7 +92,7 @@ As explained before the scheduler datastore is a kafka topic. In this topic each
 Why ? because if the payload of the schedule message changes in time, the new version should be produced in the topic. For deleting a schedule you simply need to produce
 a tombstone message which is a message with a nil payload.
 
-<figure 1: scheduler topic>
+![Scheduler topic](images/scheduler-topic.svg#darkmode "Scheduler topic")
 
 As you can see in the diagram the schedule S1 has 3 versions and the schedule S2 has been delete, so the scheduler will only trigger the schedule version V3 of the schedule S1.
 
@@ -101,7 +101,7 @@ As you can see in the diagram the schedule S1 has 3 versions and the schedule S2
 The kafka message scheduler is writtent in GO, and is using the official go client library from confluent (https://github.com/confluentinc/confluent-kafka-go). We decided to us the official
 client because in the kafka system, the client has a big part of logic regarding failover and recovery, and even if the library is based on C, it was, from our point of view, a wiser choice.
 
-<figure 1: scheduler internals>
+![Scheduler](images/scheduler.svg#darkmode "Scheduler")
 
 As shown above, the scheduler has 5 main components:
 
