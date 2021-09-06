@@ -153,7 +153,7 @@ The ticker will be in charge of notifying the timers to reset its database every
 
 ### Main loop
 Scheduler main loop is a classical GO for select on 3 channels: timer, missed, and store events. Store events are coming from a consumer kafka, missed events also coming from a consumer kafka if they are determined as missed events, and the timer events are coming from triggered schedules from the timers store. We are closing the scheduler is the store events channel is close closed.
-
+https://github.com/etf1/kafka-message-scheduler/blob/main/scheduler/scheduler.go#L192
 ```go
 		for {
 			select {
