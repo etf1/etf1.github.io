@@ -190,8 +190,8 @@ It is used by the kafka message scheduler admin which is a GUI for managing sche
 
 # Summary
 
-Today we are using the scheduler on production for the site MYTF1, and as you can see it is a relatively simple component but tricky at the same time "The evil is in the detail", so if you need more information please check the github repository (https://github.com/etf1/kafka-message-scheduler). 
+Today we are using the scheduler on production for the site MYTF1, and as you can see it is a relatively simple component but tricky at the same time "The devil is in the detail", so for more information please check the github repository (https://github.com/etf1/kafka-message-scheduler). 
 
-I hope this article was useful and interesting, and keep in touch for the incoming article on the kafka message scheduler admin.
+I hope this article was useful and interesting.
 
-Thank you
+Thank you.
