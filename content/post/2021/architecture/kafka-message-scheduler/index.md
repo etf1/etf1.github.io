@@ -10,7 +10,7 @@ description: "Why and how we made a scheduler for kafka messages"
 
 # Introduction
 
-At MYTF1 we are in charge of publishing content to tf1.fr website. The contents are mainly videos, programs, and articles of the broadcasted programs on tf1 tv channel.
+At MYTF1 we are in charge of publishing content to tf1.fr website. The contents are mainly videos, programs, and articles of the broadcasted programs on TF1 TV channel.
 
 These contents are managed in the backend with a CMS (content management system), and the videos are transcoded with a video workflow.
 The MYTF1 website is a high-traffic website, so to expose this data, we are heavily relying on caching mechanisms such as redis, elasticsearch, cloudfront, etc ...
@@ -41,7 +41,7 @@ This was the first draft design of the kafka message scheduler.
 In summary, the goal of the kafka message scheduler is to publish kafka messages to a specific topic with a specific id and payload in the future.
 A schedule is just a kafka message with specific headers and a payload. 
 
-The schedule id should be unique and if you want to change the payload of your message, you just have to publish a new version of your message in the scheduler's topic. The topic can have many versions for your schedule, the scheduler will always take the latest one. 
+The schedule ID should be unique and if you want to change the payload of your message, you just have to publish a new version of your message in the scheduler's topic. The topic can have many versions for your schedule, the scheduler will always take the latest one. 
 There is a client lib written in GO for preparing a kafka message to be a scheduled message: https://github.com/etf1/kafka-message-scheduler/tree/main/clientlib
 
 The scheduler reads the topic from the beginning at startup and every day at 00:00 am and it stores in memory the schedules planned for the current day. 
@@ -72,7 +72,7 @@ As you can see it is a regular kafka message but with some specific headers.
 
 These headers are:
 
-- scheduler-epoch: the schedule meaning when the message should be produced in the target topic, expressed in EPOCH (number of seconds since Thursday 1 January 1970 00:00:00)
+- scheduler-epoch: meaning when the message should be produced in the target topic, expressed in EPOCH (number of seconds since Thursday 1 January 1970 00:00:00)
 - scheduler-target-topic: the target topic to which the message should be produced at the scheduled date
 - scheduler-target-key: the key for the produced message to the target topic, is generally different from the scheduler message
 
@@ -90,7 +90,7 @@ Key: vid1
 Value: "video 1"
 ```
 
-- scheduler-timestamp: the scheduler message timestamp
+- scheduler-timestamp: the scheduler message creation timestamp
 - scheduler-key: the scheduler message key
 - scheduler-topic: the scheduler message topic
 
