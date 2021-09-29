@@ -663,7 +663,7 @@ C'est à dire avoir 2 infrastructures parallèles de cluster EKS et basculer le 
 ## Implémentation
 
 Notre solution se base sur l'utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.  
-Nous avons pour chaque cluster EKS blue/green un sous domaine privé et un sous-domaine public.  
+Nous avons pour chaque cluster EKS blue/green un sous-domaine privé et un sous-domaine public.  
 Et nous avons un domaine privé et un domaine public partagé entre les clusters blue/green qui correspond aux domaines en production.
 
 Schéma d'explication pour les domaines privés
