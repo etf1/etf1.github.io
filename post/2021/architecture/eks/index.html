@@ -108,7 +108,7 @@ Un peu de vocabulaire pour commencer:</p>
 <li>Un Pod est le composant le plus petit qui gère directement un ou plusieurs containers qui partagent la même adresse IP.</li>
 <li>Un Deployment définit l&rsquo;état cible des pods du cluster.</li>
 <li>Un Daemonset est un deployment qui déploie un pod par node.</li>
-<li>Un Ingress est une ressources kubernetes qui gère l&rsquo;accès externe aux services dans un cluster.</li>
+<li>Un Ingress est une ressource kubernetes qui gère l&rsquo;accès externe aux services dans un cluster.</li>
 <li>Un Namespace est une segmentation dans le nommage de ressources car les noms de ressources doivent être uniques dans un namespace.</li>
 </ul>
 <p>Toutes les définitions des ressources kubernetes sont stockées dans API kubernets qui est dans notre cas EKS
@@ -118,7 +118,7 @@ Un peu de vocabulaire pour commencer:</p>
 Il est également possible de faire gérer la gestion des nodes par AWS via
 les managed node groups. Pour plus d&rsquo;explication je vous invite à lire <a href=https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html target=_blank>https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html</a></p>
 <p>Au sein de notre cluster, nous avons des nodes privés qui passent par la nat gateway pour l&rsquo;accès internet et des nodes publics qui permettent aux pods l&rsquo;accès internet sans passer par la nat gateway.<br>
-Et nous avons des subnets dédiés pour les pod kubernetes afin de s&rsquo;affranchir des problèmes de range ip dans les subnets privés ou publics.
+Et nous avons des subnets dédiés pour les pod kubernetes afin de s&rsquo;affranchir des problèmes de range IP dans les subnets privés ou publics.
 <br>
 <img src=images/EKS.png#darkmode alt="Architecture EKS" title="Architecture EKS"></p>
 <h2 id=le-déploiement-les-outils-utilisés>Le déploiement & les outils utilisés</h2>
@@ -134,7 +134,7 @@ Les outils additionnels déployés dans notre cluster EKS:</p>
 <li><a href=https://github.com/kubernetes-sigs/external-dns target=_blank>ExternalDNS</a> pour lier un dns aux load blalancers créés</li>
 <li><a href=https://github.com/aws/aws-node-termination-handler target=_blank>AWS Node Termination Handler</a> pour détecter les interruptions d&rsquo;instance spot</li>
 <li><a href=https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws target=_blank>Cluster Autoscaler</a> pour permettre l&rsquo;augmentation/réduction du nombre de node suivant la charge</li>
-<li><a href=https://github.com/kubernetes-sigs/descheduler target=_blank>Descheduler</a> pour une meilleur répartition des pods au sein du cluster kubernetes</li>
+<li><a href=https://github.com/kubernetes-sigs/descheduler target=_blank>Descheduler</a> pour une meilleure répartition des pods au sein du cluster kubernetes</li>
 <li><a href=https://github.com/kubernetes-sigs/metrics-server target=_blank>Metrics Server</a> pour récupérer les metrics des containers</li>
 <li><a href=https://docs.fluentd.org/container-deployment/kubernetes target=_blank>FluentD</a> pour récupérer les logs des containers</li>
 </ul>
@@ -692,7 +692,7 @@ Le rôle edit qui est buildin et le rôle spécifique readwrite-secrets pour les
   - <span style=color:#ae81ff>create</span>
   - <span style=color:#ae81ff>update</span>
   - <span style=color:#ae81ff>patch</span></code></pre></div>
-<h1 id=le-deploiement-du-cluster-eks-en-mode-blue-green>Le deploiement du cluster EKS en mode blue/green.</h1>
+<h1 id=le-déploiement-du-cluster-eks-en-mode-blue-green>Le déploiement du cluster EKS en mode blue/green.</h1>
 <h2 id=contexte-etf1>Contexte eTF1</h2>
 <p>Nous voulons être capables d&rsquo;apporter des changements dans de cluster EKS avec une capacité de rollback rapide en cas d&rsquo;effet non désirable.<br>
 Nous avons opté pour un déploiement en mode blue/green.<br>
@@ -701,7 +701,7 @@ C&rsquo;est à dire avoir 2 infrastructures parallèles de cluster EKS et bascul
 <p><img src=images/aws-blue-green-simple.png#darkmode alt="Blue green" title="Blue green simple"></p>
 <h2 id=implémentation>Implémentation</h2>
 <p>Notre solution se base sur l&rsquo;utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.<br>
-Nous avons pour chaque cluster EKS blue/green un sous domaine privé et un sous domaine public.<br>
+Nous avons pour chaque cluster EKS blue/green un sous domaine privé et un sous-domaine public.<br>
 Et nous avons un domaine privé et un domaine public partagé entre les clusters blue/green qui correspond aux domaines en production.</p>
 <p>Schéma d&rsquo;explication pour les domaines privés
 <img src=images/eks-blue-green-etf1.png#darkmode alt="EKS blue green etf1" title="EKS Blue green etf1"></p>
@@ -910,7 +910,7 @@ Nous avons développé un petit script qui récupère la valeur du champ TXT et 
 <span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -z <span style=color:#e6db74>&#34;</span>$target_cluster<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span> target_cluster<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$3<span style=color:#e6db74>&#34;</span>; <span style=color:#66d9ef>fi</span>
 set -- <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>@:1:2<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span> <span style=color:#e6db74>&#34;</span>$target_cluster<span style=color:#e6db74>&#34;</span> <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>@:4<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
 aws-iam-authenticator <span style=color:#e6db74>&#34;</span>$@<span style=color:#e6db74>&#34;</span></code></pre></div>
-<p>exemple de kubeconfig (l&rsquo;entré DNS avec le champ TXT défini est eks.devinfra.info)</p>
+<p>exemple de kubeconfig (l&rsquo;entrée DNS avec le champ TXT défini est eks.devinfra.info)</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
 <span style=color:#f92672>clusters</span>:
 - <span style=color:#f92672>cluster</span>:
@@ -943,7 +943,7 @@ aws-iam-authenticator <span style=color:#e6db74>&#34;</span>$@<span style=color:
         <span style=color:#f92672>value</span>: <span style=color:#ae81ff>awsaccess</span></code></pre></div>
 <h2 id=conclusion>Conclusion</h2>
 <p>Nous sommes globalement satisfaits de EKS. Il fournit un bon support des outils dont nous avons besoin et nous a permis la mise en place d&rsquo;un processus de déploiement continu nécessaire pour nos applications.
-Notre prochain article décrira ce que nous avons mis en place pour gérer la scalabilité. Ceci est d’autant plus important car cela nous permet non seulement de réduire les coûts et mais aussi l’empreinte carbone de notre activité.</p>
+Notre prochain article décrira ce que nous avons mis en place pour gérer la scalabilité. Ceci est d’autant plus important car cela nous permet non seulement de réduire les coûts mais aussi l’empreinte carbone de notre activité.</p>
 </article>
 <section id=articleNext class="section nartrow">
 <h3 class=footer-next-heading>Plus d'articles</h3>
