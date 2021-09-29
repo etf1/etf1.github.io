@@ -67,7 +67,7 @@ copied
 <span class=hide-on-mobile>,&nbsp;</span>
 </a>
 <script src=/js/collapseAuthors.js></script>
-Publié le 29 septembre 2021 • 13 minutes
+Publié le 29 septembre 2021 • 12 minutes
 </div>
 </div>
 </header>
@@ -97,7 +97,7 @@ Publié le 29 septembre 2021 • 13 minutes
 <li>Le site d&rsquo;info <a href=https://www.lci.fr target=_blank>LCI</a></li>
 <li>Le site jeunesse <a href=https://www.tfoumax.fr target=_blank>TFOUMAX</a><br></li>
 </ul>
-<p>Et plus précisement notre gestion de droit au sein du cluster eks ainsi que le modèle de déploiement blue/green du cluster kubernetes managé par AWS (EKS) que nous utilisons.</p>
+<p>Et plus précisément notre gestion de droit au sein du cluster eks ainsi que le modèle de déploiement blue/green du cluster kubernetes managé par AWS (EKS) que nous utilisons.</p>
 <h2 id=brève-description-de-kubernetes-à-la-sauce-eks>Brève description de kubernetes à la sauce EKS</h2>
 <p>Kubernetes est un orchestrateur de container.<br>
 Pour simplifier, il s&rsquo;agit d&rsquo;un logiciel qui s&rsquo;occupe de gérer la vie d&rsquo;un ensemble de containers docker.<br>
@@ -107,9 +107,9 @@ Un peu de vocabulaire pour commencer:</p>
 <li>Un Node est une machine de travail (physique ou virtuelle) d&rsquo;un cluster.</li>
 <li>Un Pod est le composant le plus petit qui gère directement un ou plusieurs containers qui partagent la même adresse IP.</li>
 <li>Un Deployment définit l&rsquo;état cible des pods du cluster.</li>
-<li>Un Daemonset est un deployment qui deploie un pod par node.</li>
-<li>Un Ingress est une ressources kubernetes qui gère l&rsquo;accès externe aux sercies dans un cluster.</li>
-<li>Un Namespace est une segmentation dans le nommmage de ressources car les noms de ressouces doivent être uniques dans un namespace.</li>
+<li>Un Daemonset est un deployment qui déploie un pod par node.</li>
+<li>Un Ingress est une ressources kubernetes qui gère l&rsquo;accès externe aux services dans un cluster.</li>
+<li>Un Namespace est une segmentation dans le nommage de ressources car les noms de ressources doivent être uniques dans un namespace.</li>
 </ul>
 <p>Toutes les définitions des ressources kubernetes sont stockées dans API kubernets qui est dans notre cas EKS
 <img src=images/bref-kubernetes.png#darkmode alt="Bref EKS" title="Bref EKS">.</p>
@@ -126,7 +126,7 @@ Et nous avons des subnets dédiés pour les pod kubernetes afin de s&rsquo;affra
 Les outils additionnels déployés dans notre cluster EKS:</p>
 <ul>
 <li><a href=https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html target=_blank>aws-auth</a> pour la gestion de droit</li>
-<li><a href=https://github.com/external-secrets/kubernetes-external-secrets target=_blank>External Secrets</a> pour récuperer les secrets stockés dans secrets manager AWS</li>
+<li><a href=https://github.com/external-secrets/kubernetes-external-secrets target=_blank>External Secrets</a> pour récupérer les secrets stockés dans secrets manager AWS</li>
 <li><a href=https://github.com/aws/amazon-vpc-cni-k8s target=_blank>AWS VPC CNI</a> pour le réseau kubernetes</li>
 <li><a href=https://linkerd.io/ target=_blank>LinkerD</a> comme load balancer interne pour GRPC</li>
 <li><a href=https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/ target=_blank>Node-Local DNS</a> pour améliorer les performances DNS.</li>
@@ -135,8 +135,8 @@ Les outils additionnels déployés dans notre cluster EKS:</p>
 <li><a href=https://github.com/aws/aws-node-termination-handler target=_blank>AWS Node Termination Handler</a> pour détecter les interruptions d&rsquo;instance spot</li>
 <li><a href=https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws target=_blank>Cluster Autoscaler</a> pour permettre l&rsquo;augmentation/réduction du nombre de node suivant la charge</li>
 <li><a href=https://github.com/kubernetes-sigs/descheduler target=_blank>Descheduler</a> pour une meilleur répartition des pods au sein du cluster kubernetes</li>
-<li><a href=https://github.com/kubernetes-sigs/metrics-server target=_blank>Metrics Server</a> pour récuper les metrics des containers</li>
-<li><a href=https://docs.fluentd.org/container-deployment/kubernetes target=_blank>FluentD</a> pour récuper les logs des containers</li>
+<li><a href=https://github.com/kubernetes-sigs/metrics-server target=_blank>Metrics Server</a> pour récupérer les metrics des containers</li>
+<li><a href=https://docs.fluentd.org/container-deployment/kubernetes target=_blank>FluentD</a> pour récupérer les logs des containers</li>
 </ul>
 <h2 id=gestion-des-droits-au-sein-d-eks>Gestion des droits au sein d&rsquo;EKS</h2>
 <p>Notre besoin pour la gestion de droit est classique.<br>
@@ -695,9 +695,9 @@ Le rôle edit qui est buildin et le rôle spécifique readwrite-secrets pour les
 <h1 id=le-deploiement-du-cluster-eks-en-mode-blue-green>Le deploiement du cluster EKS en mode blue/green.</h1>
 <h2 id=contexte-etf1>Contexte eTF1</h2>
 <p>Nous voulons être capables d&rsquo;apporter des changements dans de cluster EKS avec une capacité de rollback rapide en cas d&rsquo;effet non désirable.<br>
-Nous avons optés pour un déploiement en mode blue/green.<br>
-C&rsquo;est à dire à avoir 2 infrastructures parallèles de cluster EKS et basculer le traffic entre le cluster N (blue) et le cluster N+1 (green) lors de nos changements majeurs (changement de CNI, upgrade de version, etc).</p>
-<h2 id=illustation-d-un-blue-green>Illustation d&rsquo;un blue/green</h2>
+Nous avons opté pour un déploiement en mode blue/green.<br>
+C&rsquo;est à dire avoir 2 infrastructures parallèles de cluster EKS et basculer le trafic entre le cluster N (blue) et le cluster N+1 (green) lors de nos changements majeurs (changement de CNI, upgrade de version, etc).</p>
+<h2 id=illustration-d-un-blue-green>Illustration d&rsquo;un blue/green</h2>
 <p><img src=images/aws-blue-green-simple.png#darkmode alt="Blue green" title="Blue green simple"></p>
 <h2 id=implémentation>Implémentation</h2>
 <p>Notre solution se base sur l&rsquo;utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.<br>
@@ -885,25 +885,25 @@ Et nous avons un domaine privé et un domaine public partagé entre les clusters
   <span style=color:#f92672>securityContext</span>:
     <span style=color:#f92672>fsGroup</span>: <span style=color:#ae81ff>65534</span></code></pre></div>
 <h3 id=exemple-de-bascule-blue-green-eks>Exemple de bascule blue/green eks</h3>
-<p>Dans cette exemple simplifié, nous avons un cluster EKS eks-blue et un cluster EKS eks-green.<br>
+<p>Dans cet exemple simplifié, nous avons un cluster EKS eks-blue et un cluster EKS eks-green.<br>
 Ils ont tous les deux un ingress privé hello et un ingress public world.<br>
 Le domaine partagé est devinfra.local pour le domaine privé et devinfra.fr pour le domaine public.<br>
 Nous avons une entrée DNS api.devinfra.local qui correspond à une API EKS en production.<br>
-L&rsquo;entrée DNS hello.devinfra.local vers une applicatition interne et l&rsquo;entrée DNS world.devinfra.fr vers une application accessible depuis internet.</p>
+L&rsquo;entrée DNS hello.devinfra.local vers une application interne et l&rsquo;entrée DNS world.devinfra.fr vers une application accessible depuis internet.</p>
 <p>Les entrées DNS de production pointent vers blue.</p>
 <p><img src=images/ingress-eks-blue.png#darkmode alt="Ingress eks-blue" title="Ingress EKS blue"></p>
 <p>On arrête les ExternalDNS de production sur eks-blue afin d&rsquo;arrêter les mises à jour des entrées DNS de production.</p>
 <p><img src=images/stop-ingress-eks-blue.png#darkmode alt="Stop ingress eks-blue" title="Stop Ingress EKS blue"></p>
-<p>On met à jours l&rsquo;entré DNS de l&rsquo;API EKS sur le domaine partagé pour pointer vers l&rsquo;API EKS green.</p>
+<p>On met à jour l&rsquo;entrée DNS de l&rsquo;API EKS sur le domaine partagé pour pointer vers l&rsquo;API EKS green.</p>
 <p><img src=images/change-api-eks.png#darkmode alt="change api eks" title="Change API EKS"></p>
-<p>On démarre les ExternalDNS de production sur eks-green afin de mettre à jours toutes les entrées DNS
+<p>On démarre les ExternalDNS de production sur eks-green afin de mettre à jour toutes les entrées DNS
 <img src=images/start-ingress-eks-green.png#darkmode alt="Start ingress eks-blue" title="Start Ingress EKS green"></p>
 <p>Il ne reste plus qu&rsquo;à vérifier que les anciens ingress ne reçoivent plus de trafic avant de les supprimer.</p>
 <p>On a réalisé une bascule blue/green de cluster EKS.</p>
 <p>Mais en basculant de cluster, il y a un problème avec l&rsquo;authentification kubectl car il est nécessaire de définir le cluster name du cluster EKS.</p>
 <h3 id=comment-avoir-un-cluster-name-dynamique>Comment avoir un cluster name dynamique</h3>
-<p>Pour cela nous avons introduit une entrées DNS de type TXT qui a pour valeur le nom du cluster.<br>
-Nous avons développé un petit script qui récupere la valeur du champ TXT et le remplace lors de l&rsquo;appel à aws-iam-authenticator.</p>
+<p>Pour cela nous avons introduit une entrée DNS de type TXT qui a pour valeur le nom du cluster.<br>
+Nous avons développé un petit script qui récupère la valeur du champ TXT et le remplace lors de l&rsquo;appel à aws-iam-authenticator.</p>
 <p>Le script entre kubectl et aws-iam-authenticator s&rsquo;appelle aws-iam-authenticator-wrapper</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e>#!/bin/bash
 </span><span style=color:#75715e></span>target_cluster<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>dig +short -t TXT <span style=color:#e6db74>&#34;</span>$3<span style=color:#e6db74>&#34;</span> | tr -d <span style=color:#e6db74>&#39;&#34;&#39;</span><span style=color:#66d9ef>)</span>
