@@ -701,7 +701,7 @@ C&rsquo;est à dire avoir 2 infrastructures parallèles de cluster EKS et bascul
 <p><img src=images/aws-blue-green-simple.png#darkmode alt="Blue green" title="Blue green simple"></p>
 <h2 id=implémentation>Implémentation</h2>
 <p>Notre solution se base sur l&rsquo;utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.<br>
-Nous avons pour chaque cluster EKS blue/green un sous domaine privé et un sous-domaine public.<br>
+Nous avons pour chaque cluster EKS blue/green un sous-domaine privé et un sous-domaine public.<br>
 Et nous avons un domaine privé et un domaine public partagé entre les clusters blue/green qui correspond aux domaines en production.</p>
 <p>Schéma d&rsquo;explication pour les domaines privés
 <img src=images/eks-blue-green-etf1.png#darkmode alt="EKS blue green etf1" title="EKS Blue green etf1"></p>
