@@ -28,7 +28,7 @@ Un peu de vocabulaire pour commencer:
 * Un Pod est le composant le plus petit qui gère directement un ou plusieurs containers qui partagent la même adresse IP.
 * Un Deployment définit l'état cible des pods du cluster.
 * Un Daemonset est un deployment qui déploie un pod par node.
-* Un Ingress est une ressources kubernetes qui gère l'accès externe aux services dans un cluster.
+* Un Ingress est une ressource kubernetes qui gère l'accès externe aux services dans un cluster.
 * Un Namespace est une segmentation dans le nommage de ressources car les noms de ressources doivent être uniques dans un namespace.
 
 Toutes les définitions des ressources kubernetes sont stockées dans API kubernets qui est dans notre cas EKS
@@ -42,7 +42,7 @@ Il est également possible de faire gérer la gestion des nodes par AWS via
 les managed node groups. Pour plus d'explication je vous invite à lire https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html
 
 Au sein de notre cluster, nous avons des nodes privés qui passent par la nat gateway pour l'accès internet et des nodes publics qui permettent aux pods l'accès internet sans passer par la nat gateway.  
-Et nous avons des subnets dédiés pour les pod kubernetes afin de s'affranchir des problèmes de range ip dans les subnets privés ou publics. 
+Et nous avons des subnets dédiés pour les pod kubernetes afin de s'affranchir des problèmes de range IP dans les subnets privés ou publics. 
 <br>
 ![Architecture EKS](images/EKS.png#darkmode "Architecture EKS")
 
@@ -60,7 +60,7 @@ Les outils additionnels déployés dans notre cluster EKS:
 * [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) pour lier un dns aux load blalancers créés
 * [AWS Node Termination Handler](https://github.com/aws/aws-node-termination-handler) pour détecter les interruptions d'instance spot
 * [Cluster Autoscaler](https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws) pour permettre l'augmentation/réduction du nombre de node suivant la charge
-* [Descheduler](https://github.com/kubernetes-sigs/descheduler) pour une meilleur répartition des pods au sein du cluster kubernetes
+* [Descheduler](https://github.com/kubernetes-sigs/descheduler) pour une meilleure répartition des pods au sein du cluster kubernetes
 * [Metrics Server](https://github.com/kubernetes-sigs/metrics-server) pour récupérer les metrics des containers
 * [FluentD](https://docs.fluentd.org/container-deployment/kubernetes) pour récupérer les logs des containers
 
@@ -648,7 +648,7 @@ rules:
 
 ```
 
-# Le deploiement du cluster EKS en mode blue/green.
+# Le déploiement du cluster EKS en mode blue/green.
 
 ## Contexte eTF1
 Nous voulons être capables d'apporter des changements dans de cluster EKS avec une capacité de rollback rapide en cas d'effet non désirable.  
@@ -663,7 +663,7 @@ C'est à dire avoir 2 infrastructures parallèles de cluster EKS et basculer le 
 ## Implémentation
 
 Notre solution se base sur l'utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.  
-Nous avons pour chaque cluster EKS blue/green un sous domaine privé et un sous domaine public.  
+Nous avons pour chaque cluster EKS blue/green un sous domaine privé et un sous-domaine public.  
 Et nous avons un domaine privé et un domaine public partagé entre les clusters blue/green qui correspond aux domaines en production.
 
 Schéma d'explication pour les domaines privés
@@ -904,7 +904,7 @@ set -- "${@:1:2}" "$target_cluster" "${@:4}"
 aws-iam-authenticator "$@"
 ```
 
-exemple de kubeconfig (l'entré DNS avec le champ TXT défini est eks.devinfra.info)
+exemple de kubeconfig (l'entrée DNS avec le champ TXT défini est eks.devinfra.info)
 ```yaml
 apiVersion: v1
 clusters:
@@ -939,6 +939,6 @@ users:
 ```
 ## Conclusion
 Nous sommes globalement satisfaits de EKS. Il fournit un bon support des outils dont nous avons besoin et nous a permis la mise en place d'un processus de déploiement continu nécessaire pour nos applications. 
-Notre prochain article décrira ce que nous avons mis en place pour gérer la scalabilité. Ceci est d’autant plus important car cela nous permet non seulement de réduire les coûts et mais aussi l’empreinte carbone de notre activité.
+Notre prochain article décrira ce que nous avons mis en place pour gérer la scalabilité. Ceci est d’autant plus important car cela nous permet non seulement de réduire les coûts mais aussi l’empreinte carbone de notre activité.
 
 
