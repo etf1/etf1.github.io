@@ -1,0 +1,1018 @@
+<html>
+<head>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="ie=edge">
+<meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no">
+<link rel=icon href=/images/favicon-96x96.png>
+<link rel=stylesheet type=text/css href="//fonts.googleapis.com/css?family=Open+Sans">
+<link rel=stylesheet href=/scss/global.min.ae6b060df7a6cc9d3fc742acd2d5dad1ccc9ba6004fb2b70d30d45768e08f41b.css>
+<link rel=stylesheet href=/css/prism.css>
+<link href="https://fonts.googleapis.com/css?family=Merriweather&display=swap" rel=stylesheet>
+<title>Infrastructure EKS | Blog technique e-TF1</title>
+<meta name=description content="Venez découvrir EKS chez eTF1">
+<meta name=robots content="index, follow">
+<meta name=google-site-verification content="8mELmXNpnm-09GtDb3i1kq4Jfq_iR94-yqgo5wN9CdY">
+<meta property="og:title" content="Infrastructure EKS | Blog technique e-TF1">
+<meta property="og:site_name" content="Blog technique e-TF1">
+<meta property="og:description" content="Venez découvrir EKS chez eTF1">
+<meta property="og:url" content="https://tech.tf1.fr/post/2021/architecture/eks/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:image" content="https://tech.tf1.fr/post/2021/architecture/eks/images/hero.jpg"><meta name=twitter:card content="summary_large_image">
+<meta name=twitter:title content="Infrastructure EKS | Blog technique e-TF1">
+<link rel=canonical href=https://tech.tf1.fr/post/2021/architecture/eks/>
+<meta name=twitter:description content="Venez découvrir EKS chez eTF1">
+<meta name=twitter:image content="https://tech.tf1.fr/post/2021/architecture/eks/images/hero.jpg">
+<meta property="article:published_time" content="2021-09-29T08:30:00+00:00">
+<meta property="article:updated_time" content="2021-09-29T08:30:00+00:00">
+<meta property="keywords" content="mytf1, tf1, streaming, player, video, go, golang, react, js, javascript, css, android, ios, kotlin, swift, nginx, drm, widevine, elemental, aws, mongodb, kafka">
+<link rel=alternate type=application/rss+xml title="Blog technique e-TF1" href=https://tech.tf1.fr/index.xml>
+</head>
+<body class=line-numbers>
+<script src=/js/initColors.js></script>
+<div class=layout-styled>
+<section class=section>
+<div class=nav-container>
+<a class=logo-link href=/>
+<img src=/images/logo-white.svg alt=logo id=logo-desktop>
+<span class=header-hidden>Navigate back to the homepage</span>
+</a>
+<div class=nav-controls>
+<button id=copyButton class=icon-wrapper><svg class="icon-image" width="24" height="20" viewBox="0 0 24 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M2 5C2 3.34328 3.34328 2 5 2h9c1.6567.0 3 1.34328 3 3V9c0 1.6567-1.3433 3-3 3H10C9.44771 12 9 12.4477 9 13S9.44771 14 10 14h4c2.7613.0 5-2.2387 5-5V5c0-2.76128-2.2387-5-5-5H5C2.23872.0.0 2.23872.0 5V9c0 1.4938.656313 2.8361 1.6935 3.7509C2.10768 13.1163 2.73961 13.0767 3.10494 12.6625 3.47028 12.2483 3.43068 11.6164 3.0165 11.2511 2.39169 10.6999 2 9.89621 2 9V5zm5 6c0-1.65672 1.34328-3 3-3h4C14.5523 8 15 7.55228 15 7S14.5523 6 14 6H10C7.23872 6 5 8.23872 5 11v4c0 2.7613 2.23872 5 5 5h9c2.7613.0 5-2.2387 5-5V11C24 9.50621 23.3437 8.16393 22.3065 7.24906 21.8923 6.88372 21.2604 6.92332 20.8951 7.3375 20.5297 7.75168 20.5693 8.38361 20.9835 8.74894 21.6083 9.30007 22 10.1038 22 11v4c0 1.6567-1.3433 3-3 3H10c-1.65672.0-3-1.3433-3-3V11z" fill="#000"/></svg>
+<div id=toolTip class=tool-tip>
+copied
+</div>
+<input id=copyText style=opacity:0 type=text class=tool-tip>
+</button>
+<button id=themeColorButton class=icon-wrapper>
+<div id=sunRays class=sun-rays></div>
+<div id=moonOrSun class=moon-or-sun></div>
+<div id=moonMask class=moon-mask></div>
+</button>
+</div>
+</div>
+</section>
+<script src=/js/toggleLogos.js></script>
+<script src=/js/toggleColors.js></script>
+<script src=/js/copyUrl.js></script>
+<section class="section narrow">
+<section id=articleHero class="section narrow">
+<div class=article-hero>
+<header class=article-header>
+<h1 class=article-hero-heading>Infrastructure EKS</h1>
+<div class=article-hero-subtitle>
+<div class=article-meta>
+<a href=/authors/koguchi/ class=article-author-link>
+<strong>Kazuhiro OGUCHI</strong>
+<span class=hide-on-mobile>,&nbsp;</span>
+</a>
+<script src=/js/collapseAuthors.js></script>
+Publié le 29 septembre 2021 • 13 minutes
+</div>
+</div>
+</header>
+<div class=article-hero-image id=ArticleImage__Hero>
+<img src=/post/2021/architecture/eks/images/hero.jpg>
+</div>
+</div>
+</section>
+<aside id=progressBar class=aside-container>
+<div class=aside-align>
+<div>
+<div class=overlap-container>
+</div>
+</div>
+</div>
+<div class=progress-container tabindex={-1}>
+<div class=track-line aria-hidden=true>
+<div id=progressIndicator class=progress-line></div>
+</div>
+</div>
+</aside>
+<article id=articleContent class=post-content style=position:relative>
+<h2 id=avant-propos>Avant propos</h2>
+<p>Cet article présente le cluster EKS qui héberge les applications d&rsquo;e-TF1:</p>
+<ul>
+<li>Le site de streaming de <a href=https://www.tf1.fr target=_blank>TF1</a></li>
+<li>Le site d&rsquo;info <a href=https://www.lci.fr target=_blank>LCI</a></li>
+<li>Le site jeunesse <a href=https://www.tfoumax.fr target=_blank>TFOUMAX</a><br></li>
+</ul>
+<p>Et plus précisement notre gestion de droit au sein du cluster eks ainsi que le modèle de déploiement blue/green du cluster kubernetes managé par AWS (EKS) que nous utilisons.</p>
+<h2 id=brève-description-de-kubernetes-à-la-sauce-eks>Brève description de kubernetes à la sauce EKS</h2>
+<p>Kubernetes est un orchestrateur de container.<br>
+Pour simplifier, il s&rsquo;agit d&rsquo;un logiciel qui s&rsquo;occupe de gérer la vie d&rsquo;un ensemble de containers docker.<br>
+Un peu de vocabulaire pour commencer:</p>
+<ul>
+<li>Un cluster kubernetes est un ensemble de machines (node) qui permettent d&rsquo;exécuter des containers.</li>
+<li>Un Node est une machine de travail (physique ou virtuelle) d&rsquo;un cluster.</li>
+<li>Un Pod est le composant le plus petit qui gère directement un ou plusieurs containers qui partagent la même adresse IP.</li>
+<li>Un Deployment définit l&rsquo;état cible des pods du cluster.</li>
+<li>Un Daemonset est un deployment qui deploie un pod par node.</li>
+<li>Un Ingress est une ressources kubernetes qui gère l&rsquo;accès externe aux sercies dans un cluster.</li>
+<li>Un Namespace est une segmentation dans le nommmage de ressources car les noms de ressouces doivent être uniques dans un namespace.</li>
+</ul>
+<p>Toutes les définitions des ressources kubernetes sont stockées dans API kubernets qui est dans notre cas EKS
+<img src=images/bref-kubernetes.png#darkmode alt="Bref EKS" title="Bref EKS">.</p>
+<h2 id=architecture-eks-e-tf1>Architecture EKS e-TF1</h2>
+<p>Nous utilisons actuellement uniquement la partie control plane.<br>
+Il est également possible de faire gérer la gestion des nodes par AWS via
+les managed node groups. Pour plus d&rsquo;explication je vous invite à lire <a href=https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html target=_blank>https://docs.aws.amazon.com/eks/latest/userguide/managed-node-groups.html</a></p>
+<p>Au sein de notre cluster, nous avons des nodes privés qui passent par la nat gateway pour l&rsquo;accès internet et des nodes publics qui permettent aux pods l&rsquo;accès internet sans passer par la nat gateway.<br>
+Et nous avons des subnets dédiés pour les pod kubernetes afin de s&rsquo;affranchir des problèmes de range ip dans les subnets privés ou publics.
+<br>
+<img src=images/EKS.png#darkmode alt="Architecture EKS" title="Architecture EKS"></p>
+<h2 id=le-déploiement-les-outils-utilisés>Le déploiement & les outils utilisés</h2>
+<p>Nous déployons le contrôle plane EKS et les nodes via terraform.<br>
+Les outils additionnels déployés dans notre cluster EKS:</p>
+<ul>
+<li><a href=https://docs.aws.amazon.com/eks/latest/userguide/add-user-role.html target=_blank>aws-auth</a> pour la gestion de droit</li>
+<li><a href=https://github.com/external-secrets/kubernetes-external-secrets target=_blank>External Secrets</a> pour récuperer les secrets stockés dans secrets manager AWS</li>
+<li><a href=https://github.com/aws/amazon-vpc-cni-k8s target=_blank>AWS VPC CNI</a> pour le réseau kubernetes</li>
+<li><a href=https://linkerd.io/ target=_blank>LinkerD</a> comme load balancer interne pour GRPC</li>
+<li><a href=https://kubernetes.io/docs/tasks/administer-cluster/nodelocaldns/ target=_blank>Node-Local DNS</a> pour améliorer les performances DNS.</li>
+<li><a href=https://github.com/kubernetes-sigs/aws-load-balancer-controller target=_blank>ALB Ingress Controller</a> pour créer les load balancers afin d&rsquo;accéder aux services lancés dans kubernetes.</li>
+<li><a href=https://github.com/kubernetes-sigs/external-dns target=_blank>ExternalDNS</a> pour lier un dns aux load blalancers créés</li>
+<li><a href=https://github.com/aws/aws-node-termination-handler target=_blank>AWS Node Termination Handler</a> pour détecter les interruptions d&rsquo;instance spot</li>
+<li><a href=https://github.com/kubernetes/autoscaler/tree/master/cluster-autoscaler/cloudprovider/aws target=_blank>Cluster Autoscaler</a> pour permettre l&rsquo;augmentation/réduction du nombre de node suivant la charge</li>
+<li><a href=https://github.com/kubernetes-sigs/descheduler target=_blank>Descheduler</a> pour une meilleur répartition des pods au sein du cluster kubernetes</li>
+<li><a href=https://github.com/kubernetes-sigs/metrics-server target=_blank>Metrics Server</a> pour récuper les metrics des containers</li>
+<li><a href=https://docs.fluentd.org/container-deployment/kubernetes target=_blank>FluentD</a> pour récuper les logs des containers</li>
+</ul>
+<h2 id=gestion-des-droits-au-sein-d-eks>Gestion des droits au sein d&rsquo;EKS</h2>
+<p>Notre besoin pour la gestion de droit est classique.<br>
+Nous avons:</p>
+<ul>
+<li>Les Ops qui ont besoin d&rsquo;avoir un contrôle total sur EKS.</li>
+<li>Les Leads Devs qui doivent pouvoir modifier leurs ressources EKS.</li>
+<li>Les Devs qui ont seulement besoin de consulter.</li>
+</ul>
+<p>Nous avons donc défini 3 rôles IAM.</p>
+<ul>
+<li>Le rôle IAM etf1-crossaccount-k8sadmin pour les Ops.</li>
+<li>Le rôle IAM etf1-crossaccount-k8sreadwrite pour les Leads Devs.</li>
+<li>Le rôle IAM etf1-crossaccount-k8sreadonly pour les Devs.</li>
+</ul>
+<p>On configure aws-auth pour associer le rôle IAM à un/des groupes kubernetes.<br>
+Dans notre cas, nous utilisons les groupes kubernetes custom suivants:</p>
+<ul>
+<li>readwrite</li>
+<li>readonly</li>
+<li>debugmode</li>
+</ul>
+<p>Voici la configmap aws-auth sur l&rsquo;association rôle IAM et groupe kubernetes.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ConfigMap</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>labels</span>:
+    <span style=color:#f92672>k8s-app</span>: <span style=color:#ae81ff>aws-iam-authenticator</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>aws-auth</span>
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>kube-system</span>
+<span style=color:#f92672>data</span>:
+  <span style=color:#f92672>mapRoles</span>: |<span style=color:#e6db74>
+</span><span style=color:#e6db74>    - rolearn: arn:aws:iam::XXXXXXXXX:role/etf1-crossaccount-k8sadmin
+</span><span style=color:#e6db74>      username: kubernetes-admin
+</span><span style=color:#e6db74>      groups:
+</span><span style=color:#e6db74>        - system:masters
+</span><span style=color:#e6db74>    - rolearn: arn:aws:iam::XXXXXXXXX:role/etf1-crossaccount-k8sreadwrite
+</span><span style=color:#e6db74>      username: kubernetes-readwrite
+</span><span style=color:#e6db74>      groups:
+</span><span style=color:#e6db74>        - readwrite
+</span><span style=color:#e6db74>        - readonly
+</span><span style=color:#e6db74>        - debugmode
+</span><span style=color:#e6db74>    - rolearn: arn:aws:iam::XXXXXXXXX:role/etf1-crossaccount-k8sreadonly
+</span><span style=color:#e6db74>      username: kubernetes-readonly
+</span><span style=color:#e6db74>      groups:
+</span><span style=color:#e6db74>        - readonly
+</span><span style=color:#e6db74>        - debugmode</span>    </code></pre></div>
+<p>Et la définition des droits des différents groupes (clusterrolebinding/clusterrole/role).</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ClusterRoleBinding</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>annotations</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>readonly-role-view</span>
+<span style=color:#f92672>roleRef</span>:
+  <span style=color:#f92672>apiGroup</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io</span>
+  <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ClusterRole</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>view</span>
+<span style=color:#f92672>subjects</span>:
+- <span style=color:#f92672>apiGroup</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io</span>
+  <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Group</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>readonly</span></code></pre></div>
+<p>Le clusterrole view est builtin et ressemble à ceci:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ClusterRole</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>annotations</span>:
+    <span style=color:#f92672>rbac.authorization.kubernetes.io/autoupdate</span>: <span style=color:#e6db74>&#34;true&#34;</span>
+  <span style=color:#f92672>labels</span>:
+    <span style=color:#f92672>kubernetes.io/bootstrapping</span>: <span style=color:#ae81ff>rbac-defaults</span>
+    <span style=color:#f92672>rbac.authorization.k8s.io/aggregate-to-edit</span>: <span style=color:#e6db74>&#34;true&#34;</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>view</span>
+<span style=color:#f92672>rules</span>:
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>configmaps</span>
+  - <span style=color:#ae81ff>endpoints</span>
+  - <span style=color:#ae81ff>persistentvolumeclaims</span>
+  - <span style=color:#ae81ff>persistentvolumeclaims/status</span>
+  - <span style=color:#ae81ff>pods</span>
+  - <span style=color:#ae81ff>replicationcontrollers</span>
+  - <span style=color:#ae81ff>replicationcontrollers/scale</span>
+  - <span style=color:#ae81ff>serviceaccounts</span>
+  - <span style=color:#ae81ff>services</span>
+  - <span style=color:#ae81ff>services/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>bindings</span>
+  - <span style=color:#ae81ff>events</span>
+  - <span style=color:#ae81ff>limitranges</span>
+  - <span style=color:#ae81ff>namespaces/status</span>
+  - <span style=color:#ae81ff>pods/log</span>
+  - <span style=color:#ae81ff>pods/status</span>
+  - <span style=color:#ae81ff>replicationcontrollers/status</span>
+  - <span style=color:#ae81ff>resourcequotas</span>
+  - <span style=color:#ae81ff>resourcequotas/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>namespaces</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>apps</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>controllerrevisions</span>
+  - <span style=color:#ae81ff>daemonsets</span>
+  - <span style=color:#ae81ff>daemonsets/status</span>
+  - <span style=color:#ae81ff>deployments</span>
+  - <span style=color:#ae81ff>deployments/scale</span>
+  - <span style=color:#ae81ff>deployments/status</span>
+  - <span style=color:#ae81ff>replicasets</span>
+  - <span style=color:#ae81ff>replicasets/scale</span>
+  - <span style=color:#ae81ff>replicasets/status</span>
+  - <span style=color:#ae81ff>statefulsets</span>
+  - <span style=color:#ae81ff>statefulsets/scale</span>
+  - <span style=color:#ae81ff>statefulsets/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>autoscaling</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>horizontalpodautoscalers</span>
+  - <span style=color:#ae81ff>horizontalpodautoscalers/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>batch</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>cronjobs</span>
+  - <span style=color:#ae81ff>cronjobs/status</span>
+  - <span style=color:#ae81ff>jobs</span>
+  - <span style=color:#ae81ff>jobs/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>extensions</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>daemonsets</span>
+  - <span style=color:#ae81ff>daemonsets/status</span>
+  - <span style=color:#ae81ff>deployments</span>
+  - <span style=color:#ae81ff>deployments/scale</span>
+  - <span style=color:#ae81ff>deployments/status</span>
+  - <span style=color:#ae81ff>ingresses</span>
+  - <span style=color:#ae81ff>ingresses/status</span>
+  - <span style=color:#ae81ff>networkpolicies</span>
+  - <span style=color:#ae81ff>replicasets</span>
+  - <span style=color:#ae81ff>replicasets/scale</span>
+  - <span style=color:#ae81ff>replicasets/status</span>
+  - <span style=color:#ae81ff>replicationcontrollers/scale</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>policy</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>poddisruptionbudgets</span>
+  - <span style=color:#ae81ff>poddisruptionbudgets/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>networking.k8s.io</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>ingresses</span>
+  - <span style=color:#ae81ff>ingresses/status</span>
+  - <span style=color:#ae81ff>networkpolicies</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>metrics.k8s.io</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>pods</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span></code></pre></div>
+<p>Le groupe debugmode défini par namespace</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>RoleBinding</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>annotations</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>debug-mode</span>
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>namespace-X</span>
+<span style=color:#f92672>roleRef</span>:
+  <span style=color:#f92672>apiGroup</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io</span>
+  <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Role</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>debug-mode</span>
+<span style=color:#f92672>subjects</span>:
+- <span style=color:#f92672>apiGroup</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io</span>
+  <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Group</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>debugmode</span>
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>namespace-X</span></code></pre></div>
+<p>Le rôle debug-mode défini par namespace</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Role</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>annotations</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>debug-mode</span>
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>namespace-X</span>
+<span style=color:#f92672>rules</span>:
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>pods</span>
+  - <span style=color:#ae81ff>pods/portforward</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>create</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>pods/exec</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>create</span></code></pre></div>
+<p>Le groupe readwrite est également défini par namespace et est associé à 2 rôles:
+Le rôle edit qui est buildin et le rôle spécifique readwrite-secrets pour les external secrets</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>RoleBinding</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>annotations</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>readwrite</span>
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>namespace-X</span>
+<span style=color:#f92672>roleRef</span>:
+  <span style=color:#f92672>apiGroup</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io</span>
+  <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ClusterRole</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>edit</span>
+<span style=color:#f92672>subjects</span>:
+- <span style=color:#f92672>apiGroup</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io</span>
+  <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Group</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>readwrite</span>
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>namespace-X</span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>kind</span>: <span style=color:#ae81ff>RoleBinding</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>annotations</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>readwrite-secrets</span>
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>namespace-X</span>
+<span style=color:#f92672>roleRef</span>:
+  <span style=color:#f92672>apiGroup</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io</span>
+  <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Role</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>readwrite-secrets</span>
+<span style=color:#f92672>subjects</span>:
+- <span style=color:#f92672>apiGroup</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io</span>
+  <span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Group</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>readwrite</span>
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>namespace-X</span></code></pre></div>
+<p>Le rôle edit builtin</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>aggregationRule</span>:
+  <span style=color:#f92672>clusterRoleSelectors</span>:
+  - <span style=color:#f92672>matchLabels</span>:
+      <span style=color:#f92672>rbac.authorization.k8s.io/aggregate-to-edit</span>: <span style=color:#e6db74>&#34;true&#34;</span>
+<span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>ClusterRole</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>annotations</span>:
+    <span style=color:#f92672>rbac.authorization.kubernetes.io/autoupdate</span>: <span style=color:#e6db74>&#34;true&#34;</span>
+  <span style=color:#f92672>labels</span>:
+    <span style=color:#f92672>kubernetes.io/bootstrapping</span>: <span style=color:#ae81ff>rbac-defaults</span>
+    <span style=color:#f92672>rbac.authorization.k8s.io/aggregate-to-admin</span>: <span style=color:#e6db74>&#34;true&#34;</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>edit</span>
+<span style=color:#f92672>rules</span>:
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>pods/attach</span>
+  - <span style=color:#ae81ff>pods/exec</span>
+  - <span style=color:#ae81ff>pods/portforward</span>
+  - <span style=color:#ae81ff>pods/proxy</span>
+  - <span style=color:#ae81ff>secrets</span>
+  - <span style=color:#ae81ff>services/proxy</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>serviceaccounts</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>impersonate</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>pods</span>
+  - <span style=color:#ae81ff>pods/attach</span>
+  - <span style=color:#ae81ff>pods/exec</span>
+  - <span style=color:#ae81ff>pods/portforward</span>
+  - <span style=color:#ae81ff>pods/proxy</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>create</span>
+  - <span style=color:#ae81ff>delete</span>
+  - <span style=color:#ae81ff>deletecollection</span>
+  - <span style=color:#ae81ff>patch</span>
+  - <span style=color:#ae81ff>update</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>configmaps</span>
+  - <span style=color:#ae81ff>endpoints</span>
+  - <span style=color:#ae81ff>persistentvolumeclaims</span>
+  - <span style=color:#ae81ff>replicationcontrollers</span>
+  - <span style=color:#ae81ff>replicationcontrollers/scale</span>
+  - <span style=color:#ae81ff>secrets</span>
+  - <span style=color:#ae81ff>serviceaccounts</span>
+  - <span style=color:#ae81ff>services</span>
+  - <span style=color:#ae81ff>services/proxy</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>create</span>
+  - <span style=color:#ae81ff>delete</span>
+  - <span style=color:#ae81ff>deletecollection</span>
+  - <span style=color:#ae81ff>patch</span>
+  - <span style=color:#ae81ff>update</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>apps</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>daemonsets</span>
+  - <span style=color:#ae81ff>deployments</span>
+  - <span style=color:#ae81ff>deployments/rollback</span>
+  - <span style=color:#ae81ff>deployments/scale</span>
+  - <span style=color:#ae81ff>replicasets</span>
+  - <span style=color:#ae81ff>replicasets/scale</span>
+  - <span style=color:#ae81ff>statefulsets</span>
+  - <span style=color:#ae81ff>statefulsets/scale</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>create</span>
+  - <span style=color:#ae81ff>delete</span>
+  - <span style=color:#ae81ff>deletecollection</span>
+  - <span style=color:#ae81ff>patch</span>
+  - <span style=color:#ae81ff>update</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>autoscaling</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>horizontalpodautoscalers</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>create</span>
+  - <span style=color:#ae81ff>delete</span>
+  - <span style=color:#ae81ff>deletecollection</span>
+  - <span style=color:#ae81ff>patch</span>
+  - <span style=color:#ae81ff>update</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>batch</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>cronjobs</span>
+  - <span style=color:#ae81ff>jobs</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>create</span>
+  - <span style=color:#ae81ff>delete</span>
+  - <span style=color:#ae81ff>deletecollection</span>
+  - <span style=color:#ae81ff>patch</span>
+  - <span style=color:#ae81ff>update</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>extensions</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>daemonsets</span>
+  - <span style=color:#ae81ff>deployments</span>
+  - <span style=color:#ae81ff>deployments/rollback</span>
+  - <span style=color:#ae81ff>deployments/scale</span>
+  - <span style=color:#ae81ff>ingresses</span>
+  - <span style=color:#ae81ff>networkpolicies</span>
+  - <span style=color:#ae81ff>replicasets</span>
+  - <span style=color:#ae81ff>replicasets/scale</span>
+  - <span style=color:#ae81ff>replicationcontrollers/scale</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>create</span>
+  - <span style=color:#ae81ff>delete</span>
+  - <span style=color:#ae81ff>deletecollection</span>
+  - <span style=color:#ae81ff>patch</span>
+  - <span style=color:#ae81ff>update</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>policy</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>poddisruptionbudgets</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>create</span>
+  - <span style=color:#ae81ff>delete</span>
+  - <span style=color:#ae81ff>deletecollection</span>
+  - <span style=color:#ae81ff>patch</span>
+  - <span style=color:#ae81ff>update</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>networking.k8s.io</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>ingresses</span>
+  - <span style=color:#ae81ff>networkpolicies</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>create</span>
+  - <span style=color:#ae81ff>delete</span>
+  - <span style=color:#ae81ff>deletecollection</span>
+  - <span style=color:#ae81ff>patch</span>
+  - <span style=color:#ae81ff>update</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>metrics.k8s.io</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>pods</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>configmaps</span>
+  - <span style=color:#ae81ff>endpoints</span>
+  - <span style=color:#ae81ff>persistentvolumeclaims</span>
+  - <span style=color:#ae81ff>persistentvolumeclaims/status</span>
+  - <span style=color:#ae81ff>pods</span>
+  - <span style=color:#ae81ff>replicationcontrollers</span>
+  - <span style=color:#ae81ff>replicationcontrollers/scale</span>
+  - <span style=color:#ae81ff>serviceaccounts</span>
+  - <span style=color:#ae81ff>services</span>
+  - <span style=color:#ae81ff>services/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>bindings</span>
+  - <span style=color:#ae81ff>events</span>
+  - <span style=color:#ae81ff>limitranges</span>
+  - <span style=color:#ae81ff>namespaces/status</span>
+  - <span style=color:#ae81ff>pods/log</span>
+  - <span style=color:#ae81ff>pods/status</span>
+  - <span style=color:#ae81ff>replicationcontrollers/status</span>
+  - <span style=color:#ae81ff>resourcequotas</span>
+  - <span style=color:#ae81ff>resourcequotas/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#e6db74>&#34;&#34;</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>namespaces</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>apps</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>controllerrevisions</span>
+  - <span style=color:#ae81ff>daemonsets</span>
+  - <span style=color:#ae81ff>daemonsets/status</span>
+  - <span style=color:#ae81ff>deployments</span>
+  - <span style=color:#ae81ff>deployments/scale</span>
+  - <span style=color:#ae81ff>deployments/status</span>
+  - <span style=color:#ae81ff>replicasets</span>
+  - <span style=color:#ae81ff>replicasets/scale</span>
+  - <span style=color:#ae81ff>replicasets/status</span>
+  - <span style=color:#ae81ff>statefulsets</span>
+  - <span style=color:#ae81ff>statefulsets/scale</span>
+  - <span style=color:#ae81ff>statefulsets/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>autoscaling</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>horizontalpodautoscalers</span>
+  - <span style=color:#ae81ff>horizontalpodautoscalers/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>batch</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>cronjobs</span>
+  - <span style=color:#ae81ff>cronjobs/status</span>
+  - <span style=color:#ae81ff>jobs</span>
+  - <span style=color:#ae81ff>jobs/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>extensions</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>daemonsets</span>
+  - <span style=color:#ae81ff>daemonsets/status</span>
+  - <span style=color:#ae81ff>deployments</span>
+  - <span style=color:#ae81ff>deployments/scale</span>
+  - <span style=color:#ae81ff>deployments/status</span>
+  - <span style=color:#ae81ff>ingresses</span>
+  - <span style=color:#ae81ff>ingresses/status</span>
+  - <span style=color:#ae81ff>networkpolicies</span>
+  - <span style=color:#ae81ff>replicasets</span>
+  - <span style=color:#ae81ff>replicasets/scale</span>
+  - <span style=color:#ae81ff>replicasets/status</span>
+  - <span style=color:#ae81ff>replicationcontrollers/scale</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>policy</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>poddisruptionbudgets</span>
+  - <span style=color:#ae81ff>poddisruptionbudgets/status</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span>
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>networking.k8s.io</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>ingresses</span>
+  - <span style=color:#ae81ff>ingresses/status</span>
+  - <span style=color:#ae81ff>networkpolicies</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>watch</span></code></pre></div>
+<p>Le rôle readwrite-secrets</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>rbac.authorization.k8s.io/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Role</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>annotations</span>:
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>readwrite-secrets</span>
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>namespace-X</span>
+<span style=color:#f92672>rules</span>:
+- <span style=color:#f92672>apiGroups</span>:
+  - <span style=color:#ae81ff>kubernetes-client.io</span>
+  <span style=color:#f92672>resources</span>:
+  - <span style=color:#ae81ff>externalsecrets</span>
+  <span style=color:#f92672>verbs</span>:
+  - <span style=color:#ae81ff>get</span>
+  - <span style=color:#ae81ff>watch</span>
+  - <span style=color:#ae81ff>list</span>
+  - <span style=color:#ae81ff>create</span>
+  - <span style=color:#ae81ff>update</span>
+  - <span style=color:#ae81ff>patch</span></code></pre></div>
+<h1 id=le-deploiement-du-cluster-eks-en-mode-blue-green>Le deploiement du cluster EKS en mode blue/green.</h1>
+<h2 id=contexte-etf1>Contexte eTF1</h2>
+<p>Nous voulons être capables d&rsquo;apporter des changements dans de cluster EKS avec une capacité de rollback rapide en cas d&rsquo;effet non désirable.<br>
+Nous avons optés pour un déploiement en mode blue/green.<br>
+C&rsquo;est à dire à avoir 2 infrastructures parallèles de cluster EKS et basculer le traffic entre le cluster N (blue) et le cluster N+1 (green) lors de nos changements majeurs (changement de CNI, upgrade de version, etc).</p>
+<h2 id=illustation-d-un-blue-green>Illustation d&rsquo;un blue/green</h2>
+<p><img src=images/aws-blue-green-simple.png#darkmode alt="Blue green" title="Blue green simple"></p>
+<h2 id=implémentation>Implémentation</h2>
+<p>Notre solution se base sur l&rsquo;utilisation du projet open source ExternalDNS qui permet de synchroniser les DNS avec les Load balancers.<br>
+Nous avons pour chaque cluster EKS blue/green un sous domaine privé et un sous domaine public.<br>
+Et nous avons un domaine privé et un domaine public partagé entre les clusters blue/green qui correspond aux domaines en production.</p>
+<p>Schéma d&rsquo;explication pour les domaines privés
+<img src=images/eks-blue-green-etf1.png#darkmode alt="EKS blue green etf1" title="EKS Blue green etf1"></p>
+<p>Techniquement cela se matérialise par l&rsquo;utilisation de quatre ExternalDNS:</p>
+<ul>
+<li>1 ExternalDNS pour le domaine privé du cluster. (*.eks-blue.devinfra.local)</li>
+<li>1 ExternalDNS pour le domaine public du cluster. (*.eks-blue.devinfra.fr)</li>
+<li>1 ExternalDNS pour le domaine privé partagé. (*.devinfra.local)</li>
+<li>1 ExternalDNS pour le domaine public partagé. (*.devinfra.fr)</li>
+</ul>
+<p>Le fichier deploy de l&rsquo;ExternalDNS privé du cluster</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>kube-system</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>external-dns-private</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>strategy</span>:
+    <span style=color:#f92672>type</span>: <span style=color:#ae81ff>Recreate</span>
+  <span style=color:#f92672>selector</span>:
+    <span style=color:#f92672>matchLabels</span>:
+      <span style=color:#f92672>app</span>: <span style=color:#ae81ff>external-dns-private</span>
+  <span style=color:#f92672>template</span>:
+    <span style=color:#f92672>metadata</span>:
+      <span style=color:#f92672>labels</span>:
+        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>external-dns-private</span>
+    <span style=color:#f92672>spec</span>:
+      <span style=color:#f92672>priorityClassName</span>: <span style=color:#e6db74>&#34;system-cluster-critical&#34;</span>
+      <span style=color:#f92672>serviceAccountName</span>: <span style=color:#ae81ff>external-dns</span>
+      <span style=color:#f92672>containers</span>:
+      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>external-dns</span>
+        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>eu.gcr.io/k8s-artifacts-prod/external-dns/external-dns:v0.7.6</span>
+        <span style=color:#f92672>livenessProbe</span>:
+          <span style=color:#f92672>initialDelaySeconds</span>: <span style=color:#ae81ff>10</span>
+          <span style=color:#f92672>httpGet</span>:
+            <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/healthz</span>
+            <span style=color:#f92672>port</span>: <span style=color:#ae81ff>7979</span>
+        <span style=color:#f92672>ports</span>:
+        - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>7979</span>
+          <span style=color:#f92672>protocol</span>: <span style=color:#ae81ff>TCP</span>
+        <span style=color:#f92672>args</span>:
+        - --<span style=color:#ae81ff>source=service</span>
+        - --<span style=color:#ae81ff>source=ingress</span>
+        - --<span style=color:#ae81ff>domain-filter=devinfra.local</span>
+        - --<span style=color:#ae81ff>fqdn-template={{ .Annotations.PrivateDNSName }}.eks-blue.devinfra.local</span>
+        - --<span style=color:#ae81ff>annotation-filter=PrivateDNSName</span>
+        - --<span style=color:#ae81ff>ignore-hostname-annotation</span>
+        - --<span style=color:#ae81ff>provider=aws</span>
+        - --<span style=color:#ae81ff>policy=upsert-only</span> <span style=color:#75715e># would prevent ExternalDNS from deleting any records, omit to enable full synchronization</span>
+        - --<span style=color:#ae81ff>registry=txt</span>
+        - --<span style=color:#ae81ff>txt-owner-id=ingress-eks-blue.devinfra.fr</span>
+      <span style=color:#f92672>securityContext</span>:
+        <span style=color:#f92672>fsGroup</span>: <span style=color:#ae81ff>65534</span></code></pre></div>
+<p>Le fichier Deploy de l&rsquo;ExternalDNS public du cluster</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+<span style=color:#f92672>metadata</span>:
+<span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>kube-system</span>
+<span style=color:#f92672>name</span>: <span style=color:#ae81ff>external-dns-public</span>
+<span style=color:#f92672>spec</span>:
+<span style=color:#f92672>strategy</span>:
+<span style=color:#f92672>type</span>: <span style=color:#ae81ff>Recreate</span>
+<span style=color:#f92672>selector</span>:
+<span style=color:#f92672>matchLabels</span>:
+  <span style=color:#f92672>app</span>: <span style=color:#ae81ff>external-dns-public</span>
+<span style=color:#f92672>template</span>:
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>labels</span>:
+    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>external-dns-public</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>priorityClassName</span>: <span style=color:#e6db74>&#34;system-cluster-critical&#34;</span>
+  <span style=color:#f92672>serviceAccountName</span>: <span style=color:#ae81ff>external-dns</span>
+  <span style=color:#f92672>containers</span>:
+  - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>external-dns</span>
+    <span style=color:#f92672>image</span>: <span style=color:#ae81ff>eu.gcr.io/k8s-artifacts-prod/external-dns/external-dns:v0.7.6</span>
+    <span style=color:#f92672>livenessProbe</span>:
+      <span style=color:#f92672>initialDelaySeconds</span>: <span style=color:#ae81ff>10</span>
+      <span style=color:#f92672>httpGet</span>:
+        <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/healthz</span>
+        <span style=color:#f92672>port</span>: <span style=color:#ae81ff>7979</span>
+    <span style=color:#f92672>ports</span>:
+    - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>7979</span>
+      <span style=color:#f92672>protocol</span>: <span style=color:#ae81ff>TCP</span>
+    <span style=color:#f92672>args</span>:
+    - --<span style=color:#ae81ff>source=service</span>
+    - --<span style=color:#ae81ff>source=ingress</span>
+    - --<span style=color:#ae81ff>domain-filter=devinfra.fr</span>
+    - --<span style=color:#ae81ff>fqdn-template={{ .Annotations.PublicDNSName }}.eks-blue.devinfra.fr</span>
+    - --<span style=color:#ae81ff>annotation-filter=PublicDNSName</span>
+    - --<span style=color:#ae81ff>ignore-hostname-annotation</span>
+    - --<span style=color:#ae81ff>provider=aws</span>
+    - --<span style=color:#ae81ff>policy=upsert-only</span> <span style=color:#75715e># would prevent ExternalDNS from deleting any records, omit to enable full synchronization</span>
+    - --<span style=color:#ae81ff>registry=txt</span>
+    - --<span style=color:#ae81ff>txt-owner-id=ingress-eks-blue.devinfra.fr</span>
+  <span style=color:#f92672>securityContext</span>:
+    <span style=color:#f92672>fsGroup</span>: <span style=color:#ae81ff>65534</span></code></pre></div>
+<p>Le fichier deploy de l&rsquo;ExternalDNS privé partagé en production</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>kube-system</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>live-external-dns-private</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>strategy</span>:
+    <span style=color:#f92672>type</span>: <span style=color:#ae81ff>Recreate</span>
+  <span style=color:#f92672>selector</span>:
+    <span style=color:#f92672>matchLabels</span>:
+      <span style=color:#f92672>app</span>: <span style=color:#ae81ff>live-external-dns-private</span>
+  <span style=color:#f92672>template</span>:
+    <span style=color:#f92672>metadata</span>:
+      <span style=color:#f92672>labels</span>:
+        <span style=color:#f92672>app</span>: <span style=color:#ae81ff>live-external-dns-private</span>
+    <span style=color:#f92672>spec</span>:
+      <span style=color:#f92672>priorityClassName</span>: <span style=color:#e6db74>&#34;system-cluster-critical&#34;</span>
+      <span style=color:#f92672>serviceAccountName</span>: <span style=color:#ae81ff>external-dns</span>
+      <span style=color:#f92672>containers</span>:
+      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>external-dns</span>
+        <span style=color:#f92672>image</span>: <span style=color:#ae81ff>eu.gcr.io/k8s-artifacts-prod/external-dns/external-dns:v0.7.6</span>
+        <span style=color:#f92672>livenessProbe</span>:
+          <span style=color:#f92672>initialDelaySeconds</span>: <span style=color:#ae81ff>10</span>
+          <span style=color:#f92672>httpGet</span>:
+            <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/healthz</span>
+            <span style=color:#f92672>port</span>: <span style=color:#ae81ff>7979</span>
+        <span style=color:#f92672>ports</span>:
+        - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>7979</span>
+          <span style=color:#f92672>protocol</span>: <span style=color:#ae81ff>TCP</span>
+        <span style=color:#f92672>args</span>:
+        - --<span style=color:#ae81ff>source=service</span>
+        - --<span style=color:#ae81ff>source=ingress</span>
+        - --<span style=color:#ae81ff>domain-filter=devinfra.local</span>
+        - --<span style=color:#ae81ff>fqdn-template={{ .Annotations.PrivateDNSName }}.devinfra.local</span>
+        - --<span style=color:#ae81ff>annotation-filter=PrivateDNSName</span>
+        - --<span style=color:#ae81ff>ignore-hostname-annotation</span>
+        - --<span style=color:#ae81ff>provider=aws</span>
+        - --<span style=color:#ae81ff>policy=upsert-only</span> <span style=color:#75715e># would prevent ExternalDNS from deleting any records, omit to enable full synchronization</span>
+        - --<span style=color:#ae81ff>registry=txt</span>
+        - --<span style=color:#ae81ff>txt-owner-id=ingress.devinfra.local</span>
+      <span style=color:#f92672>securityContext</span>:
+        <span style=color:#f92672>fsGroup</span>: <span style=color:#ae81ff>65534</span></code></pre></div>
+<p>Le fichier Deploy de l&rsquo;ExternalDNS public partagé en production</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>apps/v1</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Deployment</span>
+<span style=color:#f92672>metadata</span>:
+<span style=color:#f92672>namespace</span>: <span style=color:#ae81ff>kube-system</span>
+<span style=color:#f92672>name</span>: <span style=color:#ae81ff>live-external-dns-public</span>
+<span style=color:#f92672>spec</span>:
+<span style=color:#f92672>strategy</span>:
+<span style=color:#f92672>type</span>: <span style=color:#ae81ff>Recreate</span>
+<span style=color:#f92672>selector</span>:
+<span style=color:#f92672>matchLabels</span>:
+  <span style=color:#f92672>app</span>: <span style=color:#ae81ff>live-external-dns-public</span>
+<span style=color:#f92672>template</span>:
+<span style=color:#f92672>metadata</span>:
+  <span style=color:#f92672>labels</span>:
+    <span style=color:#f92672>app</span>: <span style=color:#ae81ff>live-external-dns-public</span>
+<span style=color:#f92672>spec</span>:
+  <span style=color:#f92672>priorityClassName</span>: <span style=color:#e6db74>&#34;system-cluster-critical&#34;</span>
+  <span style=color:#f92672>serviceAccountName</span>: <span style=color:#ae81ff>external-dns</span>
+  <span style=color:#f92672>containers</span>:
+  - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>external-dns</span>
+    <span style=color:#f92672>image</span>: <span style=color:#ae81ff>eu.gcr.io/k8s-artifacts-prod/external-dns/external-dns:v0.7.6</span>
+    <span style=color:#f92672>livenessProbe</span>:
+      <span style=color:#f92672>initialDelaySeconds</span>: <span style=color:#ae81ff>10</span>
+      <span style=color:#f92672>httpGet</span>:
+        <span style=color:#f92672>path</span>: <span style=color:#ae81ff>/healthz</span>
+        <span style=color:#f92672>port</span>: <span style=color:#ae81ff>7979</span>
+    <span style=color:#f92672>ports</span>:
+    - <span style=color:#f92672>containerPort</span>: <span style=color:#ae81ff>7979</span>
+      <span style=color:#f92672>protocol</span>: <span style=color:#ae81ff>TCP</span>
+    <span style=color:#f92672>args</span>:
+    - --<span style=color:#ae81ff>source=service</span>
+    - --<span style=color:#ae81ff>source=ingress</span>
+    - --<span style=color:#ae81ff>domain-filter=devinfra.fr</span>
+    - --<span style=color:#ae81ff>fqdn-template={{ .Annotations.PublicDNSName }}.devinfra.fr</span>
+    - --<span style=color:#ae81ff>annotation-filter=PublicDNSName</span>
+    - --<span style=color:#ae81ff>ignore-hostname-annotation</span>
+    - --<span style=color:#ae81ff>provider=aws</span>
+    - --<span style=color:#ae81ff>policy=upsert-only</span> <span style=color:#75715e># would prevent ExternalDNS from deleting any records, omit to enable full synchronization</span>
+    - --<span style=color:#ae81ff>registry=txt</span>
+    - --<span style=color:#ae81ff>txt-owner-id=ingress.devinfra.fr</span>
+  <span style=color:#f92672>securityContext</span>:
+    <span style=color:#f92672>fsGroup</span>: <span style=color:#ae81ff>65534</span></code></pre></div>
+<h3 id=exemple-de-bascule-blue-green-eks>Exemple de bascule blue/green eks</h3>
+<p>Dans cette exemple simplifié, nous avons un cluster EKS eks-blue et un cluster EKS eks-green.<br>
+Ils ont tous les deux un ingress privé hello et un ingress public world.<br>
+Le domaine partagé est devinfra.local pour le domaine privé et devinfra.fr pour le domaine public.<br>
+Nous avons une entrée DNS api.devinfra.local qui correspond à une API EKS en production.<br>
+L&rsquo;entrée DNS hello.devinfra.local vers une applicatition interne et l&rsquo;entrée DNS world.devinfra.fr vers une application accessible depuis internet.</p>
+<p>Les entrées DNS de production pointent vers blue.</p>
+<p><img src=images/ingress-eks-blue.png#darkmode alt="Ingress eks-blue" title="Ingress EKS blue"></p>
+<p>On arrête les ExternalDNS de production sur eks-blue afin d&rsquo;arrêter les mises à jour des entrées DNS de production.</p>
+<p><img src=images/stop-ingress-eks-blue.png#darkmode alt="Stop ingress eks-blue" title="Stop Ingress EKS blue"></p>
+<p>On met à jours l&rsquo;entré DNS de l&rsquo;API EKS sur le domaine partagé pour pointer vers l&rsquo;API EKS green.</p>
+<p><img src=images/change-api-eks.png#darkmode alt="change api eks" title="Change API EKS"></p>
+<p>On démarre les ExternalDNS de production sur eks-green afin de mettre à jours toutes les entrées DNS
+<img src=images/start-ingress-eks-green.png#darkmode alt="Start ingress eks-blue" title="Start Ingress EKS green"></p>
+<p>Il ne reste plus qu&rsquo;à vérifier que les anciens ingress ne reçoivent plus de trafic avant de les supprimer.</p>
+<p>On a réalisé une bascule blue/green de cluster EKS.</p>
+<p>Mais en basculant de cluster, il y a un problème avec l&rsquo;authentification kubectl car il est nécessaire de définir le cluster name du cluster EKS.</p>
+<h3 id=comment-avoir-un-cluster-name-dynamique>Comment avoir un cluster name dynamique</h3>
+<p>Pour cela nous avons introduit une entrées DNS de type TXT qui a pour valeur le nom du cluster.<br>
+Nous avons développé un petit script qui récupere la valeur du champ TXT et le remplace lors de l&rsquo;appel à aws-iam-authenticator.</p>
+<p>Le script entre kubectl et aws-iam-authenticator s&rsquo;appelle aws-iam-authenticator-wrapper</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e>#!/bin/bash
+</span><span style=color:#75715e></span>target_cluster<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>dig +short -t TXT <span style=color:#e6db74>&#34;</span>$3<span style=color:#e6db74>&#34;</span> | tr -d <span style=color:#e6db74>&#39;&#34;&#39;</span><span style=color:#66d9ef>)</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[</span> -z <span style=color:#e6db74>&#34;</span>$target_cluster<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]</span>; <span style=color:#66d9ef>then</span> target_cluster<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span>$3<span style=color:#e6db74>&#34;</span>; <span style=color:#66d9ef>fi</span>
+set -- <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>@:1:2<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span> <span style=color:#e6db74>&#34;</span>$target_cluster<span style=color:#e6db74>&#34;</span> <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>@:4<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+aws-iam-authenticator <span style=color:#e6db74>&#34;</span>$@<span style=color:#e6db74>&#34;</span></code></pre></div>
+<p>exemple de kubeconfig (l&rsquo;entré DNS avec le champ TXT défini est eks.devinfra.info)</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>v1</span>
+<span style=color:#f92672>clusters</span>:
+- <span style=color:#f92672>cluster</span>:
+    <span style=color:#f92672>insecure-skip-tls-verify</span>: <span style=color:#66d9ef>true</span>
+    <span style=color:#f92672>server</span>: <span style=color:#ae81ff>https://api.devinfra.info</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>eks.devinfra.info</span>
+<span style=color:#f92672>contexts</span>:
+- <span style=color:#f92672>context</span>:
+    <span style=color:#f92672>cluster</span>: <span style=color:#ae81ff>eks.devinfra.info</span>
+    <span style=color:#f92672>user</span>: <span style=color:#ae81ff>eks.devinfra.info</span>
+  <span style=color:#f92672>name</span>: <span style=color:#ae81ff>eks</span>
+<span style=color:#f92672>kind</span>: <span style=color:#ae81ff>Config</span>
+<span style=color:#f92672>preferences</span>:
+  <span style=color:#f92672>colors</span>: <span style=color:#66d9ef>true</span>
+<span style=color:#f92672>users</span>:
+- <span style=color:#f92672>name </span>: <span style=color:#ae81ff>eks.devinfra.info</span>
+  <span style=color:#f92672>user</span>:
+    <span style=color:#f92672>exec</span>:
+      <span style=color:#f92672>apiVersion</span>: <span style=color:#ae81ff>client.authentication.k8s.io/v1alpha1</span>
+      <span style=color:#f92672>command</span>: <span style=color:#ae81ff>aws-iam-authenticator-wrapper</span>
+      <span style=color:#f92672>args</span>:
+      - <span style=color:#ae81ff>token</span>
+      - -<span style=color:#ae81ff>i</span>
+      - <span style=color:#ae81ff>eks.devinfra.info</span>
+      - -<span style=color:#ae81ff>r</span>
+      - <span style=color:#ae81ff>arn:aws:iam::XXXXXXXXXXXXXXX:role/k8s</span>
+      <span style=color:#f92672>command</span>: <span style=color:#ae81ff>aws-iam-authenticator-wrapper</span>
+      <span style=color:#f92672>env</span>:
+      - <span style=color:#f92672>name</span>: <span style=color:#ae81ff>AWS_PROFILE</span>
+        <span style=color:#f92672>value</span>: <span style=color:#ae81ff>awsaccess</span></code></pre></div>
+<h2 id=conclusion>Conclusion</h2>
+<p>Nous sommes globalement satisfaits de EKS. Il fournit un bon support des outils dont nous avons besoin et nous a permis la mise en place d&rsquo;un processus de déploiement continu nécessaire pour nos applications.
+Notre prochain article décrira ce que nous avons mis en place pour gérer la scalabilité. Ceci est d’autant plus important car cela nous permet non seulement de réduire les coûts et mais aussi l’empreinte carbone de notre activité.</p>
+</article>
+<section id=articleNext class="section nartrow">
+<h3 class=footer-next-heading>Plus d'articles</h3>
+<div class=footer-spacer></div>
+<div class=next-articles-grid numberofarticles={numberOfArticles}>
+<div class=post-row>
+<a href=/post/2021/architecture/backend-graphql-ui/ class=article-link id=article-link-bigger>
+<div>
+<div class=image-container>
+<img src=/post/2021/architecture/backend-graphql-ui/images/hero.jpg class=article-image>
+</div>
+<div>
+<h2 class=article-title>
+Notre utilisation du langage GraphQL pour nos UI BACKEND
+</h2>
+<p class=article-excerpt>
+Nos différentes manières d’ajouter GraphQL à nos applications internes
+</p>
+<div class=article-metadata>
+23 avril 2021 • 6 minutes
+</div>
+</div>
+</div>
+</a>
+<a href=/post/2021/architecture/migration-vers-kafka/ class=article-link>
+<div>
+<div class=image-container>
+<img src=/post/2021/architecture/migration-vers-kafka/images/hero.jpeg class=article-image>
+</div>
+<div>
+<h2 class=article-title>
+Migration du backend MYTF1 vers Kafka
+</h2>
+<p class=article-excerpt>
+Nous avons orienté le backend MYTF1 vers du temps réel avec Kafka, voici comment nous avons procédé.
+</p>
+<div class=article-metadata>
+19 février 2021 • 11 minutes
+</div>
+</div>
+</div>
+</a>
+</div>
+</div>
+</section>
+</section>
+<script src=/js/progressBar.js></script>
+<div class=footer-gradient></div>
+<div class="section narrow">
+<div class=footer-hr></div>
+<div class=footer-container>
+<div class=footer-text>
+<img src=images/logo_tf1lg.png class=footer-logo>TF1 Copyright © 2021 e-TF1
+</div>
+<div class=social-icon-outer>
+<div class=social-icon-container>
+<a href=https://www.welcometothejungle.com/fr/companies/groupe-tf1><svg class="social-icon-image" viewBox="7 7 26 26" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" alt="Rejoingez nous !" title="Rejoignez nous !"><path d="M31.347322 11.295661C30.1466441 9.31125424 26.6585085 8.44345763 24.1202034 11.0048136 23.9785085 11.1532881 23.7913898 11.6054915 24.3554576 12.2149831c1.181017 1.258305 7.340339 7.7179661 5.0616949 13.36-1.1071186 2.7430508-4.2555932 2.2705084-5.438644-2.2738984C23.4991864 21.4590508 22.7595254 17.6326102 23.468678 13.0393898 23.468678 13.0393898 23.5818983 12.6082034 23.3995254 12.4705763 23.2734237 12.3743051 23.0707119 12.4143051 22.8103729 12.8312542 22.7452881 12.936339 22.7588475 12.9146441 22.6964746 13.0265085L22.6924068 13.0285424c-1.7457627 2.9444068-3.5220339 6.4352542-4.3579661 7.7444068C18.7425763 18.7980339 18.2252881 16.0814237 17.4185085 13.8075254L17.2666441 13.396678C16.5215593 11.4515932 15.6259661 10.1390508 15.3541017 9.84142373 15.3215593 9.80549153 15.2408814 9.73837288 14.9744407 9.73837288H7.42461017c-.528135590000001.0-.4820339.45220342-.31525424.615593219999999 2.00474576 2.3857627 7.84610167 11.3294915 5.13762717 20.1064407C12.0381695 31.1390508 12.3663051 31.4949831 12.9066441 30.7946441c2.3742373-3.0772882 5.32-8.3227119 7.4542373-12.2542373C19.8903729 19.9037966 19.4761356 21.4217627 19.2544407 23.0122712c-.4677966 3.3572881.5247457 5.8827119 1.2508474 7.2081356C20.8768136 30.8990508 21.3696949 31.3139661 22.6456271 31.1241356c6.5071187-.9694915 8.6772882-6.7016949 9.4786441-9.6088136C33.5852881 16.215661 32.5154576 13.2258305 31.347322 11.295661" id="monogram" fill="#000"/></svg></a>
+<span class=hidden>https://www.welcometothejungle.com/fr/companies/groupe-tf1</span>
+<a href=https://www.linkedin.com/company/e-tf1/><svg class="social-icon-image" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M3.59615 13.125H.871552V4.36523H3.59615V13.125zM2.24847 3.16406c-.42969.0-.80078-.15625-1.11328-.46875-.312498-.3125-.468747-.6836-.468747-1.11328.0-.42969.156249-.800782.468747-1.113281C1.44769.156249 1.81878.0 2.24847.0s.80078.156249 1.11328.468749c.3125.312499.46875.683591.46875 1.113281.0.42968-.15625.80078-.46875 1.11328s-.68359.46875-1.11328.46875zM13.7915 13.125H11.0669V8.84765C11.0669 8.14452 11.0083 7.63671 10.8911 7.32421c-.2148-.52734-.6348-.79101-1.25976-.79101-.625.0-1.06445.23437-1.31836.70312C8.11767 7.58788 8.02001 8.10546 8.02001 8.78905V13.125H5.32471V4.36523H7.93212V5.5664H7.96142C8.15673 5.17578 8.46923 4.85351 8.89892 4.59961c.46875-.3125 1.01562-.46875 1.64058-.46875 1.2696.0 2.1582.40039 2.666 1.20117C13.5962 5.97656 13.7915 6.97265 13.7915 8.3203V13.125z" fill="#73737d"/></svg></a>
+<span class=hidden>https://www.linkedin.com/company/e-tf1/</span>
+<a href=https://github.com/etf1><svg class="social-icon-image" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" clipRule="evenodd" d="M7 0C3.1325.0.0 3.21173.0 7.17706.0 10.3529 2.00375 13.0353 4.78625 13.9863 5.13625 14.0491 5.2675 13.8338 5.2675 13.6454 5.2675 13.4749 5.25875 12.9097 5.25875 12.3087 3.5 12.6406 3.045 11.8691 2.905 11.4653 2.82625 11.259 2.485 10.622 2.1875 10.4516 1.9425 10.317 1.5925 9.98508 2.17875 9.97611 2.73 9.96714 3.12375 10.4964 3.255 10.7118c.63 1.0855 1.63625.7805 2.03875.5921C5.355 10.8374 5.53875 10.5234 5.74 10.3439 4.1825 10.1645 2.555 9.54549 2.555 6.80026c0-.7805.27125-1.42644.7175-1.92883C3.2025 4.692 2.9575 3.95635 3.3425 2.96951c0 0 .58625-.1884 1.925.73565.56-.16149 1.155-.24223 1.75-.24223s1.19.08074 1.75.24223c1.3388-.93302 1.925-.73565 1.925-.73565C11.0775 3.95635 10.8325 4.692 10.7625 4.87143 11.2087 5.37382 11.48 6.01079 11.48 6.80026c0 2.7542-1.63625 3.36424-3.19375 3.54364C8.54 10.5682 8.75875 10.9988 8.75875 11.6717 8.75875 12.6316 8.75 13.4032 8.75 13.6454 8.75 13.8338 8.88125 14.0581 9.23125 13.9863 11.9963 13.0353 14 10.3439 14 7.17706 14 3.21173 10.8675.0 7 0z" fill="#73737d"/></svg></a>
+<span class=hidden>https://github.com/etf1</span>
+<a href=https://tech.tf1.fr/index.xml><svg class="social-icon-image" style="width:1em;height:1em;vertical-align:middle;fill:currentColor;overflow:hidden" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M329.142857 768q0 45.714286-32 77.714286t-77.714286 32-77.714285-32-32-77.714286 32-77.714286 77.714285-32 77.714286 32 32 77.714286zm292.571429 70.285714q1.142857 16-9.714286 27.428572-10.285714 12-26.857143 12H508q-14.285714.0-24.571429-9.428572T472 844.571429q-12.571429-130.857143-105.428571-223.714286T142.857143 515.428571Q128.571429 514.285714 119.142857 504T109.714286 479.428571V402.285714q0-16.571429 12-26.857143 9.714286-9.714286 24.571428-9.714285h2.857143q91.428571 7.428571 174.857143 46T472 515.428571q65.142857 64.571429 103.714286 148t46 174.857143zm292.571428 1.142857Q915.428571 854.857142 904 866.285714q-10.285714 11.428571-26.285714 11.428572H796q-14.857143.0-25.428571-10t-11.142858-24.285715Q752.571428 720.571428 701.714286 610T569.428571 418t-192-132.285714T144 227.428571q-14.285714-.571429-24.285714-11.142857t-10-24.857143V109.714286q0-16 11.428571-26.285715 10.285714-10.285714 25.142857-10.285714H148q149.714286 7.428571 286.571429 68.571429t243.142857 168q106.857143 106.285714 168 243.142857t68.571428 286.571428z"/></svg></a>
+<span class=hidden>https://tech.tf1.fr/index.xml</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script src=/js/prism.js></script>
+</body>
+</html>
