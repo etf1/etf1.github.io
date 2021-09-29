@@ -1,6 +1,6 @@
 ---
 title: Infrastructure EKS
-date: 2021-03-04T08:30:00
+date: 2021-09-29T08:30:00
 hero: /post/2021/architecture/eks/images/hero.jpg
 excerpt: Découvrez notre EKS.
 authors:
