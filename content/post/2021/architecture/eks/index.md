@@ -651,7 +651,7 @@ rules:
 # Le déploiement du cluster EKS en mode blue/green.
 
 ## Contexte eTF1
-Nous voulons être capables d'apporter des changements dans de cluster EKS avec une capacité de rollback rapide en cas d'effet non désirable.  
+Nous voulons être capables d'apporter des changements dans le cluster EKS avec une capacité de rollback rapide en cas d'effet non désirable.  
 Nous avons opté pour un déploiement en mode blue/green.  
 C'est à dire avoir 2 infrastructures parallèles de cluster EKS et basculer le trafic entre le cluster N (blue) et le cluster N+1 (green) lors de nos changements majeurs (changement de CNI, upgrade de version, etc). 
 
