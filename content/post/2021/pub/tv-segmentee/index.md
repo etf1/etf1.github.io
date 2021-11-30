@@ -5,7 +5,7 @@ hero: /post/2021/pub/tv-segmentee/images/hero.jpg
 excerpt: La publicité télévisée est en pleine mutation, voyons ce qu'il est possible de faire avec la TV Adressable.
 authors:
   - acapirchio
-description: "Et si la télévision evenait un device comme les autres aux cotés des navigateurs et applications mobile ?"
+description: "Et si la télévision devenait un device comme les autres aux cotés des navigateurs et applications mobile ?"
 ---
 
 # TV Segmentée 
@@ -39,8 +39,7 @@ Pour qu’un émetteur partage un signal, il existe différents vecteurs. Les pl
 ![Vecteurs de diffusion](images/vecteurs.png "Vecteurs de diffusion")
 
 
-Une des particularités du broadcast est le caractère unidirectionnel. Le signal ne va que dans un sens, il n'y a donc pas de voie de retour permettant de communiquer avec l'émetteur.
-(Dans les faits, il existe dans certains cas des voies de retours mais par soucis de simplicité nous allons partir du postulat qu'il n'y en a pas)
+Une des particularités du broadcast est le caractère unidirectionnel. Le signal ne va que dans un sens, il n'y a donc pas de voie de retour permettant de communiquer avec l'émetteur. Dans les faits, il existe dans certains cas des voies de retours mais par soucis de simplicité nous allons partir du postulat qu'il n'y en a pas.
 Cette particularité, nous le verrons plus en détail plus tard, entraine une contrainte forte : les récepteurs peuvent lire le signal de l'émetteur mais ne peuvent pas envoyer d'informations à l’émetteur.
 Par voie hertzienne cette contrainte est la plus évidente sachant que les émetteurs n'ont pas connaissance des récepteurs en train de consommer le signal.
 Concernant le réseau IPTV, sur les box, le signal est fourni aux FAI qui prennent en charge la diffusion chez leurs abonnés, ce qui ne permet pas de savoir qui consomme le flux.
@@ -48,8 +47,8 @@ Concernant le réseau IPTV, sur les box, le signal est fourni aux FAI qui prenne
 ## L'insertion publicitaire 
 Sur une vidéo en replay il est assez simple de placer des coupures publicitaire :  
 
-* Celle du début (la preroll) prend sa place d'elle même. 
-* Pour les autres (mid roll et post-roll), elles sont définies à l'avance en sortie de studio et renseignées au serveur publicitaire qui se charge de les remplir en respectant les règles de pression publicitaire.
+* Celle du début (la pre-roll) prend sa place d'elle même. 
+* Pour les autres (mid-roll et post-roll), elles sont définies à l'avance en sortie de studio et renseignées au serveur publicitaire qui se charge de les remplir en respectant les règles de pression publicitaire.
 
 Au lancement d'un contenu en replay, une requête vers le serveur publicitaire est effectuée. Le serveur retourne alors une playlist de coupures publicitaires, chaque entrée dans la playlist étant référencée par sa position temporelle :
 
@@ -101,7 +100,7 @@ Les marqueurs sont l'élément qui nous intéresse le plus ici. Ils permettent d
 Comme nous le verrons plus tard, le positionnement exact nous permettra de savoir quand appeler le serveur publicitaire. Quant au code écran, il nous permettra de connaitre la durée de la coupure publicitaire.
 
 ## l'Ad Switching
-Avant de voir comment le replacement publicitaire fonctionne sur la TV Ségmenté, regardons un instant comment fonctionne le remplacement publicitaire, ou Ad Switching, de manière traditionnelle, c'est à dire sur les environnements OTT (Web, applications mobiles).
+Avant de voir comment le remplacement publicitaire, ou Ad Switching, fonctionne sur la TV Ségmentée, regardons un instant il fonctionne de manière traditionnelle, c'est à dire sur les environnements OTT (Web, applications mobiles).
 
 Qu'il soit question de la lecture du live TF1 sur navigateur ou sur application mobile, le signal est consommé dans un environnement applicatif. Cet environnement permet de detecter la présence de marqueurs et d'exécuter des actions spécifiques à leur rencontre.
 
@@ -140,9 +139,9 @@ Parce que l'impact des publicités est plus important lorsqu'elles sont diffusé
 
 
 ## Et l'Ad Switching, ça fonctionne sur la télévision ?
-Nous avons parlé du fonctionnement du remplacement publicitaire (Ad Switching) sur les terminaux OTT (web browser, applications mobiles), mais qu'en est-il des télévisions ?
+Nous avons parlé du fonctionnement du remplacement publicitaire (Ad Switching) sur les terminaux OTT (navigateur web, applications mobiles), mais qu'en est-il des télévisions ?
 Comme nous l'avons vu en préambule de cet article, le broadcast ne permet pas d'avoir plusieurs signaux différents, c'est le même contenu vidéo linéaire pour tout le monde, mais ne pourrions-nous pas faire comme sur internet ? Après tout, aujourd'hui les télévisons sont connectées !
-Bien qu'il soit techniquement faisable de faire de l'Ad Switching coté opérateur (FAI) ou directement sur une TV connectée consommant un flux TNT (HbbTV, ou Hybrid Broadcast Broadband TV), c'est le législateur qui a rendu possible la mise en place du remplacement publicitaire sur le broadcast hors OTT.nt sur une TV connectée consommant un flux TNT (HbbTV, ou Hybrid Broadcast Broadband TV), c'est le législateur qui a rendu possible la mise en place du remplacement publicitaire sur le broadcast hors OTT.
+Bien qu'il soit techniquement faisable de faire de l'Ad Switching coté opérateur (FAI) ou directement sur une TV connectée consommant un flux TNT (HbbTV, ou Hybrid Broadcast Broadband TV), c'est le législateur qui a rendu possible la mise en place du remplacement publicitaire sur le broadcast hors OTT.
 
 
 En effet, [l'article 13 du décret du 27 mars 1992](https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000042213844) interdisait le décrochage publicitaire pour les chaines nationales. Autrement dit, les chaines nationales étaient astreintes à l'obligation de diffuser très exactement le même contenu publicitaire sur tout le territoire.
@@ -182,7 +181,7 @@ Dans cette playlist nous intégrons les spots compatibles avec les différentes 
 
 
 La playlist repasse par notre proxy pub (WizAds) qui se charge d'enrichir la playlist avec, entre autres, des jeux de tracking permettant, aussi bien pour les spots de remplacement que pour les placements publicitaires non remplacés, ce qui sera bien utile pour la mesure d'audience.
-A ce moment là, le téléviseur récupère la playlist pub et opère le remplacement des pub ayant un spot de remplacement et exécute les trackings pour tous les emplacements publicitaires, qu'ils soient remplacés ou non.
+À ce moment là, le téléviseur récupère la playlist publicitaire et opère le remplacement des publicités ayant un spot de remplacement et exécute les trackings pour tous les emplacements publicitaires, qu'ils soient remplacés ou non.
 Le remplacement, quant à lui, est effectué en superposant un player au flux linéaire le temps du remplacement. Une fois le remplacement terminé, le player jouant le spot de remplacement laisse la main au player jouant le contenu live.
 
 ### Remplacement coté opérateur 
@@ -202,7 +201,7 @@ Dans les faits, les jeux de tracking standards pour une publicité vidéos sont 
 * Un ou plusieurs pixel(s) à la lecture de 75% de la publicité (autrement appelé Third Quartile)
 * Un ou plusieurs pixel(s) à la lecture 100% de la publicité (autrement appelé Complete)
 
-Le "Un ou plusieurs pixel(s)" est assez répétitif pour appuyer sur un principe important : un évènement (Impression, FirstQuartile, ...) peut parfaitement déclencher toute une série de pixels de tracking. Il y a les pixels insérés par le serveur publicitaire, ceux inséré par l'annonceur, ceux par le proxy (WizAds) à des fins de supervision, ... Entre l'annonceur et la diffusion il peut parfaitement y avoir toute une série d'intermédiaire qui, pour se rémunérer, ajoute ses pixels.
+Le "Un ou plusieurs pixel(s)" est assez répétitif pour appuyer sur un principe important : un évènement (Impression, FirstQuartile, ...) peut parfaitement déclencher toute une série de pixels de tracking. Il y a les pixels insérés par le serveur publicitaire, ceux insérés par l'annonceur, ceux par le proxy (WizAds) à des fins de supervision, ... Entre l'annonceur et la diffusion il peut parfaitement y avoir toute une série d'intermédiaire qui, pour se rémunérer, ajoute ses pixels.
 
 En dehors du tracking pour déterminer si une publicité a été vue et donc si elle est facturable, les trackings permettent également de mesurer l'audience.
 Le mode de mesure d'audience sur la télévision fonctionne de la manière suivante :
@@ -210,6 +209,6 @@ Le mode de mesure d'audience sur la télévision fonctionne de la manière suiva
 2. Répartition des parts d'audience via des panels ([Médiamétrie](https://www.mediametrie.fr/fr/les-panels-indispensables-la-mesure-daudience)) 
 
 Différentes méthodologies et technologies sont proposées pour faire de la mesure d'audience, mais l'exécution de tracking directement lorsqu'un spot est lu offre un niveau de détails maximal.
-La TV Ségmenté n'est donc pas qu'une solution permettant de faire du remplacement de spots publicitaire, mais également une solution puissante de mesure d'audience.
+La TV Ségmentée n'est donc pas qu'une solution permettant de faire du remplacement de spots publicitaire, mais également une solution puissante de mesure d'audience.
 
 
