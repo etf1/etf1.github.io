@@ -1,6 +1,6 @@
 ---
 title: La TV Ségmentée, la télévision un device comme un autre ?
-date: 2021-10-05T09:30:23
+date: 2021-11-30T06:00:00
 hero: /post/2021/pub/tv-segmentee/images/hero.jpg
 excerpt: La publicité télévisée est en pleine mutation, voyons ce qu'il est possible de faire avec la TV Adressable.
 authors:
@@ -82,6 +82,7 @@ Au lancement d'un contenu en replay, une requête vers le serveur publicitaire e
 ```
 
 Le player, pour jouer les publicités réalise les opérations suivantes :
+
 * Mise en pause de la vidéo
 * Lecture des publicités
 * Exécution de pixels de tracking
@@ -94,6 +95,7 @@ Quel que soit le format de transmission (satellite, antenne ou IP), le signal co
 Tout comme le replay, des placements publicitaires sont renseignés en sortie non pas studio, mais en régie. Les marqueurs sont insérés par des automates qui indiquent les coupures publicitaires directement dans le flux temps réel du live.
 
 Les marqueurs sont l'élément qui nous intéresse le plus ici. Ils permettent de faire deux choses capitales pour nous :
+
 * Indiquer exactement une coupure publicitaire voire même un spot unitaire
 * Indiquer le code écran de la coupure publicitaire
 
@@ -108,16 +110,15 @@ Par action spécifique il est bien question refaire de la pub, plus exactement d
 
 Concrètement, l’idée est la suivante :
 
-1. Le client (navigateur, application mobile, ...) détecte un marqueur indiquant une coupure publicitaire
+**1.** Le client (navigateur, application mobile, ...) détecte un marqueur indiquant une coupure publicitaire
 
 ![Détection du marqueur](images/switch-step-1.png "Détection du marqueur")
 
-2. Le client effectue une requête vers le serveur publicitaire
+**2.** Le client effectue une requête vers le serveur publicitaire
 
 ![Requête vers l'adserver](images/switch-step-2.png "Requête vers l'adserver")
 
-
-3. Le client remplace la coupure pub du broadcast en superposant les publicités proposées par l’Ad Server
+**3.** Le client remplace la coupure pub du broadcast en superposant les publicités proposées par l’Ad Server
 
 ![Remplacement](images/switch-step-3.png "Remplacement")
 
@@ -147,6 +148,7 @@ Bien qu'il soit techniquement faisable de faire de l'Ad Switching coté opérate
 En effet, [l'article 13 du décret du 27 mars 1992](https://www.legifrance.gouv.fr/loda/article_lc/LEGIARTI000042213844) interdisait le décrochage publicitaire pour les chaines nationales. Autrement dit, les chaines nationales étaient astreintes à l'obligation de diffuser très exactement le même contenu publicitaire sur tout le territoire.
 Depuis un allègement de la réglementation en 2020, le décrochage est devenu un enjeux majeur de la publicité pour les acteurs de la télévision tout comme il l'est sur OTT.
 Le décrochage, ou la "segmentation", est possible suivant trois possibilités :
+
 1. Décrochage local opéré par TDF sur le réseau TNT sur la base de la localisation géographique
 2. Décrochage opéré par les téléviseurs compatibles HbbTV sur le réseau TNT
 3. Décrochage opéré par l'opérateur (FAI)
@@ -195,6 +197,7 @@ Le schema est donc très similaire à ce que nous avons pu voir plus haut.
 Peut-être que vous vous êtes posé la question de pourquoi nous ajoutons aussi des éléments de tracking lorsqu'il n'y a pas de spot de remplacement ?
 Cet ajout n'est pas sans raison. Le tracking pour les spots remplacés est obligatoire. Sans eux nous ne serions pas à même de savoir si la publicité a été jouée ni même à quel niveau de complétion.
 Dans les faits, les jeux de tracking standards pour une publicité vidéos sont les suivants :
+
 * Un ou plusieurs pixel(s) à l'impression, c'est à dire à l'affichage de la publicité
 * Un ou plusieurs pixel(s) à la lecture des premiers 25% de la publicité (autrement appelé First Quartile)
 * Un ou plusieurs pixel(s) à la lecture de 50% de la publicité (autrement appelé Midpoint)
@@ -205,6 +208,7 @@ Le "Un ou plusieurs pixel(s)" est assez répétitif pour appuyer sur un principe
 
 En dehors du tracking pour déterminer si une publicité a été vue et donc si elle est facturable, les trackings permettent également de mesurer l'audience.
 Le mode de mesure d'audience sur la télévision fonctionne de la manière suivante :
+
 1. Évaluation du nombre de téléspectateurs
 2. Répartition des parts d'audience via des panels ([Médiamétrie](https://www.mediametrie.fr/fr/les-panels-indispensables-la-mesure-daudience)) 
 
