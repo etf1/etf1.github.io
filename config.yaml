@@ -10,8 +10,8 @@ social:
   4_rss: "https://tech.tf1.fr/index.xml"
   1_welcome_to_the_jungle: "https://www.welcometothejungle.com/fr/companies/groupe-tf1"
 markup:
-   defaultMarkdownHandler: blackFriday
-   blackFriday:
+   defaultMarkdownHandler: goldmark
+   goldmark:
      hrefTargetBlank: 1
 enableRobotsTXT: true
 params:
