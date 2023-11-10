@@ -29,30 +29,30 @@ La fenêtre DVR (Digital Video Recorder) est l'intervalle de temps dans lequel l
 Le rôle de la brique vod2live est donc à partir d'une grille de programme de déterminer en fonction de l'heure courante la liste des segments à présenter au player. 
 
 Une grille de programme peut être générée de plusieurs façons :
-* manuellement, chaque programme est positionné sur une grille
-* automatiquement, une liste de programme est déterminée et boucle à l'infini à partir du démarrage de la chaîne
+* manuellement : chaque programme est positionné sur une grille
+* automatiquement : une liste de programme est déterminée et boucle à l'infini à partir du démarrage de la chaîne
 
-Cette seconde option est la plus simple à gérer car elle demande moins d'effort sur la programmation des chaînes. A partir d'une liste de vidéos ordonnées, de leur durée et de la date de démarrage de la boucle on peut déterminer à chaque instant (à l'aide de modulo) :
+Cette seconde option est la plus simple à gérer car elle demande moins d'effort sur la programmation des chaînes. À partir d'une liste de vidéos ordonnées, de leur durée et de la date de démarrage de la boucle on peut déterminer à chaque instant (à l'aide de modulo) :
 * l'index de la boucle courante
 * l'index du programme courant
 * l'index du segment correspondant
 
 ![vod2live DVR](images/vod2live-dvr.drawio.svg#darkmode "vod2live loops")
 
-Dans l'exemple ci-dessus, on est sur la première boucle de la chaîne, le premier segment de la fenêtre tombe sur le deuxième segment de la première vidéo, la fin de la fenêtre tombe sur le premier segment de la deuxième vidéo.
+Dans l'exemple ci-dessus, on est sur la première boucle de la chaîne. Le premier segment de la fenêtre tombe sur le deuxième segment de la première vidéo et la fin de la fenêtre tombe sur le premier segment de la deuxième vidéo.
 
 ### Architecture de la brique VOD2LIVE
 
 ![architecture](images/archi-vod2live.drawio.svg#darkmode "schema")
 
 Afin de générer les flux DASH / HLS de nos chaînes FAST, vod2live est interfacé à plusieurs systèmes :
-* l'enhancer est une brique interne qui permet de construire une vue consolidée des chaînes, sa date de démarrage, la liste ordonnée des vidéos qui la compose et leurs durées, ce qui permet de calculer la grille à tout instant
-* l'[USP](https://www.unified-streaming.com/products/unified-packager) est la solution de packaging vidéo que nous utilisons et permet de générer à la volée les manifests DASH et playlist HLS des VOD sources
-* les briques delivery et media info permettent au player de récupérer une URL sécurisée de chaque flux
+* l'`enhancer` est une brique interne qui permet de construire une vue consolidée des chaînes, sa date de démarrage, la liste ordonnée des vidéos qui la compose et leurs durées, ce qui permet de calculer la grille à tout instant
+* l'`[USP](https://www.unified-streaming.com/products/unified-packager)`` est la solution de packaging vidéo que nous utilisons et permet de générer à la volée les manifests DASH et playlist HLS des VOD sources
+* les briques `delivery` et `mediainfo` permettent au player de récupérer une URL sécurisée de chaque flux
 
 ![sequence diagram](images/vod2live-seq-diag.drawio.svg#darkmode "schema")
 
-Pour générer un manifest dash ou une playlist HLS, la brique vod2live effectue les tâches suivantes :
+Pour générer un manifest DASH ou une playlist HLS, la brique vod2live effectue les tâches suivantes :
 
 1. récupération de la définition de la chaîne et calcul de la grille
 2. calcul du ou des programmes inclus dans la fenêtre DVR actuelle
@@ -67,7 +67,7 @@ En effet, un manifest DASH ou fichier MPD (Media Presentation Description) est c
 
 ![PeriodsMakeTheMpd](images/PeriodsMakeTheMpd.png#darkmode "MPD periods")
 
-Dans un MPD, chaque période de la [timeline](https://dashif-documents.azurewebsites.net/Guidelines-TimingModel/master/Guidelines-TimingModel.html#mpd-general-timeline), correspond à une source (encodage) et contient elle même les éléments qui encapsulent les segments vidéo et audio pour les différents variants. On peut donc lire séquenciellement plusieurs VOD dans un manifest.
+Dans un MPD, chaque période de la [timeline](https://dashif-documents.azurewebsites.net/Guidelines-TimingModel/master/Guidelines-TimingModel.html#mpd-general-timeline) correspond à une source (encodage) et contient elle même les éléments qui encapsulent les segments vidéo et audio pour les différents variants. On peut donc lire séquentiellement plusieurs VOD dans un manifest.
 
 ![BasicMpdElements](images/BasicMpdElements.png#darkmode "MPD elements")
 
@@ -85,10 +85,10 @@ Ci-dessous, un exemple très allégé de MPD live constitué de deux périodes :
 </MPD>
 ```
 
-Le flux live commence à la date indiquée par l'attribut "availabilityStartTime". Les différentes périodes qui le composent sont positionnées de façon relative par rapport à cette date absolue grâce à leur attribut "start". La première période commence donc à cette date (start="PT0S" par défaut), la deuxième période commence 300s après la première période, qui à donc une durée de 300s. La deuxième période à également une durée de 300s.
+Le flux live commence à la date indiquée par l'attribut "availabilityStartTime". Les différentes périodes qui le composent sont positionnées de façon relative par rapport à cette date absolue grâce à leur attribut "start". La première période commence donc à cette date (start="PT0S" par défaut), la deuxième période commence 300s après la première période, qui à donc une durée de 300s. La deuxième période a également une durée de 300s.
 
 La valeur de l'attribut "timeShiftBufferDepth" indique une fenêtre de DVR de 400s.
-Si la date courante est "2017-12-02T09:45:00Z" soit 600s (la durée des deux périodes) de plus que availabilityStartTime alors notre fenêtre DVR commence à 200s de la première période.
+Si la date courante est "2017-12-02T09:45:00Z" soit 600s (la durée des deux périodes) de plus que "availabilityStartTime" alors notre fenêtre DVR commence à 200s de la première période.
 
 Vous l'avez compris, pour générer le flux live, il faut recopier dans un nouveau MPD les périodes des VOD correspondantes à la DVR courante en adaptant la timeline DASH.
 
@@ -113,13 +113,13 @@ Il est également nécessaire d'adapter les SegmentTimeline dans le cas d'[adres
 ```
 
 * timescale > nombre d'unité de temps pour une seconde
-* S.t > offset du segment exprimé en unité de timescale (soit 0,9s)
-* S.d > durée du segment exprimé en unité de timescale
-* S.r > nombre de segment similaire consécutifs
+* `S.t` : offset du segment exprimé en unité de timescale (soit 0,9s)
+* `S.d` : durée du segment exprimé en unité de timescale
+* `S.r` : nombre de segment similaire consécutifs
 
-L'url des segments est déduite par le player à partir du template "video/$Time$.m4s", ici $Time$ est remplacé par l'offset S.t du segment correspondant.
+L'url des segments est déduite par le player à partir du template "video/$Time$.m4s", ici "$Time$" est remplacé par l'offset "S.t" du segment correspondant.
 
-Afin d'inclure les bon segments dans notre fenêtre DVR, il faut adapter les S.t, S.r du SegmentTimeLine.
+Afin d'inclure les bon segments dans notre fenêtre DVR, il faut adapter les "S.t", "S.r" du "SegmentTimeLine".
 
 
 ### Manipulation des playlist HLS
@@ -143,13 +143,13 @@ La génération d'un flux HLS est beaucoup plus simple qu'en DASH. En HLS, il ex
 ../videoB-2.ts
 ```
 
-L'attribut "EXTINF" indique la durée des segments (ici 8s). Pour enchaîner deux VOD distincte, l'attribut "EXT-X-DISCONTINUITY" permet d'indiquer au player une discontinuité dans l'encodage de deux segments successifs.
+L'attribut "EXTINF" indique la durée des segments (ici 8s). Pour enchaîner deux VOD distinctes, l'attribut "EXT-X-DISCONTINUITY" permet d'indiquer au player une discontinuité dans l'encodage de deux segments successifs.
 
-Il suffit alors de lister explicitement les segments des VOD en plaçant les tag #EXT-X-DISCONTINUITY entre les VOD.
+Il suffit alors de lister explicitement les segments des VOD en plaçant les tags #EXT-X-DISCONTINUITY entre les VOD.
 
 Il est également nécessaire de tenir à jour les valeurs des attributs #EXT-X-MEDIA-SEQUENCE et #EXT-X-DISCONTINUITY-SEQUENCE.
-* #EXT-X-MEDIA-SEQUENCE doit être incrémenté à chaque fois qu'un segment disparait de la playlist
-* #EXT-X-DISCONTINUITY-SEQUENCE doit être incrémenté à chaque fois qu'un segment en discontinuité disparait de la playlist
+* `#EXT-X-MEDIA-SEQUENCE` : doit être incrémenté à chaque fois qu'un segment disparait de la playlist
+* `#EXT-X-DISCONTINUITY-SEQUENCE` : doit être incrémenté à chaque fois qu'un segment en discontinuité disparait de la playlist
 
 Il y a cependant un prérequis fort sur HLS, les contenus doivent tous avoir exactement le même nombre de variants (une seule master playlist pour le flux). Sans cela, la jonction entre les VOD n'est pas possible si un variant n'existe plus sur le contenu suivant, le player plante et s'arrête.
 
@@ -165,28 +165,28 @@ Le deuxième ad slate lui n'est remplacé que par un seul spot (manque d'inventa
 
 Dans le flux vidéo d'origine, des marqueurs [SCTE35](https://www.scte.org/standards/library/catalog/scte-35-digital-program-insertion-cueing-message/) sont ajoutés pour indiquer les emplacements où des opportunités publicitaire sont possibles ainsi que leur durée.
 
-A noter également, pour insérer de la publicité au milieu d'un contenu, il est nécessaire de le couper en deux parties. Cela est possible en DASH ou HLS à condition que le point de jonction corresponde au début d'un segment. Afin que le packager puisse créer un segment à une frame précise, il est nécessaire de forcer un GOP (group of picture) au niveau de l'encoder afin de tomber sur une frame I. En général, ce comportement est assuré par la présence de marqueur SCTE35 dans la source VOD. À défaut d'avoir correctement préparer les contenus, la publicité ne pourra être insérée qu'à la jonction des deux segments les plus proches de la frame désirée.
+À noter également, pour insérer de la publicité au milieu d'un contenu, il est nécessaire de le couper en deux parties. Cela est possible en DASH ou HLS à condition que le point de jonction corresponde au début d'un segment. Afin que le packager puisse créer un segment à une frame précise, il est nécessaire de forcer un GOP (Group Of Picture) au niveau de l'encoder afin de tomber sur une frame I. En général, ce comportement est assuré par la présence de marqueur SCTE35 dans la source VOD. À default d'avoir correctement préparer les contenus, la publicité ne pourra être insérée qu'à la jonction des deux segments les plus proches de la frame désirée.
 
 ### Architecture de la brique adback
 
-Pour insérer les publicités dans nos flux FAST, nous avons développé une solution SSAI (Server Side Ad Insertion) maison "adback".
+Pour insérer les publicités dans nos flux FAST, nous avons développé une solution SSAI (Server Side Ad Insertion) maison, nommée "adback".
 
 ![architecture](images/archi-adback.drawio.svg#darkmode "schema")
 
 Adback est interfacé à plusieurs systèmes :
-* vod2live qui permet de récupérer le flux préparé avec des adslates et marqueur SCTE35
-* wizads est une brique interne qui proxifie les appels avec notre ad server : freewheel
-* C3PO est un référentiel des publicités connues de notre delivery vidéo
-* video wf est notre workflow d'encodage & packaging, il est sollicité par C3PO pour mettre à disposition les spots publicitaires
-* l'[USP](https://www.unified-streaming.com/products/unified-packager) est la solution de packaging vidéo que nous utilisons et permet de générer à la volée les manifests DASH et playlist HLS des spots publicitaires (c'est la même brique qui est utilisé par vod2live)
+* `vod2live` : qui permet de récupérer le flux préparé avec des ad slates et marqueur SCTE35
+* `wizads` : une brique interne qui proxifie les appels avec notre ad server (Freewheel)
+* `C3PO` : un référentiel de publicités connues de notre delivery vidéo
+* `video wf` : notre workflow d'encodage & packaging, il est sollicité par C3PO pour mettre à disposition les spots publicitaires
+* l'`[USP](https://www.unified-streaming.com/products/unified-packager)` : la solution de packaging vidéo que nous utilisons et permet de générer à la volée les manifests DASH et playlist HLS des spots publicitaires (c'est la même brique qui est utilisée par vod2live)
 
 ![sequence diagram](images/adback-seq-diag.drawio.svg#darkmode "schema")
 
 Pour insérer les spots publicitaire, la brique adback effectue les tâches suivantes :
-1. Adback: récupération du manifest DASH ou playlist HLS du contenu, préparé avec les adslates & marqueur SCTE35 par vod2live
-2. Wizads: sur présence de marqueur SCTE35, appel à l'ad server Freewheel pour récupérer la liste de publicités du tunnel (format VAST, cf. ci-dessous), la durée du tunnel est extraite du marqueur SCTE35 et indiqué à l'ad server
-3. C3PO: les publicités qui ne sont pas déjà connues font l'objet d'une demande d'encodage asynchrone à notre workflow vidéo, les publicités déjà encodées sont conservées dans le VAST retourné par wizads
-4. Adback: les manifest DASH ou playlist HLS du contenu et des pubs permettent après remanipulation de générer le flux live, le tunnel est persisté en session pour chaque utilisateur
+1. `Adback` : récupération du manifest DASH ou playlist HLS du contenu, préparé avec les ad slates & marqueur SCTE35 par vod2live
+2. `Wizads` : sur présence de marqueur SCTE35, appel à l'ad server Freewheel pour récupérer la liste de publicités du tunnel (format VAST, cf. ci-dessous), la durée du tunnel est extraite du marqueur SCTE35 et indiqué à l'ad server
+3. `C3PO` : les publicités qui ne sont pas déjà connues font l'objet d'une demande d'encodage asynchrone à notre workflow vidéo, les publicités déjà encodées sont conservées dans le VAST retourné par Wizads
+4. `Adback` : les manifests DASH ou playlist HLS du contenu et des pubs permettent après re-manipulation de générer le flux live, le tunnel est persisté en session pour chaque utilisateur
 
 ### Template VAST
 
