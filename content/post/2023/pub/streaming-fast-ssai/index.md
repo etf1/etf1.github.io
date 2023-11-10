@@ -1,5 +1,5 @@
 ---
-title: Chaînes FAST & SSAI
+title: Gestion du Server-Side Ad Insertion (SSAI) sur nos chaînes FAST
 date: 2023-11-06T09:00:00
 hero: /post/2023/pub/streaming-fast-ssai/images/hero.jpg
 excerpt: "Découvrez comment nous avons mis en place nos chaînes FAST et notre solution SSAI pour y insérer la pub."
@@ -10,15 +10,15 @@ description: "Découvrez comment nous avons mis en place nos chaînes FAST et no
 
 ## Chaînes FAST
 
-FAST est l'acronyme pour Free ad-supported streaming television. Il s'agit de chaînes en streaming gratuites avec de la publicité. Le principe est de reprendre des contenus du catalogue TF1, typiquement en AVOD (Advertising Video on Demand) et de l'assembler pour constituer une grille de programmation qui alimentera une chaîne live. C'est le principe de Stream sur [MYTF1](https://www.tf1.fr/ris-police-scientifique-42165804/direct). On parle alors de relinéarisation des contenus.
+FAST est l'acronyme pour `Free Ad-supported Streaming Television`. Il s'agit de chaînes en streaming gratuites avec de la publicité. Le principe est de reprendre des contenus du catalogue TF1, typiquement en AVOD (Advertising Video on Demand) et de l'assembler pour constituer une grille de programmation qui alimentera une chaîne live. C'est le principe de Stream sur [MYTF1](https://www.tf1.fr/tf1/direct). On parle alors de re-linéarisation des contenus.
 
 ### Mise en oeuvre des flux origin
 
-eTF1 assure le delivery des contenus VOD en [HLS](https://developer.apple.com/streaming/) (HTTP Live Streaming) et [DASH](https://dashif.org/) (Dynamic Adaptive Streaming over HTTP). Si vous ne l'avez pas déjà lu, nous avons écrit [un article sur la vidéo](https://tech.tf1.fr/post/2020/architecture/video/).
+eTF1 assure le delivery des contenus VOD en [HLS](https://developer.apple.com/streaming/) (HTTP Live Streaming) et [DASH](https://dashif.org/) (Dynamic Adaptive Streaming over HTTP). Si vous ne l'avez pas déjà lu, nous avons écrit [un article sur notre architecture vidéo](https://tech.tf1.fr/post/2020/architecture/video/).
 
 Afin de déployer nos chaînes FAST nous avons développé une brique maison "vod2live" qui permet de générer des flux live à partir de contenus VOD.
 
-DASH et HLS sont deux formats de streaming vidéo qui permettent à un player de connaître les segments vidéo/audio (chunk) à télécharger pour lire un contenu. Le découpage en segment permet la lecture en streaming, le fait qu'il existe différents variants (bitrate / résolution) permet au player de faire de l'adaptative bitrate (adaptation de la qualité à la bande passante réseau disponible).
+DASH et HLS sont deux formats de streaming vidéo qui permettent à un player de connaître les segments vidéo/audio (chunks) à télécharger pour lire un contenu. Le découpage en segment permet la lecture en streaming, le fait qu'il existe différents variants (bitrate / résolution) permet au player de faire de l'adaptation de la qualité à la bande passante réseau disponible (adaptative bitrate).
 
 Dans un contexte VOD, l'ensemble des segments est connu dès l'initialisation du player. Dans un contexte live, le player recharge régulièrement la playlist HLS ou le manifest DASH pour avoir connaissance des segments à venir : il s'agit d'une fenêtre glissante, les segments trop anciens disparaissent et les nouveaux segments sont ajoutés. 
 
@@ -240,7 +240,7 @@ On retrouve les différents trackings à exécuter :
 * le tracking d'erreur, si la PUB n'a pu être insérée
 * "firstQuartile", "midpoint", "thirdQuartile", "complete" : selon l'avancement de lecture du spot
 
-On trouve aussi l'url du spot de PUB dans la balise "MediaFile" au format mp4 dans le retour freewheel, réécrit ensuite en dash et hls suite à la réécriture de wizads / c3po.
+On trouve aussi l'url du spot de PUB dans la balise "MediaFile" au format MP4 dans le retour Freewheel, réécrit ensuite en DASH et HLS suite à la réécriture de Wizads / C3PO.
 
 ### Manipulation des manifests DASH
 
@@ -266,7 +266,7 @@ Il n'y a pas de complexité particulière sur HLS, il suffit de remplacer les se
 
 ![trackings](images/adback-trackings.drawio.svg#darkmode "trackings")
 
-Le tracking des publicités se fait en server side, lors de la génération du flux live, les URL des segments de spot publicitaire sont remplacées par une URL qui pointera sur la brique adback. 
+Le tracking des publicités se fait en server side, lors de la génération du flux live, les URLs des segments de spot publicitaire sont remplacées par une URL qui pointera sur la brique Adback. 
 
 Dans cette URL sont inclus :
 * l'id de session de l'utilisateur
@@ -293,6 +293,6 @@ Les manipulations de manifest DASH ou playlist HLS nécessaires à la mise en pl
 L'insertion publicitaire est plus complexe, elle exige de maintenir une session pour chaque utilisateur :
 * pour gérer le décalage des périodes DASH
 * pour conserver les publicités d'un utilisateur pour chaque tunnel (le manifest est rechargé régulièrement par le player en live)
-* pour gérer les trackings sur les segments des spot publicitaire
+* pour gérer les trackings sur les segments des spots publicitaires
 
 Nous opérons actuellement une soixantaine de flux FAST. Notre solution "maison" permet en quelque clics dans notre [CMS](https://fr.wikipedia.org/wiki/Syst%C3%A8me_de_gestion_de_contenu) la publication d'une nouvelle chaîne avec la possibilité de gérer la pression publicitaire (durée et fréquence des ad slates).
