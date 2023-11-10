@@ -266,7 +266,7 @@ Il n'y a pas de complexité particulière sur HLS, il suffit de remplacer les se
 
 ![trackings](images/adback-trackings.drawio.svg#darkmode "trackings")
 
-Le tracking des publicités se fait en server side, lors de la génération du flux live, les URLs des segments de spot publicitaire sont remplacées par une URL qui pointera sur la brique Adback. 
+Le tracking des publicités se fait en server side, lors de la génération du flux live. Les URLs des segments de spot publicitaire sont remplacées par une URL qui pointera sur la brique Adback. 
 
 Dans cette URL sont inclus :
 * l'id de session de l'utilisateur
