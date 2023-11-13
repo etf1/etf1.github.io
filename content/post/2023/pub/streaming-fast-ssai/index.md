@@ -18,7 +18,7 @@ eTF1 assure le delivery des contenus VOD en [HLS](https://developer.apple.com/st
 
 Afin de déployer nos chaînes FAST nous avons développé une brique maison "vod2live" qui permet de générer des flux live à partir de contenus VOD.
 
-DASH et HLS sont deux formats de streaming vidéo qui permettent à un player de connaître les segments vidéo/audio (chunks) à télécharger pour lire un contenu. Le découpage en segment permet la lecture en streaming, le fait qu'il existe différents variants (bitrate / résolution) permet au player de faire de l'adaptation de la qualité à la bande passante réseau disponible (adaptative bitrate).
+DASH et HLS sont deux formats de streaming vidéo qui permettent à un player de connaître les segments vidéo/audio (chunks) à télécharger pour lire un contenu. Le découpage en segment permet la lecture en streaming, le fait qu'il existe différents variants (bitrate / résolution) permet au player de faire de l'adaptation de la qualité à la bande passante réseau disponible (adaptative bitrate) ou de choisir le variant le plus adapté selon le CPU disponible ainsi que la taille de l'écran du device.
 
 Dans un contexte VOD, l'ensemble des segments est connu dès l'initialisation du player. Dans un contexte live, le player recharge régulièrement la playlist HLS ou le manifest DASH pour avoir connaissance des segments à venir : il s'agit d'une fenêtre glissante, les segments trop anciens disparaissent et les nouveaux segments sont ajoutés. 
 
@@ -47,7 +47,7 @@ Dans l'exemple ci-dessus, on est sur la première boucle de la chaîne. Le premi
 
 Afin de générer les flux DASH / HLS de nos chaînes FAST, vod2live est interfacé à plusieurs systèmes :
 * l'`enhancer` est une brique interne qui permet de construire une vue consolidée des chaînes, sa date de démarrage, la liste ordonnée des vidéos qui la compose et leurs durées, ce qui permet de calculer la grille à tout instant
-* l'`[USP](https://www.unified-streaming.com/products/unified-packager)`` est la solution de packaging vidéo que nous utilisons et permet de générer à la volée les manifests DASH et playlist HLS des VOD sources
+* l'[`USP (Unified Streaming Packager)`](https://www.unified-streaming.com/products/unified-packager) est la solution de packaging vidéo que nous utilisons et permet de générer à la volée les manifests DASH et playlist HLS des VOD sources
 * les briques `delivery` et `mediainfo` permettent au player de récupérer une URL sécurisée de chaque flux
 
 ![sequence diagram](images/vod2live-seq-diag.drawio.svg#darkmode "schema")
