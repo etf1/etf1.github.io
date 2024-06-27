@@ -63,11 +63,11 @@ docker run --rm -p 8080:80 \
 
 Pour tester llama3 au lieu de mistral il suffit de changer l'argument --model-id. Les id des modèles sont indiqués sur le hub hugging face.
 
-Au démarrage, TGI va télécharger dans un volume le modèle spécifié si celui-ci n'est pas déjà présent.
+Au démarrage, TGI va télécharger dans un volume (/data) le modèle spécifié si celui-ci n'est pas déjà présent.
 
 ### Quantization
 
-En plus d'un hardware sépcifique il faudra être vigilent à la quantité de mémoire necessaire pour faire tourner le modèle. On parle bien ici de mémoire GPU (ou mémoire de la carte d'accelération) et non de RAM.
+En plus d'un hardware sépcifique il faudra être vigilent à la quantité de mémoire nécessaire pour faire tourner le modèle. On parle bien ici de mémoire GPU (ou mémoire de la carte d'accelération) et non de RAM.
 
 Ci-dessous les prérequis pour faire tourner les différentes variantes de mistral :
 
@@ -80,15 +80,19 @@ Ci-dessous les prérequis pour faire tourner les différentes variantes de mistr
 
 Heureusement il existe plusieurs techniques pour rendre l'inference possible sur du matériel relativement modeste ou grand public : le sharding et la [quantization](https://huggingface.co/docs/optimum/concept_guides/quantization).
 
-Lorsque TGI a terminé le téléchargement d'un modèle dans son volume, il commence ensuite le chargement de celui-ci dans la mémoire de l'accelerateur. Le modèle est souvent sauvegardé sous forme de fichier binaire, par exemple [pytorch](https://pytorch.org/tutorials/beginner/saving_loading_models.html) ou [safetensors](https://github.com/huggingface/safetensors).
+Lorsque TGI a terminé le téléchargement d'un modèle dans son volume, il commence ensuite le chargement de celui-ci dans la mémoire de l'accelerateur. 
+
+![nvidia-smi](images/nvidia-smi.png#darkmode "nvidia-smi")
+
+Le modèle est souvent sauvegardé sous forme de fichier binaire, par exemple [pytorch](https://pytorch.org/tutorials/beginner/saving_loading_models.html) ou [safetensors](https://github.com/huggingface/safetensors).
 
 ![Mistral model files](images/mistral-files.png#darkmode "Mistral model files")
 
 Ces fichiers volumineux contiennent les fameux paramètres du modèle. En réalité il s'agit de matrices contenant les différents paramètres sous forme de float. On peut trouver facielement la précision des floats d'un modèle en consultant le [fichier de configuration](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3/blob/main/config.json) d'hugging face du modèle. Pour mistral et llama, l'attribut "torch_dtype" a comme valeur ["bfloat16"](https://pytorch.org/docs/stable/tensors.html).
 
-En réduisant la précision des floats d'un modèle on réduit la taille du modèle. Mistral-7B-v0.3 nécessite 16GB de VRAM pour l'inference en 16 bits, la quantité de mémoire necessaire en 8 bit ou 4 bit sera deux ou quatre fois moins élevé.
+En réduisant la précision des floats d'un modèle on réduit la taille du modèle. Mistral-7B-v0.3 nécessite 16GB de VRAM pour l'inference en 16 bits, la quantité de mémoire nécessaire en 8 bit ou 4 bit sera deux ou quatre fois moins élevé.
 
-Sur Mac, avec ollama, les modèles sont en général en 4 bit (ça tourne dans la mémoire unifié), les Nvidia supportent la quantization, sur inferentia ce n'est pas le cas. Il faut donc vérifier les contraintes en fonction du hardware. De plus il existe plusieurs implémentation pour quantizer un modèle, certaines nécessitent une variante du modèle d'origine : 
+Sur Mac, avec [Ollama](https://ollama.com/), les modèles sont en général en 4 bit (ça tourne dans la mémoire unifié), les Nvidia supportent la quantization, sur inferentia ce n'est pas le cas. Il faut donc vérifier les contraintes en fonction du hardware. De plus il existe plusieurs implémentation pour quantizer un modèle, certaines nécessitent une variante du modèle d'origine : 
 * [bitsandbytes](https://github.com/TimDettmers/bitsandbytes): fonctionne avec tous les modèles mais peut être plus lent
 * [EETQ](https://github.com/NetEase-FuXi/EETQ): 8 bits, fonctionne avec tous les modèles
 * [AWQ](https://github.com/casper-hansen/AutoAWQ): 4 bits, nécessite un modèle [spécifique](https://hf.co/models?search=awq)
@@ -101,10 +105,10 @@ docker run --rm -p 8080:80 \
        -e HUGGING_FACE_HUB_TOKEN=${HF_TOKEN} \
        ghcr.io/huggingface/text-generation-inference:2.0.4 \
        --model-id=mistralai/Mistral-7B-Instruct-v0.3 \
-       --quantize eetq \
+       --quantize eetq
 ```
 
-## Sharding & inferentia
+### Sharding
 
 Sur les instances inferentia2 d'AWS 2 cores sont disponibles sur les inf2.xlarge. On a donc 2x16GB, pour exploiter pleinement les 32GB disponibles il faut couper le modèle en deux.
 
@@ -125,13 +129,109 @@ docker run --rm -p 8080:80 \
        ghcr.io/huggingface/neuronx-tgi:latest \
        --model-id=mistralai/Mistral-7B-Instruct-v0.3 \
        --max-batch-size 1 \
-       --max-input-length 3686 \
-       --max-batch-prefill-tokens 3686 \
        --max-total-tokens 4096
 ```
 
-Pour lancer TGI sur inferentia2 il est nécessaire d'utiliser une image docker [spécifique](https://github.com/huggingface/optimum-neuron/tree/main/text-generation-inference). D'autre part, le modèle doit être recompilé pour tourner sur inferentia a l'aide d'un outil : [Neuron Compiler](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/compiler/index.html). Hugging face dispose d'un cache avec les modèles précompilé, par exemple pour mistral on trouve la liste [ici](https://huggingface.co/aws-neuron/optimum-neuron-cache/blob/main/inference-cache-config/mistral.json). Les paramètres HF_BATCH_SIZE, HF_SEQUENCE_LENGTH, HF_AUTO_CAST_TYPE et HF_NUM_CORES doivent correspondre au paramètres utilisés lors de la compilation.
+Pour lancer TGI sur inferentia2 il est nécessaire d'utiliser une image docker [spécifique](https://github.com/huggingface/optimum-neuron/tree/main/text-generation-inference). D'autre part, le modèle doit être recompilé pour tourner sur inferentia a l'aide d'un outil : [Neuron Compiler](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/compiler/index.html). Hugging face dispose d'un cache avec les modèles précompilés, par exemple pour mistral on trouve la liste [ici](https://huggingface.co/aws-neuron/optimum-neuron-cache/blob/main/inference-cache-config/mistral.json). Les paramètres HF_BATCH_SIZE, HF_SEQUENCE_LENGTH, HF_AUTO_CAST_TYPE et HF_NUM_CORES doivent correspondre au paramètres utilisés lors de la compilation.
 
+![Neuron top](images/neuron-top.png#darkmode "Neuron top")
+
+### Batching
+
+Pour augmenter les performances d'inference en production, il est primordial d'utiliser la technique de batching.
+Lorsqu'un prompt est soumis à un LLM, il est transformé en tokens, la première utération permet de déterminer le premier token de la réponse. La seconde itération prend en entrée le prompt et le premier token généré de la réponse afin de générer le deuxieme token.
+Le temps d'inference est principalement lié au temps necessaire pour charger les données dans la mémoire du GPU, il est donc indispensable de faire travailler le GPU sur plusieurs prompts en même temps : les itérations des différents prompts sont batchées pour minimiser le nombre de chargement en mémoire.
+
+TGI supporte nativement le continuous batching, pour affiner le comportement des batch il est possible de jouer sur les paramètres suivants :
+
+```shell
+docker run --rm -p 8080:80 \
+       -v $(pwd)/data:/data \
+       --gpus all \
+       --shm-size 1g \
+       -e HUGGING_FACE_HUB_TOKEN=${HF_TOKEN} \
+       ghcr.io/huggingface/text-generation-inference:2.0.4 \
+       --model-id=mistralai/Mistral-7B-Instruct-v0.3 \
+       --quantize eetq \
+       --max-input-length 1984 \
+       --max-total-tokens 2048
+```
+
+L'option [--max-total-tokens](https://huggingface.co/docs/text-generation-inference/basic_tutorials/launcher#maxtotaltokens) est déterminante. Celle-ci doit être déterminée en fonction du nombre de token en input et du nombre de token attendu en output. Plus sa valeur sera basse, plus un batch pour contenir d'iterations.
+
+A noter, sur les instances inferentia, le batching est statique et déterminé à la compilation contrairement à d'autres matériels ou le nombre d'iteration dans un batch est dynamique.
+
+### Guidance / JSON
+
+Une des difficultés récurrente de l'utilisation d'un LLM est son intégration avec des briques logiciel. Un LLM est conçu pour répondre en langage naturel. Pour obtenir un retour en JSON il peut être fastidueux de décrire un retour précis dans le prompt, qui de toute façon ne serait pas toujours respecté. Pour contrer cela il est possible de préciser un json schema lors de l'appel à TGI.
+Le schema est alors inclut dans les batchs et va pondérer les poids sur les tokens de sorti afin de respecter le schema précisé.
+
+Cette fonctionnalité est documentée [ici](https://huggingface.co/docs/text-generation-inference/conceptual/guidance).
+
+```shell
+curl 'http://localhost:8080/generate' \
+  -H 'Accept: application.json' \
+  -H 'Content-Type: application/json' \
+  --data-raw $'{
+    "inputs":"< précisez ici votre prompt ... >",
+    "parameters": {
+        "temperature": 0.5,
+        "max_new_tokens": 50,
+        "repetition_penalty": 1.03,
+        "grammar": {
+            "type": "json",
+            "value": {
+                "properties": {
+                    "field1": {
+                        "type": "array",
+                        "description": "< field 1 description >",
+                        "items": {
+                            "type": "string",
+                            "enum": [
+                                "value1",
+                                "value2"
+                            ]
+                        },
+                        "minItems": 1,
+                        "maxItems": 2,
+                        "uniqueItems": true
+                    }
+                },
+                "required": [
+                    "field1"
+                ]
+            }
+        }
+    }
+}' |jq '.generated_text | fromjson'
+```
+
+### Embeddings
+
+Pour mettre en place des techniques de RAG (retrieval augmented generation) il est possible d'utiliser un autre outil d'Hugging Face : [TEI](https://github.com/huggingface/text-embeddings-inference) (Text Embeddings Inference).
+AWS supporte un certain nombre de [base de données vectoriel](https://aws.amazon.com/what-is/vector-databases/) qui permettent de stocker les embeddings de vos documents.
+
+Exemple de commande docker pour démarrer TEI sur une instance T4 (architecture turing)
+```shell
+docker run --rm -p 8081:80 \
+       -v $(pwd)/data:/data \
+       --gpus all \
+       --shm-size 1g \
+       -e HF_TOKEN=${HF_TOKEN} \
+       ghcr.io/huggingface/text-embeddings-inference:turing-1.2 \
+       --model-id BAAI/bge-m3 \
+       --port 80
+```
+
+## Conclusion
+
+TGI permet de déployer simplement un LLM open source et fait abstraction des spécificités des modèles.
+Le support de différents matériels apporte plus de souplesse selon les besoins.
+Les fonctionnalités de sharding, batching et quantization permettent d'optimiser les performances tout en rendant possible l'inference sur du materiel bon marché. Les instances EC2 équipées d'une nvidia T4 ne consomment que 70w ce qui est plutôt raisonnable pour déployer un LLM
+
+La possibilité de guider le modèle avec un JSON schema est un vrai plus pour l'automatisation de tâches.
+
+TGI répond à nos besoin actuels, vLLM serait interressant à explorer pour des besoins d'inférence avec des enjeux plus importants en performance et scalabilité.
 
 
 
