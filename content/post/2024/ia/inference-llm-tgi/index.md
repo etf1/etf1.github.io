@@ -1,5 +1,5 @@
 ---
-title: Déploiement d'un LLM à l'echelle avec TGI
+title: Déploiement d'un LLM à l'échelle avec TGI
 date: 2024-06-26T09:00:00
 hero: /post/2024/ia/inference-llm-tgi/images/hero.jpg
 excerpt: "Découvrez comment nous réalisons l'inférence de nos LLMs en production."
@@ -10,7 +10,7 @@ description: "Découvrez comment nous réalisons l'inférence de nos LLMs en pro
 
 ## L'inférence d'un Large Language Model
 
-Les LLMs (_Large Language Model_) sont de plus en plus adoptés en entreprise, leur coût, leur mise à l'echelle en production ou la confidentialité des données peuvent être un véritable défi.
+Les LLMs (_Large Language Model_) sont de plus en plus adoptés en entreprise, leur coût, leur mise à l'échelle en production ou la confidentialité des données peuvent être un véritable défi.
 
 La solution la plus simple pour réaliser l'inférence d'un modèle consiste à payer une solution clé en main, telle que :
 * [openAI (chatGPT)](https://platform.openai.com/docs)
@@ -37,7 +37,7 @@ Chaque modèle vient avec sa façon de réaliser l'inférence, il existe cependa
 
 ### Hugging Face & TGI
 
-Chez eTF1, nous utilisons les solutions d'[hugging face](https://huggingface.co/) sur nos environnements AWS. [Ollama](https://ollama.com/) est également utilisé sur les postes de développement pour du prototypage.
+À eTF1, nous utilisons les solutions d'[hugging face](https://huggingface.co/) sur nos environnements AWS. [Ollama](https://ollama.com/) est également utilisé sur les postes de développement pour du prototypage.
 
 [Hugging face](https://huggingface.co/) est un hub, qui permet de partager des datasets et des modèles à la communauté. C'est aussi un ensemble de bibliothèques qui permettent l'entraînement et l'inférence de ces modèles.
 
@@ -46,8 +46,8 @@ Chez eTF1, nous utilisons les solutions d'[hugging face](https://huggingface.co/
 [TGI](https://github.com/huggingface/text-generation-inference) (_Text Generation Inference_) permet de déployer facilement un modèle, fourni sous forme d'image Docker, [TGI](https://github.com/huggingface/text-generation-inference) peut être facilement déployé sur une infrastructure existante.
 
 L'inférence d'un LLM nécessite cependant l'utilisation d'une configuration matérielle (_hardware_) spécifique, [TGI](https://github.com/huggingface/text-generation-inference) permet l'inférence sur différents types de matériels :
-* Une carte graphique NVIDIA, AMD ou Intel : sur AWS, à Paris (zone eu-west-3), les instances EC2 de type [G4dn](https://aws.amazon.com/fr/ec2/instance-types/g4/) sont disponibles avec des cartes NVIDIA T4 avec 16GB de VRAM (~0,6$ de l'heure pour un g4dn.xlarge).
-* Une carte d'accélération spécifique Inferentia, Gaudi, TPU : sur AWS, les instances EC2 de type [Inf2](https://aws.amazon.com/fr/ec2/instance-types/inf2/) sont disponibles avec des cartes Inferentia2 avec 2x16GB de mémoire (~1$ de l'heure pour inf2.xlarge).
+* Une carte graphique NVIDIA, AMD ou Intel : sur AWS, à Paris (zone eu-west-3), les instances EC2 de type [G4dn](https://aws.amazon.com/fr/ec2/instance-types/g4/) sont disponibles avec des cartes NVIDIA T4 avec 16GB de VRAM pour ~0,6$ de l'heure pour un g4dn.xlarge.
+* Une carte d'accélération spécifique Inferentia, Gaudi, TPU : sur AWS, les instances EC2 de type [Inf2](https://aws.amazon.com/fr/ec2/instance-types/inf2/) sont disponibles avec des cartes Inferentia2 avec 2x16GB de mémoire pour ~1$ de l'heure pour inf2.xlarge.
 
 Pour démarrer l'inférence du modèle, il suffit de démarrer le conteneur TGI. Sur AWS, nous déployons ces conteneurs dans un cluster [EKS](https://aws.amazon.com/fr/eks/). Nous avons une configuration spécifique de [Karpenter](https://karpenter.sh/) pour provisionner des instances EC2 de type [G4dn](https://aws.amazon.com/fr/ec2/instance-types/g4/) ou [Inf2](https://aws.amazon.com/fr/ec2/instance-types/inf2/) sur ces déploiements.
 
@@ -157,9 +157,9 @@ docker run --rm -p 8080:80                                 \
        --max-total-tokens 2048
 ```
 
-L'option [`--max-total-tokens`](https://huggingface.co/docs/text-generation-inference/basic_tutorials/launcher#maxtotaltokens) est déterminante. Celle-ci doit être déterminée en fonction du nombre de token en input et du nombre de token attendu en output. Plus sa valeur sera basse, plus un batch pourra contenir d'itérations.
+L'option [`--max-total-tokens`](https://huggingface.co/docs/text-generation-inference/basic_tutorials/launcher#maxtotaltokens) est structurante. Celle-ci doit être déterminée en fonction du nombre de tokens en input et du nombre de tokens attendus en output. Plus sa valeur sera basse, plus un batch pourra contenir d'itérations.
 
-A noter, sur les instances inferentia, le batching est statique et déterminé à la compilation contrairement à d'autres configurations matérielles où le nombre d'itération dans un batch est dynamique.
+A noter, sur les instances inferentia, le batching est statique et déterminé à la compilation contrairement à d'autres configurations matérielles où le nombre d'itérations dans un batch est dynamique.
 
 ### Guidance / JSON
 
@@ -208,7 +208,7 @@ curl 'http://localhost:8080/generate' \
 
 ### Embeddings
 
-Pour mettre en place des techniques de RAG (_Retrieval Augmented Generation_) il est possible d'utiliser un autre outil de Hugging Face : [TEI](https://github.com/huggingface/text-embeddings-inference) (_Text Embeddings Inference_).
+Pour mettre en place des techniques de RAG (_Retrieval Augmented Generation_) il est possible d'utiliser un autre outil d'Hugging Face : [TEI](https://github.com/huggingface/text-embeddings-inference) (_Text Embeddings Inference_).
 AWS supporte un certain nombre de [base de données vectorielles](https://aws.amazon.com/what-is/vector-databases/) qui permettent de stocker les embeddings de vos documents.
 
 Exemple de commande docker pour démarrer TEI sur une instance T4 (architecture turing)
@@ -227,8 +227,8 @@ docker run --rm -p 8081:80                                      \
 
 TGI permet de déployer simplement un LLM Open Source et fait abstraction des spécificités des modèles.
 Le support de différentes configurations matérielles apporte plus de souplesse selon les besoins.
-Les fonctionnalités de _sharding_, _batching_ et _quantization_ permettent d'optimiser les performances tout en rendant possible l'inf"rence sur du materiel grand public. Les instances EC2 équipées d'une NVIDIA T4 ne consomment que 70W ce qui est plutôt raisonnable pour déployer un LLM.
+Les fonctionnalités de _sharding_, _batching_ et _quantization_ permettent d'optimiser les performances tout en rendant possible l'inférence sur du materiel grand public. Les instances EC2 équipées d'une NVIDIA T4 ne consomment que 70W ce qui est plutôt raisonnable pour déployer un LLM.
 
 La possibilité de guider le modèle avec un JSON Schema est un vrai plus pour l'automatisation de tâches.
 
-TGI répond à nos besoin actuels, vLLM serait int"rressant à explorer pour des besoins d'inférence avec des enjeux plus importants en performance et scalabilité.
+TGI répond à nos besoin actuels, vLLM serait intérressant à explorer pour des besoins d'inférence avec des enjeux plus importants en scalabilité.
