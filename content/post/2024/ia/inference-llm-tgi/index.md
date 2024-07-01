@@ -90,7 +90,7 @@ Le modèle est souvent sauvegardé sous forme de fichier binaire, par exemple [p
 
 Ces fichiers volumineux contiennent les fameux paramètres du modèle. En réalité il s'agit de matrices contenant les différents paramètres sous forme de nombres flottants (`float`). Nous pouvons facilement trouver la précision des nombres flottants d'un modèle en consultant le [fichier de configuration](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.3/blob/main/config.json) de Hugging Face du modèle. Pour Mistral et Llama 3, l'attribut `torch_dtype` a comme valeur ["bfloat16"](https://pytorch.org/docs/stable/tensors.html).
 
-En réduisant la précision des nombres flottants d'un modèle, nous réduisons aussi sa taille. Mistral-7B-v0.3 nécessite 16GB de VRAM pour une inférence avec 16 bits de précision, la quantité de mémoire nécessaire pour une précision de 8 bits ou 4 bits sera deux ou quatre fois moins élevée.
+En réduisant la précision des nombres flottants d'un modèle, nous réduisons aussi sa taille. Mistral-7B-v0.3 nécessite 16GB de VRAM pour une inférence avec 16 bits de précision, la quantité de mémoire nécessaire pour une précision de 8 bits ou 4 bits sera deux ou quatre fois moins élevée. Cette diminution implique une réduction de la performance du modèle, cependant celle-ci reste en général limitée à l'usage.
 
 Sous macOS, avec [Ollama](https://ollama.com/), les modèles sont en général en 4 bits, et s'exécutent dans la mémoire unifiée. Les NVIDIA supportent la quantization, tandis que sur Inferentia ce n'est pas le cas. Il faut donc vérifier les contraintes en fonction de la configuration matérielle. De plus, il existe plusieurs implémentations pour _quantizer_ un modèle, certaines nécessitent une variante du modèle d'origine : 
 * [bitsandbytes](https://github.com/TimDettmers/bitsandbytes) : fonctionne avec tous les modèles mais peut être plus lent
@@ -121,6 +121,7 @@ Exemple de commande docker pour mistral sur inferentia2 inf2.xlarge :
 docker run --rm -p 8080:80                            \
        -v $(pwd)/data:/data                           \
        --device=/dev/neuron0                          \
+       --shm-size 1g                                  \
        -e HF_TOKEN=${HF_TOKEN}                        \
        -e HF_BATCH_SIZE=1                             \
        -e HF_SEQUENCE_LENGTH=4096                     \
@@ -140,7 +141,7 @@ Pour exécuter TGI sur inferentia2, il est nécessaire d'utiliser une image Dock
 
 Pour augmenter les performances d'inférence en production, il est primordial d'utiliser la technique de batching.
 Lorsqu'un prompt est soumis à un LLM, il est transformé en tokens, la première itération permet de déterminer le premier token de la réponse. La seconde itération prend en entrée le prompt et le premier token généré de la réponse afin de générer le deuxième token.
-Le temps d'inférence est principalement lié au temps necessaire pour charger les données dans la mémoire du GPU, il est donc indispensable de faire travailler le GPU sur plusieurs prompts en même temps : les itérations des différents prompts sont _batchées_ pour minimiser le nombre de chargements en mémoire.
+Le temps d'inférence est principalement lié au temps nécessaire pour charger les données dans la mémoire du GPU, il est donc indispensable de faire travailler le GPU sur plusieurs prompts en même temps : les itérations des différents prompts sont _batchées_ pour minimiser le nombre de chargements en mémoire.
 
 TGI supporte nativement le _continuous batching_, pour affiner le comportement des batch il est possible de jouer sur les paramètres suivants :
 
@@ -173,37 +174,46 @@ curl 'http://localhost:8080/generate' \
   -H 'Accept: application.json'       \
   -H 'Content-Type: application/json' \
   --data-raw $'{
-    "inputs":"< précisez ici votre prompt ... >",
+    "inputs":"vous devrez classifier le message suivant selon son émotion: \\"le plus beau jour de ma vie !\\"",
     "parameters": {
         "temperature": 0.5,
-        "max_new_tokens": 50,
+        "max_new_tokens": 100,
         "repetition_penalty": 1.03,
         "grammar": {
             "type": "json",
             "value": {
                 "properties": {
-                    "field1": {
-                        "type": "array",
-                        "description": "< field 1 description >",
-                        "items": {
-                            "type": "string",
-                            "enum": [
-                                "value1",
-                                "value2"
-                            ]
-                        },
-                        "minItems": 1,
-                        "maxItems": 2,
-                        "uniqueItems": true
+                    "emotion": {
+                        "type": "string",
+                        "description": "émotion associée au message",
+                        "enum": [
+                            "tristesse",
+                            "colère",
+                            "joie",
+                            "peur"
+                        ]
+                    },
+                    "explanation": {
+                        "type": "string",
+                        "description": "un explication en français et concise de votre classification"
                     }
                 },
                 "required": [
-                    "field1"
+                    "emotion",
+                    "explanation"
                 ]
             }
         }
     }
 }' |jq '.generated_text | fromjson'
+```
+
+Le retour du LLM :
+```json
+{
+  "emotion": "joie",
+  "explanation": "Le message contient l'expression 'le plus beau jour de ma vie', qui est généralement associée à une émotion de joie ou de bonheur."
+}
 ```
 
 ### Embeddings
@@ -232,3 +242,5 @@ Les fonctionnalités de _sharding_, _batching_ et _quantization_ permettent d'op
 La possibilité de guider le modèle avec un JSON Schema est un vrai plus pour l'automatisation de tâches.
 
 TGI répond à nos besoin actuels, vLLM serait intérressant à explorer pour des besoins d'inférence avec des enjeux plus importants en scalabilité.
+
+L'inférence d'un LLM est coûteuse, avec l'engouement autour de leur usage, il est important de bien définir les cas d'utilisation dans lesquels ils sont réellement pertinants. Par ailleur il est crucial de bien sizer les instances pour éviter un gaspillage des resources pour un usage plus responsable de cette technologie.
