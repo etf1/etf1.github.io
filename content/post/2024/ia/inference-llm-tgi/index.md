@@ -10,7 +10,7 @@ description: "Découvrez comment nous réalisons l'inférence de nos LLMs en pro
 
 ## L'inférence d'un Large Language Model
 
-Les LLMs (_Large Language Model_) sont de plus en plus adoptés en entreprise, leur coût, leur mise à l'échelle en production ou la confidentialité des données peuvent être un véritable défi.
+Les LLMs (_Large Language Model_) sont de plus en plus adoptés en entreprise, leur coût, leur mise à l'échelle en production ou la confidentialité des données peuvent être de véritables défis.
 
 La solution la plus simple pour réaliser l'inférence d'un modèle consiste à payer une solution clé en main, telle que :
 * [openAI (chatGPT)](https://platform.openai.com/docs)
@@ -21,7 +21,7 @@ Certains services, comme [AWS Bedrock](https://docs.aws.amazon.com/bedrock/lates
 
 ![AWS Bedrock](images/aws-bedrock.png#darkmode "Modèles d'AWS Bedrock")
 
-Souvent, le prix se fera en fonction du nombre de tokens (input + output), ce qui n'aide pas à se projeter sur le coût réel de la solution. La confidentialité des données est également un point de vigilence d'un point de vu RGPD. En utilisant une solution SaaS, nous entrons dans une logique de "vendor lock-in", et nous perdons également la maîtrise sur les potentielles mises à jour des modèles.
+Souvent, le prix se fera en fonction du nombre de tokens (input + output), ce qui n'aide pas à se projeter sur le coût réel de la solution. La confidentialité des données est également un point de vigilance d'un point de vue RGPD. En utilisant une solution SaaS, nous entrons dans une logique de "vendor lock-in", et nous perdons également la maîtrise sur les potentielles mises à jour des modèles.
 
 L'autre possibilité est de déployer soi-même un modèle Open Source :
 * [Mistral](https://mistral.ai/technology/#models)
@@ -67,7 +67,7 @@ Au démarrage, TGI va télécharger dans un volume (`/data`) le modèle spécifi
 
 ### Quantization
 
-En plus d'une configuration matérielle spécifique, il faudra être vigilent à la quantité de mémoire nécessaire pour exécuter le modèle. Nous parlons bien ici de mémoire GPU (ou mémoire de la carte d'accelération) et non de RAM.
+En plus d'une configuration matérielle spécifique, il faudra être vigilant à la quantité de mémoire nécessaire pour exécuter le modèle. Nous parlons bien ici de mémoire GPU (ou mémoire de la carte d'accelération) et non de RAM.
 
 Ci-dessous les prérequis pour exécuter les différentes variantes de Mistral :
 
@@ -133,7 +133,7 @@ docker run --rm -p 8080:80                            \
        --max-total-tokens 4096
 ```
 
-Pour exécuter TGI sur inferentia2, il est nécessaire d'utiliser une image Docker [spécifique](https://github.com/huggingface/optimum-neuron/tree/main/text-generation-inference). D'autre part, le modèle doit être recompilé pour s'exécuter sur inferentia à l'aide d'un outil : [Neuron Compiler](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/compiler/index.html). Hugging Face dispose d'un cache avec les modèles précompilés, par exemple pour Mistral nous trouvons la liste [ici](https://huggingface.co/aws-neuron/optimum-neuron-cache/blob/main/inference-cache-config/mistral.json). Les paramètres `HF_BATCH_SIZE`, `HF_SEQUENCE_LENGTH`, `HF_AUTO_CAST_TYPE` et `HF_NUM_CORES` doivent correspondre au paramètres utilisés lors de la compilation.
+Pour exécuter TGI sur inferentia2, il est nécessaire d'utiliser une image Docker [spécifique](https://github.com/huggingface/optimum-neuron/tree/main/text-generation-inference). D'autre part, le modèle doit être recompilé pour s'exécuter sur inferentia à l'aide d'un outil : [Neuron Compiler](https://awsdocs-neuron.readthedocs-hosted.com/en/latest/compiler/index.html). Hugging Face dispose d'un cache avec les modèles précompilés, par exemple pour Mistral nous trouvons la liste [ici](https://huggingface.co/aws-neuron/optimum-neuron-cache/blob/main/inference-cache-config/mistral.json). Les paramètres `HF_BATCH_SIZE`, `HF_SEQUENCE_LENGTH`, `HF_AUTO_CAST_TYPE` et `HF_NUM_CORES` doivent correspondre aux paramètres utilisés lors de la compilation.
 
 ![Neuron top](images/neuron-top.png#darkmode "Neuron top")
 
@@ -165,7 +165,7 @@ A noter, sur les instances inferentia, le batching est statique et déterminé �
 ### Guidance / JSON
 
 Une des difficultés récurrente de l'utilisation d'un LLM est son intégration avec des briques logicielles. Un LLM est conçu pour répondre en langage naturel. Pour obtenir un retour en JSON il peut être fastidueux de décrire un retour précis dans le prompt, qui de toute façon ne serait pas toujours respecté. Pour contrer cela il est possible de préciser un JSON Schema lors de l'appel à TGI.
-Le schema est alors inclut dans les batchs et va pondérer les poids sur les tokens de sortie afin de respecter le schema précisé.
+Le schema est alors inclus dans les batchs et va pondérer les poids sur les tokens de sortie afin de respecter le schema précisé.
 
 Cette fonctionnalité est documentée [ici](https://huggingface.co/docs/text-generation-inference/conceptual/guidance).
 
@@ -219,7 +219,7 @@ Le retour du LLM :
 ### Embeddings
 
 Pour mettre en place des techniques de RAG (_Retrieval Augmented Generation_) il est possible d'utiliser un autre outil d'Hugging Face : [TEI](https://github.com/huggingface/text-embeddings-inference) (_Text Embeddings Inference_).
-AWS supporte un certain nombre de [base de données vectorielles](https://aws.amazon.com/what-is/vector-databases/) qui permettent de stocker les embeddings de vos documents.
+AWS supporte un certain nombre de [bases de données vectorielles](https://aws.amazon.com/what-is/vector-databases/) qui permettent de stocker les embeddings de vos documents.
 
 Exemple de commande docker pour démarrer TEI sur une instance T4 (architecture turing)
 ```shell
@@ -243,4 +243,4 @@ La possibilité de guider le modèle avec un JSON Schema est un vrai plus pour l
 
 TGI répond à nos besoin actuels, vLLM serait intérressant à explorer pour des besoins d'inférence avec des enjeux plus importants en scalabilité.
 
-L'inférence d'un LLM est coûteuse, avec l'engouement autour de leur usage, il est important de bien définir les cas d'utilisation dans lesquels ils sont réellement pertinants. Par ailleur il est crucial de bien sizer les instances pour éviter un gaspillage des resources pour un usage plus responsable de cette technologie.
+L'inférence d'un LLM est coûteuse, avec l'engouement autour de leur usage, il est important de bien définir les cas d'utilisation dans lesquels ils sont réellement pertinents. Par ailleur il est crucial de bien sizer les instances pour éviter un gaspillage des resources pour un usage plus responsable de cette technologie.
