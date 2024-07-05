@@ -10,7 +10,7 @@ initAnimation();
 
 function initAnimation(){
     if (localStorage.getItem("isLight") === 'true'){
-        logo.setAttribute('src', "/images/logo-blue.svg");
+        logo.setAttribute('src', "/images/logo-tf1plus-blue.svg");
 
         moonMask.style.top = "-8px";
         moonMask.style.right = "-5px";
@@ -18,7 +18,7 @@ function initAnimation(){
         sunRays.style.transform = "scale(0.1)"
     }
     else{
-        logo.setAttribute('src', "/images/logo-white.svg");
+        logo.setAttribute('src', "/images/logo-tf1plus-white.svg");
 
         moonMask.style.top = "-25px";
         moonMask.style.right = "-15px";
@@ -91,7 +91,7 @@ function makeDark(){
     console.log("makeDark");
     console.log(logo);
 
-    logo.setAttribute('src', "/images/logo-white.svg");
+    logo.setAttribute('src', "/images/logo-tf1plus-white.svg");
 }
 
 function makeLight(){
@@ -116,5 +116,5 @@ function makeLight(){
 
     console.log("makeLight");
 
-    logo.setAttribute('src', "/images/logo-blue.svg");
+    logo.setAttribute('src', "/images/logo-tf1plus-blue.svg");
 }

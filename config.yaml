@@ -1,7 +1,7 @@
 baseURL: "https://tech.tf1.fr/"
 languageCode: "fr-FR"
 title: "Blog technique e-TF1"
-theme: "hugo-theme-novela-mytf1"
+theme: "hugo-theme-novela-tf1plus"
 pygmentsstyle: "monokai"
 paginate: 6
 social:
@@ -15,8 +15,8 @@ markup:
      hrefTargetBlank: 1
 enableRobotsTXT: true
 params:
-  description: "Découvrez les coulisses de MYTF1, la plateforme de streaming vidéo de TF1"
+  description: "Découvrez les coulisses de TF1+, la plateforme de streaming vidéo de TF1"
   seo:
-    default_image: "/images/mytf1.png"
+    default_image: "/images/tf1plus.png"
     locale: "fr_FR"
-    keywords: "mytf1, tf1, streaming, player, video, go, golang, react, js, javascript, css, android, ios, kotlin, swift, nginx, drm, widevine, elemental, aws, mongodb, kafka"
+    keywords: "mytf1, tf1, tf1+, streaming, player, video, go, golang, react, js, javascript, css, android, ios, kotlin, swift, nginx, drm, widevine, elemental, aws, mongodb, kafka"
