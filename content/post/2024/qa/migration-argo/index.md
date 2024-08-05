@@ -17,7 +17,7 @@ Historiquement, l'équipe QA de la DT eTF1 utilisait Jenkins comme orchestrateur
 
 Deux choix s'offraient alors à nous :
 * Rester sur Jenkins, et reprendre à notre charge l'administation et la maintenance de l'outil
-* Miger au profit d'un autre outil 
+* Migrer au profit d'un autre outil 
 
 Jenkins, bien que puissant et largement adopté, peut parfois présenter des défis en termes de gestion de pipelines complexes, d'orchestration de conteneurs et de maintenance. De plus, nous n'avions pas à l'époque les compétences en interne pour reprendre l'administation d'un tel outil. Notre choix s'est donc porté sur une migration vers une stack Argo Workflow / Argo CD dans des environnements Kubernetes.
 
@@ -37,7 +37,7 @@ Jenkins, bien que puissant et largement adopté, peut parfois présenter des dé
 
 #### Mise en place de Kubernetes :
 * Installer et configurer le cluster Kubernetes 
-* Déployer des outils nécessaires comme Helm pour la gestion des charts
+* Déployer des outils nécessaires 
 
 #### Déploiement d'Argo Workflow :
 * Installer Argo Workflow sur le cluster Kubernetes
@@ -70,7 +70,7 @@ Les workflows dans Argo sont décomposés en plusieurs images ayant chacun une t
 
 ![Workflow](images/workflow.svg "Workflow d'exécution d'un job")
 
-La déclaration de chacune de ses images et des ressources se fait de manière simple dans un fichier YAML
+La déclaration de chacune de ses images et des ressources se fait de manière simple dans un fichier YAML grâce à Kustomize (inclus nativement dans Kubernetes)
 ```yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
@@ -85,7 +85,7 @@ resources:
 - templates/email-sending
 ```
 
-Et on peut ensuite facilement déclarer un workflow complet, avec ces paramètres de lancement custom, toujours grâce à des fichiers YAML, comme par exemple :
+Et on peut ensuite facilement déclarer un workflow complet, avec ses paramètres de lancement custom, toujours grâce à des fichiers YAML, comme par exemple :
 ```yaml
 apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
