@@ -2,7 +2,7 @@
 title: Jean-Baptiste Bernard
 excerpt: Head of QA
 bio: |
-  Grand ancien de eTF1
+  Grand ancien de eTF1 (depuis PHP 4 et Internet Explorer 6)
 hero: /authors/jbbernard/avatar.jpg
 avatar: /authors/jbbernard/avatar.jpg
 featured: true
