@@ -22,11 +22,10 @@ Deux choix s'offraient alors à nous :
 Jenkins, bien que puissant et largement adopté, peut parfois présenter des défis en termes de gestion de pipelines complexes, d'orchestration de conteneurs et de maintenance. De plus, cette situation fut une bonne opportunité pour challenger nos besoins pour l'avenir. Notre choix s'est donc porté sur une migration vers une stack Argo Workflow / Argo CD dans des environnements Kubernetes.
 
 ### Pourquoi choisir Argo ?
-Après une phase d'étude suivie d'un petit POC, notre choix s'est porté sur les solutions Argo pour les raisons suivantes : 
-1. **Scalabilité et flexibilité** : Les solutions basées sur Kubernetes, comme Argo, offrent une meilleure scalabilité et flexibilité comparée aux solutions traditionnelles. Argo Workflow permet d'orchestrer des workflows de manière native sur Kubernetes, tandis qu'Argo CD facilite le déploiement
-2. **Gestion des dépendances et sécurité** : L'utilisation de conteneurs Docker améliore la gestion des dépendances et renforce la sécurité grâce à l'isolation des environnements.
-3. **Simplification de la configuration et du déploiement** : Argo CD suit le principe GitOPS et utilise des définitions déclaratives des applications, rendant le processus de déploiement plus transparent et reproductible.
-4. **Uniformisation** : la stack technique de la QA est la même (ou compatible) avec le reste des applications métier.
+
+Nous avons besoin d'un outil assez complexe pour gérer de multiples environnements, pouvant êtré déployé/éxecuté à la demande mais aussi avec divers déclencheurs git ou programmés, tout en étant assez simple pour être configuré en partie par des ingénieurs automaticiens (non professionnels de la gestion d'infrastructure), avec des ajouts/suppressions/modifications fréquentes de workflows au fur et à mesure des développements à venir, qu'on sait ambitieux, de façon très fluide. Argo étant basé sur Kubernetes, il nous offrait à la fois cette flexibilité et cette scalabilité.\
+Nous avions aussi besoin de garder un historique clair de chaque modification sur les workflows, les infrastructures ou les images, pour assurer la stabilité, la reproductibilité et la fiabilité de nos tests, et pouvoir rollback facilement au moindre souci, ceci à moindre coût. L'approche GitOps offerte par Argo répond le mieux à notre besoin, elle permet à nos automaticiens, de gérer leur infrastructure, le déploiement de leur application à tester, la compilation et le lancement de leur tests, ainsi que la génération et la communication des rapports, de la même façon qu'ils gèrent l'implémentation de leurs tests, donc avec une courbe d'apprentissage raisonnable.\
+Enfin, cela permet d'uniformiser la stack technique de la QA avec le reste des applications métier, soit déjà en Argo, soit par exemple les interactions avec des workflows CI existant en Github Actions seront beaucoup plus naturelles (langage yaml dans les deux cas).
 
 
 
@@ -46,13 +45,12 @@ Une fois nos workflows définis en dur, nous pouvons passer à ArgoCD pour pér�
 
 #### Migration des Pipelines Jenkins :
 Tous les pré-requis étaient alors réunis pour commencer effectivement la migration.\
-Par sécurité, nous avons d'abord commencé par sélectionné un premier pipeline, celui de tests automatisés du site Web de TFOU MAX. Nous avons traduit le pipeline Jenkins en workflows Argo en utilisant les briques définies précédemment, et nous l'avons testé dans un environnement de staging. Une fois celui-ci validé, nous avons pu le déployer dans l'environnement de prod, et après 2 semaines de double run, nous avons comparé les résultats entre Jenkins et Argo avant de décider de stopper le pipeline dans Jenkins.\
-Puis nous avons décliné cette procédure de migration pipeline par pipeline, avec un double run pour minimiser les risques
+Par sécurité, nous avons d'abord commencé par sélectionner un premier pipeline, celui de tests automatisés du site Web de TFOU MAX. Nous avons traduit le pipeline Jenkins en workflow Argo en utilisant les briques définies précédemment, et nous l'avons testé dans un environnement de staging. Une fois celui-ci validé, nous avons pu le déployer dans l'environnement de prod, et après 2 semaines de double run, nous avons comparé les résultats entre Jenkins et Argo avant de décider de stopper le pipeline dans Jenkins.\
+Puis nous avons décliné cette procédure de migration pipeline par pipeline, avec à nouveau un double run pour s'assurer du bon fonctionnement.\
 
 #### Validation et Optimisation :
-Une fois tous les pipelines Jenkins migrés et transformés en workflow Argo, il ne restait plus que quelques affinages.\
-Nous avons d'abord supervisé les performances pour ajuster les ressources Kubernetes en conséquence (augmentation ou diminution de la RAM et/ou du CPU des instances par exemple).\
-Et enfin des métriques ont été mis en place, ainsi que des alertes pour surveiller l'état des workflows et des déploiements.
+Une fois tous les pipelines Jenkins migrés et transformés en workflow Argo, nous avons pu valider la solution au global, qui donne des résultats identique, avec des temps d'éxécution comparables.\
+Il ne restait alors plus que quelques affinages. Nous avons d'abord supervisé les performances pour ajuster les ressources Kubernetes en conséquence (augmentation ou diminution de la RAM et/ou du CPU des instances par exemple). Pour faciliter le débug, les logs ont été envoyés dans Datadog qui permet facilement de retrouver les informations pertinentes grâce à son système de requêtage. Et enfin des métriques ont été mis en place, ainsi que des alertes pour surveiller l'état des workflows et des déploiements.
 
 
 
@@ -177,19 +175,10 @@ spec:
 ```
 
 
-### Avantages Post-Migration
-
-* **Orchestration native Kubernetes** : Argo Workflow s'intègre nativement à Kubernetes, offrant des fonctionnalités avancées d'orchestration et de gestion des tâches.
-* **Déploiement déclaratif** : Argo CD utilise Git comme source de vérité, assurant que l'état des applications en production correspond toujours aux configurations définies.
-* **Automatisation et réduction des erreurs** : Les workflows et déploiements sont automatisés et déclaratifs, réduisant ainsi les erreurs humaines.
-* **Visibilité et traçabilité** : Les interfaces Argo fournissent une vue détaillée des workflows et des déploiements, facilitant le suivi et la résolution des problèmes.
-* **Facilité de création et maintenance des workflows** : Le fonctionnement sous forme de briques indépendantes et réutilisables (images Docker et templates) facilite grandement l'évolutivité (déclinaison basée sur des workflows existant, intégration de nouvelles étapes dans les workflows...) ainsi que la maintenance (mise à jour rapide des images par exemple)
-* **Rapport de test** : Les rapports d’exécution sont téléchargeables directement sur l’interface.
-* **Interfaçage avec d’autres outils** : La modularité d'Argo Workflow permet de facilement s'interfacer avec des outils et en particulier de permettre à ceux-ci de déclencher l'éxécution d'un workflow. On peut penser par exemple à Github Actions qui propose ce type d'interface dans sa marketplace ou d'utiliser le framework natif [Argo Events](https://argoproj.github.io/argo-events/sensors/triggers/argo-workflow/).
-
-
 ## Conclusion
 
-La migration de Jenkins vers une solution Docker avec Argo Workflow et Argo CD représente une avancée significative pour notre équipe. D'un outil à l'avenir incertain, nous sommes passés à une solution aux nombreux bénéfices en termes de scalabilité, flexibilité, et sécurité.
+La migration de Jenkins vers une solution Docker avec Argo Workflow et Argo CD représente une avancée significative pour notre équipe. D'un outil risquant de correspondre de moins en moins à nos besoins, nous sommes passés à une solution aux nombreux bénéfices en termes de scalabilité, flexibilité, et sécurité.
 
-En terme de perspectives d'avenir, cette migration nous ouvre un champ des possibles et nous avons déjà plein de projets dont certains sont déjà en cours de réalisation. On peut par exemple citer l'intégration des workflows de tests automatisés dans les différentes CI des équipes de développement. Nous avons aussi dans l'idée de mettre en place une interface entre Argo et Jira/Xray, qui nous permettrait par exemple de déclencher un workflow à la création d'une campagne de test dans Xray, puis d'y insérer les résultats des tests automatisés une fois ceci joués, afin de centraliser dans le même référentiel nos resultats de tests manuels et automatisés.
+En terme de perspectives d'avenir, cette migration nous ouvre un champ des possibles et nous avons déjà plein de projets dont certains sont déjà en cours de réalisation.\
+On peut par exemple citer l'intégration des workflows de tests automatisés dans les différentes CI des équipes de développement. Il est en effet très simple de déclencher l'éxécution d'un workflow depuis un outil tiers, par exemple en utilisant le framework natif [Argo Events](https://argoproj.github.io/argo-events/sensors/triggers/argo-workflow/) ou depuis Github Actions qui propose ce type d'interface dans sa marketplace.\
+Nous avons aussi dans l'idée de mettre en place une interface entre Argo et Jira/Xray, qui nous permettrait par exemple de déclencher un workflow à la création d'une campagne de test dans Xray, puis d'y insérer les résultats des tests automatisés une fois ceci joués, afin de centraliser dans le même référentiel nos resultats de tests manuels et automatisés.
