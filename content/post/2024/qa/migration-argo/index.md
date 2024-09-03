@@ -1,6 +1,6 @@
 ---
 title: Migration de Jenkins vers Argo
-date: 2024-08-01T09:00:00
+date: 2024-09-02T09:00:00
 hero: /post/2024/qa/migration-argo/images/argo-logo.svg
 excerpt: "Comment nous avons changé d'orchestrateur de tests automatisés"
 authors:
