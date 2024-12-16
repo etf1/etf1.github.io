@@ -1,6 +1,6 @@
 ---
 title: Scaling et Optimation des coûts Infrastructure
-date: 2024-12-16T09:00:00
+date: 2024-12-16T08:00:00
 hero: /post/2024/iops/cost-optimisation/images/hero.jpg
 excerpt: "Découvrez comment nous optimisons les coût infrastructure tout en tenant des pic de charges importants."
 authors:
