@@ -66,7 +66,7 @@ L'image suivante créé avec eks-node-viewer est un extrait de notre cluster de 
 
 Voici une exemple proche de la configuration des CRD Karpenter que nous utilisons. On peut voir :
 - Une ressource `EC2NodeClass` qui définit les caractéristiques des instances des noeuds
-- Une ressource `NodePool` qui utilise l'EC2NodeClass et définit les contraintes du nodepool en termes de limties, de consolidation ainsi que de choix d'instance type.
+- Une ressource `NodePool` qui utilise l'EC2NodeClass et définit les contraintes du nodepool en termes de limites, de consolidation ainsi que de choix d'instance type.
 
 ```yaml
 ---
@@ -146,9 +146,9 @@ spec:
         - r
 ```
 
-Si une chose est à retenir avec l'utilisation de Karpenter : le `sizing des requests des containers est essentiel`. Le choix des noeuds et la compaction du cluster nécessite que les workloads soient dimensionnées au plus juste de leur utilisation réelle.
+Si une chose est à retenir avec l'utilisation de Karpenter : le **sizing des requests des containers est essentiel**. Le choix des noeuds et la compaction du cluster nécessite que les workloads soient dimensionnées au plus juste de leur utilisation réelle.
 
-L'utilisation des `TopologySpreadConstraints` des `AntiAffinity` ainsi que des `PodDisruptionBudget` est également essentielle pour garantir la `Haute Disponibilité` des applicatifs dans un contexte où Karpenter va continuellement consolider le cluster et donc rescheduler des pods et des noeuds.
+L'utilisation des `TopologySpreadConstraints` des `AntiAffinity` ainsi que des `PodDisruptionBudget` est également essentielle pour garantir la **Haute Disponibilité** des applicatifs dans un contexte où Karpenter va continuellement consolider le cluster et donc rescheduler des pods et des noeuds.
 
 Voici par exemple un extrait de configuration que nous mettons sur chacun de nos deployment :
 ```yaml
