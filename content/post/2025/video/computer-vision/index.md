@@ -21,7 +21,7 @@ Ces meta données peuvent être auto générées à partir du contenu vidéo.
 
 ## Selection automatique des vignettes vidéo
 
-Dans cet article, nous allons étudier le cas d'usage de la selection automatique des vignettes vidéo (thumbnail). L'idée est de selectionner une frame de la vidéo, qui sera utilisée comme vignette de présentation (thumbnail) dans TF1+. Pour se faire, nous définissons des règles qui vont s'appuyer sur la présence d'un ou plusieurs personnages ainsi que l'émotion qu'ils dégagent.
+Dans cet article, nous allons étudier le cas d'usage de la selection automatique des vignettes vidéo (thumbnail). L'idée est de selectionner une frame de la vidéo, qui sera utilisée comme vignette de présentation (thumbnail) dans TF1+. Pour se faire, nous définissons des règles qui vont s'appuyer sur la présence d'un ou plusieurs personnages ainsi que des émotions qu'ils dégagent.
 
 Par exemple :
 * personnage principal, calme
@@ -638,7 +638,7 @@ Pour une scene donnée, les personnages présents sont en général les mêmes d
 La commande ffmpeg ci dessous permet de détecter les scènes :
 
 ```shell
-ffmpeg -i 14188512.mp4 -filter:v "select='gt(scene,0.3)',showinfo" -fps_mode vfr -f null -
+ffmpeg -i video.mp4 -filter:v "select='gt(scene,0.3)',showinfo" -f null -
 ```
 
 
@@ -662,8 +662,6 @@ pts_time = (pts * duration_time) / duration
 
 Pour le premier changement de plan (n=0), on obtient :
 pts_time = (548000 * 0.04) / 1000 = 21.92 (en secondes)
-
-
 
 ### Regroupement des scènes similaires
 
@@ -719,7 +717,557 @@ func ComputeLaplacianVariance(input gocv.Mat) float64 {
 
 ### Detection des visages
 
+Il existe de multiples algorithmes permettant la detection de vistage, ci dessous un tableau récapitulatifs des principaux algorithmes et leur année de publication.
+
+| Algorithme | Description | Support natif OpenCV | Année |
+| ---------- | ----------- | -------------- | ----- |
+| Haar cascades​ | méthode historique | ✅​ | 2001 |
+| dlib-HOG​ | Histogram of Oriented Gradients | ❌​ | 2005​ |
+| SSD​ | Single Shot Multibox Detector, permier modèle Deep learning, real time​ | ✅ | 2015 |
+| MTCNN​ | Multi-task Cascaded Convolutional Neural Network |​ ❌​ | 2016 |
+| DSFD | Dual Shot Face Detector​ | ❌​​ | 2019 |
+| RetinaFace​ | InsightFace project | ❌​​ | 2019 |
+| MediaPipe​ | Google AI Edge | ❌​​ | 2019 |
+| Yunet | CNN-based face detection | ✅​ | 2021 |
+
+Le code OpenCV permettant l'implémentation du modèle Yunet est disponible dans les samples [ici](https://github.com/opencv/opencv/blob/4.x/samples/dnn/face_detect.cpp).
+
+Ce code implémente également la reconnaissance de visage qui permet de déterminer la similarité de deux visages.
+
+Ci dessous un exemple d'implémentation avec gocv de detection de visage avec Yunet.
+
+```go
+package opencv
+
+import (
+	_ "embed"
+	"image"
+
+	"github.com/rpinsonneau/scene-detect/internal/model"
+	"gocv.io/x/gocv"
+)
+
+var (
+	//go:embed onnx/face_detection_yunet_2023mar.onnx
+	FaceDetectionYunet2023mar []byte
+)
+
+type YunetFaceDetector struct {
+	fd *gocv.FaceDetectorYN
+}
+
+func NewYunetFaceDetector() (FaceDetector, error) {
+
+	file, err := writeTempFile(FaceDetectionYunet2023mar, "face_detection_yunet_2023mar*.onnx")
+	if err != nil {
+		return nil, err
+	}
+
+	fd := gocv.NewFaceDetectorYN(file, "", image.Pt(320, 320))
+
+	return &YunetFaceDetector{
+		fd: &fd,
+	}, nil
+}
+
+func (fd *YunetFaceDetector) DetectFaces(input gocv.Mat, confidence float32) ([]*model.Face, error) {
+
+	fd.fd.SetInputSize(image.Pt(input.Cols(), input.Rows()))
+	output := gocv.NewMat()
+	defer output.Close()
+	fd.fd.Detect(input, &output)
+
+	var faces []*model.Face
+	for i := 0; i < output.Rows(); i++ {
+		face := model.NewFace(
+			image.Rect(
+				int(output.GetFloatAt(i, 0)),
+				int(output.GetFloatAt(i, 1)),
+				int(output.GetFloatAt(i, 0))+int(output.GetFloatAt(i, 2)),
+				int(output.GetFloatAt(i, 1))+int(output.GetFloatAt(i, 3)),
+			),
+			output.GetFloatAt(i, 14),
+			SourceOCV,
+		)
+
+		// face landmarks
+		face.SetRightEye(image.Pt(int(output.GetFloatAt(i, 4)), int(output.GetFloatAt(i, 5))))
+		face.SetLeftEye(image.Pt(int(output.GetFloatAt(i, 6)), int(output.GetFloatAt(i, 7))))
+		face.SetNose(image.Pt(int(output.GetFloatAt(i, 8)), int(output.GetFloatAt(i, 9))))
+		face.SetRightMouthCorner(image.Pt(int(output.GetFloatAt(i, 10)), int(output.GetFloatAt(i, 11))))
+		face.SetLeftMouthCorner(image.Pt(int(output.GetFloatAt(i, 12)), int(output.GetFloatAt(i, 13))))
+
+		if !face.Rectangle().Empty() && isRoiInImage(input, face) {
+			faces = append(faces, face)
+		}
+
+	}
+
+	return faces, nil
+}
+
+func (fd *YunetFaceDetector) Close() {
+	fd.fd.Close()
+}
+
+```
+
+Le résultat de la detection est stocké dans une matrice, il faut donc récupérer les différents indices de chaque ligne pour récupérer la zone de détection (x, y, largeur, hauteur) et les landmarks (yeux, nez, bouche).
+
+Les landmarks sont des points d'intêret permettant de pointer les coordonnées de certaines parties du visage (yeux, nez, bouche, menton).
+
+Le modèle Yunet remonte 5 landmarks, d'autre modèles permettent de remonter 68 landmarks avec [FacemarkLBF](https://docs.opencv.org/4.10.0/dc/d63/classcv_1_1face_1_1FacemarkLBF.html).
+
+![Landmarks](images/figure_68_markup.jpg "Landmarks")
+
+### Estimation de l'orientation du visage
+
+OpenCV met à disposition une fonction [solvePnP](https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html) qui permet à partir d'une projection sur un plan 2d de déterminer les matrices de translation et de rotation déterminant la position de l'objet 3d dans le monde réel.
+
+![PnP](images/pnp.jpg "PnP")
+
+Pour cela la fonction prend plusieurs éléments en entrée :
+* 6 points, projetés sur le plan 2d, il s'agit ici des positions des landmarks
+* un modèle 3d de visage avec les 6 points correspondants aux landmarks
+* les paramètres de la camera, tel que la focale
+
+En toute rigueur, le modèle 3d de chaque personne est unique. Cependant, un modèle générique est suffisant pour estimer l'orientation d'un visage.
+
+De même, les paramètres de la camera, notemment la focale, vont influencer sur cette estimation, cependant, des valeurs par défaut sont suffisantes.
+
+Ci-dessous un exemple de code avec gocv :
+
+```go
+		// 2d face landmarks
+		faceLandmarks := gocv.NewPoint2fVectorFromPoints([]gocv.Point2f{
+			{
+				X: float32(face.GetNose().X),
+				Y: float32(face.GetNose().Y),
+			},
+			{
+				X: float32(face.GetChin().X),
+				Y: float32(face.GetChin().Y),
+			},
+			{
+				X: float32(face.GetLeftEye().X),
+				Y: float32(face.GetLeftEye().Y),
+			},
+			{
+				X: float32(face.GetRightEye().X),
+				Y: float32(face.GetRightEye().Y),
+			},
+			{
+				X: float32(face.GetLeftMouthCorner().X),
+				Y: float32(face.GetLeftMouthCorner().Y),
+			},
+			{
+				X: float32(face.GetRightMouthCorner().X),
+				Y: float32(face.GetRightMouthCorner().Y),
+			},
+		})
+		defer faceLandmarks.Close()
+
+		// 3d face model
+		model := gocv.NewPoint3fVectorFromPoints([]gocv.Point3f{
+			{X: 0.0, Y: 0.0, Z: 0.0},          // Nose tip
+			{X: 0.0, Y: -330.0, Z: -65.0},     // Chin
+			{X: -225.0, Y: 170.0, Z: -135.0},  // Left eye left corner
+			{X: 225.0, Y: 170.0, Z: -135.0},   // Right eye right corner
+			{X: -150.0, Y: -150.0, Z: -125.0}, // Left Mouth corner
+			{X: 150.0, Y: -150.0, Z: -125.0},  // Right mouth corner
+		})
+		defer model.Close()
+
+		// camera matrix
+		focalLength := input.Cols() // Approximate focal length.
+		center := image.Pt(input.Cols()/2, input.Rows()/2)
+		cameraMatrix := gocv.NewMatWithSize(3, 3, gocv.MatTypeCV64F)
+		defer cameraMatrix.Close()
+
+		cameraMatrix.SetDoubleAt(0, 0, float64(focalLength))
+		cameraMatrix.SetDoubleAt(0, 1, 0)
+		cameraMatrix.SetDoubleAt(0, 2, float64(center.X))
+		cameraMatrix.SetDoubleAt(1, 0, 0)
+		cameraMatrix.SetDoubleAt(1, 1, float64(focalLength))
+		cameraMatrix.SetDoubleAt(1, 2, float64(center.Y))
+		cameraMatrix.SetDoubleAt(2, 0, 0)
+		cameraMatrix.SetDoubleAt(2, 1, 0)
+		cameraMatrix.SetDoubleAt(2, 2, 1)
+
+		// dist_coeffs
+		dist_coeffs := gocv.NewMatWithSize(4, 1, gocv.MatTypeCV64F)
+		defer dist_coeffs.Close()
+
+		// rotation and translation vectors
+		rotation := gocv.NewMat()
+		defer rotation.Close()
+		translation := gocv.NewMat()
+		defer translation.Close()
+
+		// Perspective-n-Point (PnP) pose computation
+		gocv.SolvePnP(model, faceLandmarks, cameraMatrix, dist_coeffs, &rotation, &translation, false, 0)
+
+		// convert rotation vector to euler angles
+		r := gocv.NewMat()
+		defer r.Close()
+		gocv.Rodrigues(rotation, &r)
+		sy := math.Sqrt(r.GetDoubleAt(0, 0)*r.GetDoubleAt(0, 0) + r.GetDoubleAt(1, 0)*r.GetDoubleAt(1, 0))
+		singular := sy < 1e-6
+		var x, y, z float64
+		if !singular {
+			x = math.Atan2(r.GetDoubleAt(2, 1), r.GetDoubleAt(2, 2))
+			y = math.Atan2(-r.GetDoubleAt(2, 0), sy)
+			z = math.Atan2(r.GetDoubleAt(1, 0), r.GetDoubleAt(0, 0))
+		} else {
+			x = math.Atan2(-r.GetDoubleAt(1, 2), r.GetDoubleAt(1, 1))
+			y = math.Atan2(-r.GetDoubleAt(2, 0), sy)
+			z = 0
+		}
+
+		face.Pitch = x * 180 / math.Pi
+		face.Yaw = y * 180 / math.Pi
+		face.Roll = z * 180 / math.Pi
+```
+Etant donnée qu'il faut 6 points minimum en entrée de la fonction solvePnP, les 5 landmarks du modèle Yunet ne sont pas suffisants pour l'estimation de la position du visage.
+
+Ci-dessous, la detection du visage de Camille avec l'estimation de son orientation :
+
+![Face](images/group20_scene20_frame2830_time_1m53.2s.jpg "Face detection")
+
+
 ### Scoring des frames
+
+Plusieurs niveaux de filtrage sont opérés à l'echelle de chaque regroupement de scène.
+
+Le premier niveau de filtrage s'appuit sur l'analyse avec opencv. Une fonction de scoring permet de ne garder que N frames pour chaque groupe. Cette fonction s'appuit sur les éléments suivants :
+* la proportion des visages sur l'ecran
+* la variance du filtre laplacien (sur l'image globale et sur les zone de détection des visages).
+* le niveau de confiance de detection des visages
+* l'estimation de l'orientation du visage
+
+En effet, le seuil de confiance de detection est un indicateur important. Un visage partiellement occulté ou trop orienté sur un côté aura un niveau de confiance plus faible étant donnée sa detection moins fiable.
+
+Sur ce premier filtrage, nous conservons une selection de quelques frames par regroupement de scène, avec un écart minimum entre chaque candidat.
+
+Le second niveau de filtrage s'effectue après l'analyse avec AWS Rekognition et s'appuit sur un scoring sur les éléments suivants :
+* taille et orientation du visage
+* ouverture et orientation des yeux
+* bouche fermée ou un sourire
+* l'émotion de la personne
+
+### Reconnaissance de visages
+
+AWS Rekognition permet la reconnaissance de visage. Pour cela il est possible de créer une collection dans laquelle nous allons indexer des visages.
+
+Création de la collection :
+```go
+_, err := r.client.CreateCollection(ctx, &rekognition.CreateCollectionInput{
+  CollectionId: aws.String(r.collectionId),
+})
+if err != nil {
+  panic(err)
+}
+```
+
+Indexation des visages d'une image
+```go
+  facesIndex, err := r.client.IndexFaces(ctx, &rekognition.IndexFacesInput{
+    CollectionId:    aws.String(r.collectionId),
+    ExternalImageId: aws.String(screenshot.FrameContext.String()),
+    Image: &types.Image{
+      Bytes: bs,
+    },
+    DetectionAttributes: []types.Attribute{
+      types.AttributeAll,
+    },
+  })
+  if err != nil {
+    panic(err)
+  }
+```
+L'indexation renvoit les même attributs que la detection, il n'est donc pas nécessaire de faire deux opérations.
+
+Recherche des visages similaire dans la collection
+```go
+  search, err := r.client.SearchFaces(ctx, &rekognition.SearchFacesInput{
+    CollectionId:       aws.String(r.collectionId),
+    FaceId:             fr.Face.FaceId,
+    FaceMatchThreshold: aws.Float32(float32(r.cfg.FaceRecognitionMinimumSimilarity)),
+  })
+  if err != nil {
+    panic(err)
+  }
+```
+
+L'attribut FaceId doit être valorisé avec la valeur renseignée en sortie de l'indexation.
+
+Exemple de retour de la recherche :
+
+```json
+{
+  "FaceMatches": [
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.373889,
+          "Left": 0.498104,
+          "Top": 0.145949,
+          "Width": 0.145449
+        },
+        "Confidence": 99.999794,
+        "ExternalImageId": "group20_scene20_frame2937_time_1m57.48s",
+        "FaceId": "ba911e94-7c3c-42b6-b693-23544b0244c9",
+        "ImageId": "355f918f-5989-379a-b786-e48d6c7639e7",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99992
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.3824,
+          "Left": 0.374953,
+          "Top": 0.157578,
+          "Width": 0.13977
+        },
+        "Confidence": 99.9996,
+        "ExternalImageId": "group14_scene18_frame2544_time_1m41.76s",
+        "FaceId": "aca9dc5b-511f-40b7-8dcc-489f2ac270a5",
+        "ImageId": "f5ca90f5-7a1c-34b9-b84a-419487068b31",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.999916
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.376234,
+          "Left": 0.380485,
+          "Top": 0.183655,
+          "Width": 0.139851
+        },
+        "Confidence": 99.9997,
+        "ExternalImageId": "group14_scene18_frame2755_time_1m50.2s",
+        "FaceId": "217252ee-5c12-4673-82f4-9e01a8b105d6",
+        "ImageId": "369d85f9-df06-32d9-a058-58ddc7d131b5",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99988
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.370737,
+          "Left": 0.386591,
+          "Top": 0.219342,
+          "Width": 0.139286
+        },
+        "Confidence": 99.9995,
+        "ExternalImageId": "group6_scene10_frame1404_time_56.16s",
+        "FaceId": "73e18d27-85b2-4bc7-8783-fabf8026800e",
+        "ImageId": "f8a7a759-6de3-3b8d-a617-8b5aee085a70",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.999855
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.377166,
+          "Left": 0.352541,
+          "Top": 0.194139,
+          "Width": 0.142679
+        },
+        "Confidence": 99.9997,
+        "ExternalImageId": "group6_scene10_frame1508_time_1m0.32s",
+        "FaceId": "03a10069-5a08-4a50-88bc-38bbf0bd3873",
+        "ImageId": "7f1e63ff-43b9-3547-bb67-b4f80551d7e6",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99984
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.362563,
+          "Left": 0.366831,
+          "Top": 0.223855,
+          "Width": 0.138061
+        },
+        "Confidence": 99.9996,
+        "ExternalImageId": "group14_scene14_frame2223_time_1m28.92s",
+        "FaceId": "986f1195-cd09-4629-b871-2969cf303ac6",
+        "ImageId": "8a2dd6ed-7962-367a-a529-f669a9ce2466",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99983
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.240159,
+          "Left": 0.356472,
+          "Top": 0.16679,
+          "Width": 0.0923306
+        },
+        "Confidence": 99.9981,
+        "ExternalImageId": "group4_scene4_frame754_time_30.16s",
+        "FaceId": "dbf8d851-8797-42db-8b18-751b25625341",
+        "ImageId": "1b6d980d-f87a-3880-acf9-9af934cf198c",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99966
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.36427,
+          "Left": 0.382736,
+          "Top": 0.16512,
+          "Width": 0.136051
+        },
+        "Confidence": 99.9995,
+        "ExternalImageId": "group14_scene16_frame2379_time_1m35.16s",
+        "FaceId": "80771ee0-1004-4b22-8b22-7af281825e00",
+        "ImageId": "c17b121e-bbd2-3816-a66c-c6b2b53c68a1",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99955
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.361178,
+          "Left": 0.335164,
+          "Top": 0.228363,
+          "Width": 0.138493
+        },
+        "Confidence": 99.9995,
+        "ExternalImageId": "group6_scene12_frame1616_time_1m4.64s",
+        "FaceId": "48358db9-b6c3-4fb4-a301-7660a47ab407",
+        "ImageId": "f793c441-6656-3f99-b828-5389ee01274a",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99922
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.371159,
+          "Left": 0.394839,
+          "Top": 0.245917,
+          "Width": 0.142968
+        },
+        "Confidence": 99.999794,
+        "ExternalImageId": "group6_scene8_frame1186_time_47.44s",
+        "FaceId": "6e6b4eaf-a36d-45f1-8c3c-ccb5953d5070",
+        "ImageId": "27ca9e96-22af-363d-a895-9af98a113593",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99922
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.353885,
+          "Left": 0.366461,
+          "Top": 0.194141,
+          "Width": 0.137903
+        },
+        "Confidence": 99.9995,
+        "ExternalImageId": "group6_scene12_frame1774_time_1m10.96s",
+        "FaceId": "c9b5c82f-6a40-48a5-92dc-14efb047a263",
+        "ImageId": "2ae4c96a-66ac-3e80-9b2d-be0e900a25d1",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99917
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.374631,
+          "Left": 0.407712,
+          "Top": 0.172038,
+          "Width": 0.145586
+        },
+        "Confidence": 99.9997,
+        "ExternalImageId": "group6_scene6_frame988_time_39.52s",
+        "FaceId": "c5f9365a-c91b-46eb-aa0b-ce776ba0d101",
+        "ImageId": "632dc19d-3414-3f67-955d-94b27fa50a8e",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99867
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.234199,
+          "Left": 0.357588,
+          "Top": 0.123309,
+          "Width": 0.084453
+        },
+        "Confidence": 99.995705,
+        "ExternalImageId": "group4_scene4_frame465_time_18.6s",
+        "FaceId": "4607a885-ff86-4587-866c-682583ab0e3c",
+        "ImageId": "68472b0a-b22e-3c0d-afd9-90ac5de79903",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99801
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.224203,
+          "Left": 0.387475,
+          "Top": 0.130461,
+          "Width": 0.0792494
+        },
+        "Confidence": 99.996,
+        "ExternalImageId": "group1_scene2_frame321_time_12.84s",
+        "FaceId": "701109c1-f551-458a-bd28-58637a5f9abf",
+        "ImageId": "df598cd4-46d6-3755-a430-19b47e608ddb",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 99.99028
+    },
+    {
+      "Face": {
+        "BoundingBox": {
+          "Height": 0.35406,
+          "Left": 0.548117,
+          "Top": 0.18813,
+          "Width": 0.12966
+        },
+        "Confidence": 99.9853,
+        "ExternalImageId": "group1_scene2_frame148_time_5.92s",
+        "FaceId": "41094fbc-c88f-43a6-b951-2cc838488970",
+        "ImageId": "ecc29d7a-df74-36f0-8d8f-2817371a0c23",
+        "IndexFacesModelVersion": "7.0",
+        "UserId": null
+      },
+      "Similarity": 88.80459
+    }
+  ],
+  "FaceModelVersion": "7.0",
+  "SearchedFaceId": "ea9af6bd-f1b4-460a-86a0-fd32608a8db2",
+  "ResultMetadata": {}
+}
+```
+
 
 ### Selection de la meilleure frame
 
