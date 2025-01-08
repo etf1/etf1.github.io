@@ -60,7 +60,7 @@ Ci dessous quelques exemples d'analyses d'images avec AWS rekognition :
 
 * Frame extraite du programme "Demain nous appartient" - Camille :
 
-![Camille](images/raw_group20_scène20_frame2830_time_1m53.2s.jpg "Camille - Demain nous appartient")
+![Camille](images/raw_group20_scene20_frame2830_time_1m53.2s.jpg "Camille - Demain nous appartient")
 
 ```json
 {
@@ -75,7 +75,7 @@ Ci dessous quelques exemples d'analyses d'images avec AWS rekognition :
           "Width": 0.14581785
         },
         "Confidence": 99.99991,
-        "ExternalImageId": "group20_scène20_frame2830_time_1m53.2s",
+        "ExternalImageId": "group20_scene20_frame2830_time_1m53.2s",
         "FaceId": "ea9af6bd-f1b4-460a-86a0-fd32608a8db2",
         "ImageId": "a1bee274-2e8c-378f-9e6b-5ac92e25bdf6",
         "IndexFacesModelVersion": null,
@@ -340,7 +340,7 @@ Ci dessous quelques exemples d'analyses d'images avec AWS rekognition :
 
 * Frame extraite du programme "Demain nous appartient" - Simon :
 
-![Simon](images/raw_group9_scène19_frame2757_time_1m50.28s.jpg "Simon - Demain nous appartient")
+![Simon](images/raw_group9_scene19_frame2757_time_1m50.28s.jpg "Simon - Demain nous appartient")
 
 ```json
 {
@@ -355,7 +355,7 @@ Ci dessous quelques exemples d'analyses d'images avec AWS rekognition :
           "Width": 0.1947689
         },
         "Confidence": 99.99969,
-        "ExternalImageId": "group9_scène19_frame2757_time_1m50.28s",
+        "ExternalImageId": "group9_scene19_frame2757_time_1m50.28s",
         "FaceId": "6b903cf6-3d45-440d-a472-b2ec758b52ad",
         "ImageId": "e43f1ef7-1029-3021-8cb0-bc4a3dc6c50f",
         "IndexFacesModelVersion": null,
@@ -820,6 +820,8 @@ Le résultat de la detection est stocké dans une matrice, il faut donc récupé
 
 Les landmarks sont des points d'intêret permettant de pointer les coordonnées de certaines parties du visage (yeux, nez, bouche, menton).
 
+![Preview](images/preview.gif "Preview")
+
 Le modèle Yunet remonte 5 landmarks, d'autre modèles permettent de remonter 68 landmarks avec [FacemarkLBF](https://docs.opencv.org/4.10.0/dc/d63/classcv_1_1face_1_1FacemarkLBF.html).
 
 ![Landmarks](images/figure_68_markup.jpg "Landmarks")
@@ -936,7 +938,7 @@ Etant donnée qu'il faut 6 points minimum en entrée de la fonction solvePnP, le
 
 Ci-dessous, la detection du visage de Camille avec l'estimation de son orientation :
 
-![Face](images/group20_scène20_frame2830_time_1m53.2s.jpg "Face detection")
+![Face](images/group20_scene20_frame2830_time_1m53.2s.jpg "Face detection")
 
 
 ### Scoring des frames
@@ -1019,7 +1021,7 @@ Exemple de retour de la recherche :
           "Width": 0.145449
         },
         "Confidence": 99.999794,
-        "ExternalImageId": "group20_scène20_frame2937_time_1m57.48s",
+        "ExternalImageId": "group20_scene20_frame2937_time_1m57.48s",
         "FaceId": "ba911e94-7c3c-42b6-b693-23544b0244c9",
         "ImageId": "355f918f-5989-379a-b786-e48d6c7639e7",
         "IndexFacesModelVersion": "7.0",
@@ -1036,7 +1038,7 @@ Exemple de retour de la recherche :
           "Width": 0.13977
         },
         "Confidence": 99.9996,
-        "ExternalImageId": "group14_scène18_frame2544_time_1m41.76s",
+        "ExternalImageId": "group14_scene18_frame2544_time_1m41.76s",
         "FaceId": "aca9dc5b-511f-40b7-8dcc-489f2ac270a5",
         "ImageId": "f5ca90f5-7a1c-34b9-b84a-419487068b31",
         "IndexFacesModelVersion": "7.0",
@@ -1053,7 +1055,7 @@ Exemple de retour de la recherche :
           "Width": 0.139851
         },
         "Confidence": 99.9997,
-        "ExternalImageId": "group14_scène18_frame2755_time_1m50.2s",
+        "ExternalImageId": "group14_scene18_frame2755_time_1m50.2s",
         "FaceId": "217252ee-5c12-4673-82f4-9e01a8b105d6",
         "ImageId": "369d85f9-df06-32d9-a058-58ddc7d131b5",
         "IndexFacesModelVersion": "7.0",
@@ -1070,7 +1072,7 @@ Exemple de retour de la recherche :
           "Width": 0.139286
         },
         "Confidence": 99.9995,
-        "ExternalImageId": "group6_scène10_frame1404_time_56.16s",
+        "ExternalImageId": "group6_scene10_frame1404_time_56.16s",
         "FaceId": "73e18d27-85b2-4bc7-8783-fabf8026800e",
         "ImageId": "f8a7a759-6de3-3b8d-a617-8b5aee085a70",
         "IndexFacesModelVersion": "7.0",
@@ -1087,7 +1089,7 @@ Exemple de retour de la recherche :
           "Width": 0.142679
         },
         "Confidence": 99.9997,
-        "ExternalImageId": "group6_scène10_frame1508_time_1m0.32s",
+        "ExternalImageId": "group6_scene10_frame1508_time_1m0.32s",
         "FaceId": "03a10069-5a08-4a50-88bc-38bbf0bd3873",
         "ImageId": "7f1e63ff-43b9-3547-bb67-b4f80551d7e6",
         "IndexFacesModelVersion": "7.0",
@@ -1104,7 +1106,7 @@ Exemple de retour de la recherche :
           "Width": 0.138061
         },
         "Confidence": 99.9996,
-        "ExternalImageId": "group14_scène14_frame2223_time_1m28.92s",
+        "ExternalImageId": "group14_scene14_frame2223_time_1m28.92s",
         "FaceId": "986f1195-cd09-4629-b871-2969cf303ac6",
         "ImageId": "8a2dd6ed-7962-367a-a529-f669a9ce2466",
         "IndexFacesModelVersion": "7.0",
@@ -1121,7 +1123,7 @@ Exemple de retour de la recherche :
           "Width": 0.0923306
         },
         "Confidence": 99.9981,
-        "ExternalImageId": "group4_scène4_frame754_time_30.16s",
+        "ExternalImageId": "group4_scene4_frame754_time_30.16s",
         "FaceId": "dbf8d851-8797-42db-8b18-751b25625341",
         "ImageId": "1b6d980d-f87a-3880-acf9-9af934cf198c",
         "IndexFacesModelVersion": "7.0",
@@ -1138,7 +1140,7 @@ Exemple de retour de la recherche :
           "Width": 0.136051
         },
         "Confidence": 99.9995,
-        "ExternalImageId": "group14_scène16_frame2379_time_1m35.16s",
+        "ExternalImageId": "group14_scene16_frame2379_time_1m35.16s",
         "FaceId": "80771ee0-1004-4b22-8b22-7af281825e00",
         "ImageId": "c17b121e-bbd2-3816-a66c-c6b2b53c68a1",
         "IndexFacesModelVersion": "7.0",
@@ -1155,7 +1157,7 @@ Exemple de retour de la recherche :
           "Width": 0.138493
         },
         "Confidence": 99.9995,
-        "ExternalImageId": "group6_scène12_frame1616_time_1m4.64s",
+        "ExternalImageId": "group6_scene12_frame1616_time_1m4.64s",
         "FaceId": "48358db9-b6c3-4fb4-a301-7660a47ab407",
         "ImageId": "f793c441-6656-3f99-b828-5389ee01274a",
         "IndexFacesModelVersion": "7.0",
@@ -1172,7 +1174,7 @@ Exemple de retour de la recherche :
           "Width": 0.142968
         },
         "Confidence": 99.999794,
-        "ExternalImageId": "group6_scène8_frame1186_time_47.44s",
+        "ExternalImageId": "group6_scene8_frame1186_time_47.44s",
         "FaceId": "6e6b4eaf-a36d-45f1-8c3c-ccb5953d5070",
         "ImageId": "27ca9e96-22af-363d-a895-9af98a113593",
         "IndexFacesModelVersion": "7.0",
@@ -1189,7 +1191,7 @@ Exemple de retour de la recherche :
           "Width": 0.137903
         },
         "Confidence": 99.9995,
-        "ExternalImageId": "group6_scène12_frame1774_time_1m10.96s",
+        "ExternalImageId": "group6_scene12_frame1774_time_1m10.96s",
         "FaceId": "c9b5c82f-6a40-48a5-92dc-14efb047a263",
         "ImageId": "2ae4c96a-66ac-3e80-9b2d-be0e900a25d1",
         "IndexFacesModelVersion": "7.0",
@@ -1206,7 +1208,7 @@ Exemple de retour de la recherche :
           "Width": 0.145586
         },
         "Confidence": 99.9997,
-        "ExternalImageId": "group6_scène6_frame988_time_39.52s",
+        "ExternalImageId": "group6_scene6_frame988_time_39.52s",
         "FaceId": "c5f9365a-c91b-46eb-aa0b-ce776ba0d101",
         "ImageId": "632dc19d-3414-3f67-955d-94b27fa50a8e",
         "IndexFacesModelVersion": "7.0",
@@ -1223,7 +1225,7 @@ Exemple de retour de la recherche :
           "Width": 0.084453
         },
         "Confidence": 99.995705,
-        "ExternalImageId": "group4_scène4_frame465_time_18.6s",
+        "ExternalImageId": "group4_scene4_frame465_time_18.6s",
         "FaceId": "4607a885-ff86-4587-866c-682583ab0e3c",
         "ImageId": "68472b0a-b22e-3c0d-afd9-90ac5de79903",
         "IndexFacesModelVersion": "7.0",
@@ -1240,7 +1242,7 @@ Exemple de retour de la recherche :
           "Width": 0.0792494
         },
         "Confidence": 99.996,
-        "ExternalImageId": "group1_scène2_frame321_time_12.84s",
+        "ExternalImageId": "group1_scene2_frame321_time_12.84s",
         "FaceId": "701109c1-f551-458a-bd28-58637a5f9abf",
         "ImageId": "df598cd4-46d6-3755-a430-19b47e608ddb",
         "IndexFacesModelVersion": "7.0",
@@ -1257,7 +1259,7 @@ Exemple de retour de la recherche :
           "Width": 0.12966
         },
         "Confidence": 99.9853,
-        "ExternalImageId": "group1_scène2_frame148_time_5.92s",
+        "ExternalImageId": "group1_scene2_frame148_time_5.92s",
         "FaceId": "41094fbc-c88f-43a6-b951-2cc838488970",
         "ImageId": "ecc29d7a-df74-36f0-8d8f-2817371a0c23",
         "IndexFacesModelVersion": "7.0",
