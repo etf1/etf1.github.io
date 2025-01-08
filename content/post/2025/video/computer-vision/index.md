@@ -1537,7 +1537,18 @@ Et le retour du modèle sur les frames selectionnées de Camille et Simon :
 ]
 ```
 
-Le prompt donné en exemple n'est pas très précis sur les critère de selection. Il est nécessaire de l'affiner selon le contexte du programme pour des résultats probants.
+Le prompt donné en exemple n'est pas très précis sur les critères de selection. Il est nécessaire de l'affiner selon le contexte du programme pour un filtrage plus selectif.
 
 ## Conclusion
 
+L'approche hybride nous permet de réduire par trois la facture AWS Rekognition sans impacter de façon structurante la qualité de l'analyse. OpenCV est framework complet, bien qu'il soit complexe de s'y retrouver dans la quantitée de modèles disponibles. La detection de visage est fiable, la reconnaissance de visage est encore perfectible sur les modèles open source disponibles. AWS rekognition reste à ce jour beaucoup plus performant notamment sur cet aspect. L'utilisation d'un LLM multi modal permet d'affiner d'avantage la selection.
+
+Le use case de selection automatique des vignette couvre un ensemble varié d'outils : 
+* détection de scène avec ffmpeg
+* similarité des plans avec SSIM
+* détection et reconnaissance des visages avec OpenCV (Yunet et SFace) ainsi que AWS Rekognition
+* analyse d'une image avec un LLM multi modal avec AWS Bedrock
+
+La mise en place des ces outils nous ont permis de gagner en expertise sur le domaine "computer vision". 
+
+Ces même outils nous permettent d'adresser différents cas d'usage notamment sur le chapitrage ou la détection du casting. De cette façon nous pouvons capitaliser sur ces outils en interne et ne pas dépendre d'une solution externe pour chaque usage.
