@@ -10,7 +10,7 @@ description: "Comment analyser le contenu d'une vidéo, quels outils et usages ?
 
 ## Contexte et cas d'usage
 
-Aujourd'hui TF1 met à disposition des centaines de milliers de contenus vidéo sur sa plateforme TF1+. La plupart de ces contenus proviennent du catalogue TF1, depuis peu, certains proviennent de partenaires (TF1+ devient une plateforme d'aggrégation). Selon le type de contenu (AVOD, Quotidienne, JT ...) les meta données associées à ces contenus sont plus ou moins bien fournies. L'augmentation en volume de ce catalogue nécessite la mise en place de certaines automatisations afin de garantir la présence de certaines de ces méta données :
+Aujourd'hui TF1 met à disposition des centaines de milliers de contenus vidéo sur sa plateforme TF1+. La plupart de ces contenus proviennent du catalogue TF1. Depuis peu, certains proviennent de partenaires : TF1+ devient une plateforme d'aggrégation. Selon le type de contenu (AVOD, Quotidienne, JT ...) les meta données associées à ces contenus sont plus ou moins bien fournies. L'augmentation en volume de ce catalogue nécessite la mise en place de certaines automatisations afin de garantir la présence de certaines de ces méta données :
 
 * Cue Point : pour déterminer les placements des coupures PUBs
 * Thumbnail : pour afficher une vignette, représentative d'un épisode
@@ -28,7 +28,7 @@ Par exemple :
 * personnage secondaire, souriant
 * duo: personnage principal et secondaire, heureux
 
-Pour implémenter ce type de filtrage il est nécessaire de mettre en place des outils pour :
+Pour implémenter ce type de filtrage parmis l'ensemble des frames d'une vidéo, il est nécessaire de mettre en place des outils pour :
 * la detection des visages
 * la reconnaissance des visages
 * l'analyse des émotions
@@ -39,9 +39,9 @@ Par ailleur, afin de selectionner le meilleur visuel, il faut également déterm
 ### AWS Rekognition
 
 AWS Fournit le service [Rekognition](https://aws.amazon.com/fr/rekognition/), qui permet notemment :
-* la detection / reconnaissance de visages
-* detection d'objets
-* detection de CUE Point (placement PUB)
+* la detection et la reconnaissance de visages
+* la detection d'objets
+* la detection de CUE Point (placement PUB)
 
 Le service est fiable et donne un niveau de detail assez impressionnant, surtout sur la detection des visages :
 * l'orientation du visage (pitch, roll, yaw)
@@ -52,9 +52,9 @@ Le service est fiable et donne un niveau de detail assez impressionnant, surtout
 * une estimation de l'âge de la personne
 * l'émotion de la personne 
 
-La reconnaissance de visage permet d'affecter un identifiant à chaque personne présente dans une vidéo. Il est possible également de rechercher dans un bucket d'images indexées des visages d'une même personne.
+La reconnaissance de visage permet d'affecter un identifiant à chaque personne présente dans une vidéo. Il est possible également de rechercher dans une collection d'images indexées des visages d'une même personne.
 
-Le tarif d'AWS rekognition est calculé à la minute de vidéo analysé, il est de 0,10 USD/min pour la detection de visage, soit 6$ pour l'analyse d'une heure de vidéo. Il est également possible d'utiliser le service pour l'analyse d'une seule image, dans ce cas, le tarif est dégressif et commence à 0,001$ pour la detection, l'indexation et la recherche de visages.
+Le tarif d'AWS rekognition est calculé à la minute de vidéo analysé, il est de 0,10 USD/min pour la detection de visage, soit 6$ pour l'analyse d'une heure de vidéo. Il est également possible d'utiliser le service pour l'analyse d'une seule image, dans ce cas, le tarif est dégressif et commence à 0,001$ pour les opérations de detection, d'indexation et de recherche de visages.
 
 Ci dessous quelques exemples d'analyses d'images avec AWS rekognition :
 
@@ -625,15 +625,17 @@ Afin de réduire les coûts d'AWS rekognition, nous avons adopté une approche h
 
 ![Hybride](images/hybride.svg#darkmode "Approche hybride")
 
-La stratégie est la suivante, les outils open souce permettent un premier filtrage sur les frames afin de ne conserver qu'un nombre réduit de candidats. AWS Rekognition est ensuite utilisé, image par image, pour établir un second filtrage, plus fin. Sur les dernieres frames, AWS Bedrock permet l'utilisation d'un LLM multi modal pour selectionner le meilleur visuel en fonction de critères liés au programme de la vidéo.
+La stratégie est la suivante, les outils open souce permettent un premier filtrage sur les frames afin de ne conserver qu'un nombre réduit de candidats. 
+AWS Rekognition est ensuite utilisé, image par image, pour établir un second filtrage, plus fin. Sur les dernieres frames, AWS Bedrock permet l'utilisation d'un LLM multi modal pour selectionner le meilleur visuel en fonction de critères liés au programme de la vidéo.
 
 ### Détection de scènes
 
 La detection des scènes permet d'identifier les discontinuitées dans le contenu vidéo, correspondantes a des changement de plan.
 
-L'idée est de limiter le nombre d'analyses par plan, en effet, beaucoup de scènes sont relativement statiques lors de dialogues. Cette affirmation est plus ou moins vérifiée selon le programme, elle est tout a fait pertinante pour des programmes tel que "Ici tout commence", "Demain nous appartient", "Plus belle la vie" et la plupart des quotidiennes de TF1 où les plans sont très statiques et sont une succession de dialogues. C'est un peu moins évidant pour certains programmes comme Koh-Lanta ou les scènes sont plus mouvante avec des transitions parfois moins marquées. 
+L'idée est de limiter le nombre d'analyses par plan, en effet, beaucoup de scènes sont relativement statiques lors de dialogues. Cette affirmation est plus ou moins vérifiée selon le programme, elle est tout a fait pertinante pour des programmes tel que "Ici tout commence", "Demain nous appartient", "Plus belle la vie" et la plupart des quotidiennes de TF1 où les plans sont plutôt statiques et correspondent une succession de dialogues. C'est un peu moins évidant pour certains programmes comme Koh-Lanta ou les scènes sont plus mouvantes avec des transitions parfois moins marquées. 
 
 Pour une scene donnée, les personnages présents sont en général les mêmes du début à la fin de la scène. Ceci permet de limiter le nombre d'analyse en ne conservant que N candidats par scene tout en conservant l'exhaustivité des plans.
+Cela facilite aussi le calcul de temps de présence des personnages, nécessaire pour définir lequel est le personnage principal, secondaire, etc ...
 
 La commande ffmpeg ci dessous permet de détecter les scènes :
 
@@ -642,7 +644,7 @@ ffmpeg -i video.mp4 -filter:v "select='gt(scene,0.3)',showinfo" -f null -
 ```
 
 
-Ici, "0.3" est le seuil de détection des scènes.
+Ici, "0.3" est le seuil de détection des scènes, à ajuster selon le programme.
 
 La commande va générer en sortie d'erreur les logs suivants :
 
@@ -655,13 +657,13 @@ La commande va générer en sortie d'erreur les logs suivants :
 
 pts_time est la position en seconde dans la vidéo du changement de scène.
 
-La vidéo a 25 frames par secondes (fps) :
-duration_time = 1 / 25 = 0.04
+La vidéo analysée ici est en 25 frames par secondes (fps) :
+duration_time = 1s / 25 = 0.04s
 
 pts_time = (pts * duration_time) / duration
 
 Pour le premier changement de plan (n=0), on obtient :
-pts_time = (548000 * 0.04) / 1000 = 21.92 (en secondes)
+pts_time = (548000 * 0.04) / 1000 = 21.92s
 
 ### Regroupement des scènes similaires
 
@@ -717,7 +719,7 @@ func ComputeLaplacianVariance(input gocv.Mat) float64 {
 
 ### Detection des visages
 
-Il existe de multiples algorithmes permettant la detection de vistage, ci dessous un tableau récapitulatifs des principaux algorithmes et leur année de publication.
+Il existe de multiples algorithmes permettant la detection de visages, ci dessous un tableau récapitulatifs des principaux algorithmes et leur année de publication.
 
 | Algorithme | Description | Support natif OpenCV | Année |
 | ---------- | ----------- | -------------- | ----- |
@@ -732,7 +734,9 @@ Il existe de multiples algorithmes permettant la detection de vistage, ci dessou
 
 Le code OpenCV permettant l'implémentation du modèle Yunet est disponible dans les samples [ici](https://github.com/opencv/opencv/blob/4.x/samples/dnn/face_detect.cpp).
 
-Ce code implémente également la reconnaissance de visage qui permet de déterminer la similarité de deux visages.
+Ce code implémente également la reconnaissance de visage avec sface, qui permet de déterminer la similarité de deux visages.
+
+OpenCV est un framework de traitement d'image complet qui permet l'utilisation de différents modèles. Quelques un de ces modèles DNN (deep neural network) sont disponibles [ici](https://github.com/opencv/opencv_zoo) et donnent un aperçu de ce qu'il est possible de faire avec OpenCV.
 
 Ci dessous un exemple d'implémentation avec gocv de detection de visage avec Yunet.
 
@@ -831,9 +835,9 @@ Pour cela la fonction prend plusieurs éléments en entrée :
 * un modèle 3d de visage avec les 6 points correspondants aux landmarks
 * les paramètres de la camera, tel que la focale
 
-En toute rigueur, le modèle 3d de chaque personne est unique. Cependant, un modèle générique est suffisant pour estimer l'orientation d'un visage.
+En toute rigueur, le modèle 3d de chaque personne est unique. Cependant, un modèle générique est suffisant pour estimer l'orientation de n'importe quel visage.
 
-De même, les paramètres de la camera, notemment la focale, vont influencer sur cette estimation, cependant, des valeurs par défaut sont suffisantes.
+De même, les paramètres de la camera, notemment la focale, vont influencer sur cette estimation, cependant, des valeurs par défaut sont suffisantes pour une estimation.
 
 Ci-dessous un exemple de code avec gocv :
 
@@ -941,7 +945,7 @@ Plusieurs niveaux de filtrage sont opérés à l'echelle de chaque regroupement 
 
 Le premier niveau de filtrage s'appuit sur l'analyse avec opencv. Une fonction de scoring permet de ne garder que N frames pour chaque groupe. Cette fonction s'appuit sur les éléments suivants :
 * la proportion des visages sur l'ecran
-* la variance du filtre laplacien (sur l'image globale et sur les zone de détection des visages).
+* la variance du filtre laplacien (sur l'image globale et sur les zones de détection des visages).
 * le niveau de confiance de detection des visages
 * l'estimation de l'orientation du visage
 
@@ -1267,8 +1271,273 @@ Exemple de retour de la recherche :
   "ResultMetadata": {}
 }
 ```
+La reconnaisance de visage permet d'itentifier les groupes de scène dans lesquels un même personnage apparaît. Pour cela il n'est pas nécessaire d'avoir une base de connaissance des personnages. Il suffit de déterminer les clusters de visages avec un algorithme KNN et d'utiliser le score de similarité de rekognition comme distance.
 
+Une fois les personnages associés aux groupes de scène, il est aisé de déterminer la durée d'apparition de chaque personnage et de déterminer le personnage principal ou secondaire.
 
 ### Selection de la meilleure frame
 
+Une fois le filtrage avec OpenCV et l'analyse des frames restantes avec rekognition effectués, nous avons les informations suivantes :
+* la durée d'apparition de chaque personnage
+* pour chaque personnage, l'ensemble des frames analysées où il apparaît
+* un scoring pour chaque frames s'appuyant sur les caractéristique du visage
+
+Il est donc possible par exemple de selectionner les N meilleurs frames pour un critère tel que : "personnage secondaire, calme".
+
+Afin de faire la dernière selection parmis ces N derniers candidats, nous pourvons utiliser un LLM multi modal.
+
+AWS bedrock permet l'inférence de différents modèles en SAS. Claude Haiku, un modèle d'Anthropic est un modèle multi modal. Cela signifie qu'en plus du prompt, il est possible de soumettre en entrée des images. Le modèle peut interpréter celles-ci et donner des informations selon le prompt associé.
+
+Ci-dessous un exemple d'utilisation d'AWS bedrock avec Claude Haiku.
+
+```go
+package bedrock
+
+import (
+	"context"
+	"encoding/base64"
+	"encoding/json"
+	"fmt"
+	"os"
+	"path/filepath"
+	"strings"
+
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/bedrockruntime"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/rpinsonneau/scene-detect/internal/report"
+)
+
+type BedrockAnalysis struct {
+	client     *bedrockruntime.Client
+	reportPath string
+}
+
+type Request struct {
+	AnthropicVersion string     `json:"anthropic_version"`
+	MaxTokens        int        `json:"max_tokens"`
+	Temperature      float64    `json:"temperature"`
+	System           string     `json:"system"`
+	Messages         []Messages `json:"messages"`
+}
+type Source struct {
+	Type      string `json:"type"`
+	MediaType string `json:"media_type"`
+	Data      string `json:"data"`
+}
+type Content struct {
+	Type   string  `json:"type"`
+	Source *Source `json:"source,omitempty"`
+	Text   *string `json:"text,omitempty"`
+}
+type Messages struct {
+	Role    string    `json:"role"`
+	Content []Content `json:"content"`
+}
+
+type Response struct {
+	ID         string    `json:"id"`
+	Type       string    `json:"type"`
+	Role       string    `json:"role"`
+	Model      string    `json:"model"`
+	Usage      Usage     `json:"usage"`
+	Content    []Content `json:"content"`
+	StopReason string    `json:"stop_reason"`
+}
+type Usage struct {
+	InputTokens  int `json:"input_tokens"`
+	OutputTokens int `json:"output_tokens"`
+}
+
+type Image struct {
+	Image   string  `json:"image"`
+	Score   float64 `json:"score"`
+	Explain string  `json:"explain"`
+	Select  bool    `json:"select"`
+}
+
+func NewBedrockAnalysis(ctx context.Context, reportPath string) *BedrockAnalysis {
+	return &BedrockAnalysis{
+		client:     createClient(ctx),
+		reportPath: reportPath,
+	}
+}
+
+func createClient(ctx context.Context) *bedrockruntime.Client {
+	// Load the Shared AWS Configuration (~/.aws/config)
+	cfg, err := config.LoadDefaultConfig(ctx,
+		config.WithSharedConfigProfile("etf1-sandbox"),
+		config.WithRegion("eu-west-3"),
+	)
+	if err != nil {
+		panic(err)
+	}
+
+	// rekognition client
+	return bedrockruntime.NewFromConfig(cfg)
+}
+
+func toMessageContent(file string) ([]Content, error) {
+
+	// read file bytes
+	raw, err := os.ReadFile(file)
+	if err != nil {
+		return nil, err
+	}
+
+	// encode to base64
+	base64Content := base64.StdEncoding.EncodeToString(raw)
+
+	return []Content{
+		{
+			Type: "text",
+			Text: aws.String(fmt.Sprintf("\"%s\":", filepath.Base(file))),
+		},
+		{
+			Type: "image",
+			Source: &Source{
+				Type:      "base64",
+				MediaType: "image/jpeg",
+				Data:      base64Content,
+			},
+		},
+	}, nil
+
+}
+
+func (b *BedrockAnalysis) Analyze(ctx context.Context) {
+
+	// prepare anthropic haiku request
+	request := &Request{
+		AnthropicVersion: "bedrock-2023-05-31",
+		MaxTokens:        4096,
+		Temperature:      0.7,
+		System: "Vous êtes un membre de l'équipe éditoriale du site de streaming vidéo TF1+." +
+			" Votre mission est de noter des images qui serviront de thumbnail afin de mettre en avant une vidéo du catalogue de TF1+." +
+			" Vous évalurez la qualité de la composition de l'image ainsi que l'émotion transmise par les personnages." +
+			" Vous répondrez en JSON dans un tableau qui comportera les clés suivantes:" +
+			" \"image\" (le nom de l'image)," +
+			" \"score\" (votre notation de l'image en pourcentage)," +
+			" \"explain\" (une explication de votre notation)",
+		Messages: []Messages{
+			{
+				Role: "user",
+				Content: []Content{
+					{
+						Type: "text",
+						Text: aws.String("Ci-dessous, une série d'images extraites d'une vidéo."),
+					},
+				},
+			},
+			{
+				Role: "assistant",
+				Content: []Content{
+					{
+						Type: "text",
+						Text: aws.String("[{\"image\": \""),
+					},
+				},
+			},
+		},
+	}
+
+	// search thumbnails candidates
+	thumbnailsDirectory := filepath.Join(b.reportPath, report.THUMBNAILS_DIR)
+	entries, err := os.ReadDir(thumbnailsDirectory)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, entry := range entries {
+		if entry.IsDir() {
+			continue
+		}
+		if !strings.HasSuffix(entry.Name(), ".jpg") {
+			continue
+		}
+
+		// load thumbnail into message content
+		file := filepath.Join(thumbnailsDirectory, entry.Name())
+		content, err := toMessageContent(file)
+		if err != nil {
+			panic(err)
+		}
+		request.Messages[0].Content = append(request.Messages[0].Content, content...)
+	}
+
+	// marshal request
+	body, err := json.Marshal(request)
+	if err != nil {
+		panic(err)
+	}
+
+	// invoke model
+	output, err := b.client.InvokeModel(ctx, &bedrockruntime.InvokeModelInput{
+		ModelId: aws.String("anthropic.claude-3-haiku-20240307-v1:0"),
+		Body:    body,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(string(output.Body))
+
+	// unmarshal response
+	response := &Response{}
+	err = json.Unmarshal(output.Body, response)
+	if err != nil {
+		panic(err)
+	}
+
+	text := "[{\"image\": \""
+	for _, content := range response.Content {
+		if content.Type != "text" || content.Text == nil {
+			continue
+		}
+		text += *content.Text
+	}
+
+	analysis := make([]Image, 0)
+	err = json.Unmarshal([]byte(text), &analysis)
+	if err != nil {
+		panic(err)
+	}
+
+	// print indent json
+	raw, err := json.MarshalIndent(analysis, "", "  ")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(string(raw))
+
+	err = os.WriteFile(filepath.Join(b.reportPath, "bedrock_analysis.json"), raw, os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+
+}
+```
+
+Et le retour du modèle sur les frames selectionnées de Camille et Simon :
+
+```json
+[
+  {
+    "image": "1_character1_1m17.76s.jpg",
+    "score": 90,
+    "explain": "Cette image présente une femme souriante avec des cheveux noirs qui regarde directement la caméra. L'éclairage est doux et met en valeur son visage, créant une atmosphère chaleureuse. La composition de l'image est équilibrée et attire l'attention sur l'expression de la personne, transmettant une émotion positive.",
+    "select": false
+  },
+  {
+    "image": "2_character0_39.76s.jpg",
+    "score": 85,
+    "explain": "Cette image montre un homme au regard intense et sérieux, dans un environnement sombre et mystérieux. La lumière éclaire son visage de manière dramatique, créant une ambiance tendue et captivante. La composition met l'accent sur l'expression du personnage, transmettant une émotion de réflexion ou de concentration.",
+    "select": false
+  }
+]
+```
+
+Le prompt donné en exemple n'est pas très précis sur les critère de selection. Il est nécessaire de l'affiner selon le contexte du programme pour des résultats probants.
+
 ## Conclusion
+
