@@ -10,38 +10,38 @@ description: "Comment analyser le contenu d'une vidéo, quels outils et usages ?
 
 ## Contexte et cas d'usage
 
-Aujourd'hui TF1 met à disposition des centaines de milliers de contenus vidéo sur sa plateforme TF1+. La plupart de ces contenus proviennent du catalogue TF1. Depuis peu, certains proviennent de partenaires : TF1+ devient une plateforme d'agrégation. Selon le type de contenu (AVOD, Quotidienne, JT ...) les meta données associées à ces contenus sont plus ou moins bien fournies. L'augmentation en volume de ce catalogue nécessite la mise en place de certaines automatisations afin de garantir la présence de certaines de ces méta données :
+Aujourd'hui TF1 met à disposition des centaines de milliers de contenus vidéo sur sa plateforme TF1+. La plupart de ces contenus proviennent du catalogue TF1. Depuis peu, certains proviennent de partenaires : TF1+ devient une plateforme d'agrégation. Selon le type de contenu (AVOD, Quotidienne, JT...), les métadonnées associées à ces contenus sont plus ou moins bien fournies. L'augmentation en volume de ce catalogue nécessite la mise en place de certaines automatisations afin de garantir la présence de certaines de ces métadonnées :
 
-* Cue Point : pour déterminer les placements des coupures PUBs
-* Thumbnail : pour afficher une vignette, représentative d'un épisode
-* Casting : afin que le contenu soit correctement indexé dans le moteur de recherche, que les données de casting soient affichées en front
+* Cue Point : pour déterminer les placements des coupures publicitaires
+* Thumbnail : pour afficher une vignette représentative d'un épisode
+* Casting : afin que le contenu soit correctement indexé dans le moteur de recherche et que les données de casting soient affichées en front
 * Chapitrage : pour identifier les séquences du JT
 
-Ces meta données peuvent être auto générées à partir du contenu vidéo.
+Ces métadonnées peuvent être automatiquement générées à partir du contenu vidéo.
 
 ## Selection automatique des vignettes vidéo
 
-Dans cet article, nous allons étudier le cas d'usage de la selection automatique des vignettes vidéo (thumbnail). L'idée est de selectionner une frame de la vidéo, qui sera utilisée comme vignette de présentation (thumbnail) dans TF1+. Pour se faire, nous définissons des règles qui vont s'appuyer sur la présence d'un ou plusieurs personnages ainsi que des émotions qu'ils dégagent.
+Dans cet article, nous allons étudier le cas d'usage de la selection automatique des vignettes vidéo (thumbnail). L'idée est de sélectionner une frame de la vidéo, qui sera utilisée comme vignette de présentation (thumbnail) dans TF1+. Pour ce faire, nous définissons des règles qui vont s'appuyer sur la présence d'un ou plusieurs personnages, ainsi que des émotions qu'ils dégagent.
 
 Par exemple :
 * personnage principal, calme
 * personnage secondaire, souriant
 * duo: personnage principal et secondaire, heureux
 
-Pour implémenter ce type de filtrage parmis l'ensemble des frames d'une vidéo, il est nécessaire de mettre en place des outils pour :
+Pour implémenter ce type de filtrage parmi l'ensemble des frames d'une vidéo, il est nécessaire de mettre en place des outils pour :
 * la detection des visages
 * la reconnaissance des visages
 * l'analyse des émotions
 
-Par ailleur, afin de selectionner le meilleur visuel, il faut également déterminer les caractéristiques précises d'un visage : orientation, yeux ouverts / fermés ...
+Par ailleurs, afin de sélectionner le meilleur visuel, il faut également déterminer les caractéristiques précises d'un visage : orientation, yeux ouverts ou fermés...
 
 
 ### AWS Rekognition
 
-AWS Fournit le service [Rekognition](https://aws.amazon.com/fr/rekognition/), qui permet notemment :
+AWS Fournit le service [Rekognition](https://aws.amazon.com/fr/rekognition/), qui permet notamment :
 * la detection et la reconnaissance de visages
 * la detection d'objets
-* la detection de CUE Point (placement PUB)
+* la detection de CUE Point (placement publicitaire)
 
 Le service est fiable et donne un niveau de detail assez impressionnant, surtout sur la detection des visages :
 * l'orientation du visage (pitch, roll, yaw)
@@ -54,11 +54,11 @@ Le service est fiable et donne un niveau de detail assez impressionnant, surtout
 
 La reconnaissance de visage permet d'affecter un identifiant à chaque personne présente dans une vidéo. Il est possible également de rechercher dans une collection d'images indexées des visages d'une même personne.
 
-Le tarif d'AWS rekognition est calculé à la minute de vidéo analysé, il est de 0,10 USD/min pour la detection de visage, soit 6$ pour l'analyse d'une heure de vidéo. Il est également possible d'utiliser le service pour l'analyse d'une seule image, dans ce cas, le tarif est dégressif et commence à 0,001$ pour les opérations de detection, d'indexation et de recherche de visages.
+Le tarif d'AWS rekognition est calculé à la minute de vidéo analysée, il est de 0,10 USD/min pour la detection de visage, soit 6 USD pour l'analyse d'une heure de vidéo. Il est également possible d'utiliser le service pour l'analyse d'une seule image, dans ce cas, le tarif est dégressif et commence à 0,001 USD pour les opérations de detection, d'indexation et de recherche de visages.
 
-Ci dessous quelques exemples d'analyses d'images avec AWS rekognition :
+Ci-dessous quelques exemples d'analyses d'images avec AWS rekognition :
 
-* Frame extraite du programme "Demain nous appartient" - Camille :
+* Frame extraite du programme "Camille - Demain nous appartient" :
 
 ![Camille](images/raw_group20_scene20_frame2830_time_1m53.2s.jpg "Camille - Demain nous appartient")
 
@@ -338,7 +338,7 @@ Ci dessous quelques exemples d'analyses d'images avec AWS rekognition :
 }
 ```
 
-* Frame extraite du programme "Demain nous appartient" - Simon :
+* Frame extraite du programme "Simon - Demain nous appartient" :
 
 ![Simon](images/raw_group9_scene19_frame2757_time_1m50.28s.jpg "Simon - Demain nous appartient")
 
@@ -618,79 +618,76 @@ Ci dessous quelques exemples d'analyses d'images avec AWS rekognition :
 }
 ```
 
-
 ### Approche hybride
 
-Afin de réduire les coûts d'AWS rekognition, nous avons adopté une approche hybride utilisant à la fois des outils open source, AWS rekognition et AWS bedrock.
+Afin de réduire les coûts d'AWS rekognition, nous avons adopté une approche hybride en utilisant à la fois des outils Open Source, AWS rekognition et AWS Bedrock.
 
 ![Hybride](images/hybride.svg#darkmode "Approche hybride")
 
-La stratégie est la suivante, les outils open souce permettent un premier filtrage sur les frames afin de ne conserver qu'un nombre réduit de candidats. 
-AWS Rekognition est ensuite utilisé, image par image, pour établir un second filtrage, plus fin. Sur les dernieres frames, AWS Bedrock permet l'utilisation d'un LLM multi modal pour selectionner le meilleur visuel en fonction de critères liés au programme de la vidéo.
+La stratégie est la suivante, les outils Open Source permettent un premier filtrage sur les frames afin de ne conserver qu'un nombre réduit de candidats. 
+AWS Rekognition est ensuite utilisé, image par image, pour établir un second filtrage, plus fin. Sur les dernières frames, AWS Bedrock permet l'utilisation d'un LLM multi-modal pour sélectionner le meilleur visuel en fonction de critères liés au programme de la vidéo.
 
 ### Détection de scènes
 
-La detection des scènes permet d'identifier les discontinuitées dans le contenu vidéo, correspondantes a des changement de plan.
+La detection des scènes permet d'identifier les discontinuités dans le contenu vidéo, correspondantes à des changements de plan.
 
-L'idée est de limiter le nombre d'analyses par plan, en effet, beaucoup de scènes sont relativement statiques lors de dialogues. Cette affirmation est plus ou moins vérifiée selon le programme, elle est tout a fait pertinante pour des programmes tel que "Ici tout commence", "Demain nous appartient", "Plus belle la vie" et la plupart des quotidiennes de TF1 où les plans sont plutôt statiques et correspondent à une succession de dialogues. C'est un peu moins évidant pour certains programmes comme Koh-Lanta ou les scènes sont plus mouvantes avec des transitions parfois moins marquées. 
+L'idée est de limiter le nombre d'analyses par plan. En effet, beaucoup de scènes sont relativement statiques lors de dialogues. Cette affirmation est plus ou moins vérifiée selon le programme, elle est tout à fait pertinente pour des programmes tels que "Ici tout commence", "Demain nous appartient", "Plus belle la vie" et la plupart des quotidiennes de TF1, où les plans sont plutôt statiques et correspondent à une succession de dialogues. C'est un peu moins évident pour certains programmes comme "Koh-Lanta" où les scènes sont plus mouvantes avec des transitions parfois moins marquées.
 
-Pour une scène donnée, les personnages présents sont en général les mêmes du début à la fin de la scène. Ceci permet de limiter le nombre d'analyse en ne conservant que N candidats par scène tout en conservant l'exhaustivité des plans.
-Cela facilite aussi le calcul de temps de présence des personnages, nécessaire pour définir lequel est le personnage principal, secondaire, etc ...
+Pour une scène donnée, les personnages présents sont en général les mêmes du début à la fin de la scène. Ceci permet de limiter le nombre d'analyses en ne conservant que N candidats par scène tout en conservant l'exhaustivité des plans.
+Cela facilite aussi le calcul de temps de présence des personnages, nécessaire pour définir lequel est le personnage principal, secondaire...
 
-La commande ffmpeg ci dessous permet de détecter les scènes :
+La commande `ffmpeg` ci-dessous permet de détecter les scènes :
 
 ```shell
 ffmpeg -i video.mp4 -filter:v "select='gt(scène,0.3)',showinfo" -f null -
 ```
 
-
-Ici, "0.3" est le seuil de détection des scènes, à ajuster selon le programme.
+Ici, `0.3` est le seuil de détection des scènes, à ajuster selon le programme.
 
 La commande va générer en sortie d'erreur les logs suivants :
 
-
-```shell
+```text
 [Parsed_showinfo_1 @ 0x6000019dc160] n:   0 pts: 548000 pts_time:21.92   duration:   1000 duration_time:0.04    fmt:yuv420p cl:left sar:0/1 s:1920x1080 i:P iskey:0 type:P checksum:4D9D3276 plane_checksum:[214FFDD1 8F8EF20E E0224279] mean:[104 121 130] stdev:[57.2 10.8 7.7]
 [Parsed_showinfo_1 @ 0x6000019dc160] n:   1 pts: 709000 pts_time:28.36   duration:   1000 duration_time:0.04    fmt:yuv420p cl:left sar:0/1 s:1920x1080 i:P iskey:0 type:B checksum:1C96B95B plane_checksum:[C829B67C 37D11037 9ED7F299] mean:[98 121 129] stdev:[55.8 11.8 8.5]
 [Parsed_showinfo_1 @ 0x6000019dc160] n:   2 pts: 844000 pts_time:33.76   duration:   1000 duration_time:0.04    fmt:yuv420p cl:left sar:0/1 s:1920x1080 i:P iskey:0 type:P checksum:417A4441 plane_checksum:[1FF62C11 4ABACA08 183F4E19] mean:[90 122 132] stdev:[52.1 9.1 8.2]
 ```
 
-pts_time est la position en seconde dans la vidéo du changement de scène.
+`pts_time` est la position en seconde dans la vidéo du changement de scène.
 
 La vidéo analysée ici est en 25 frames par secondes (fps) :
-duration_time = 1s / 25 = 0.04s
+`duration_time = 1s / 25 = 0.04s`
 
-pts_time = (pts * duration_time) / duration
+`pts_time = (pts * duration_time) / duration`
 
 Pour le premier changement de plan (n=0), on obtient :
-pts_time = (548000 * 0.04) / 1000 = 21.92s
+`pts_time = (548000 * 0.04) / 1000 = 21.92s`
 
 ### Regroupement des scènes similaires
 
-Lors de dialogues, la caméra peut faire des changements répétitifs entre deux personnages qui au final vont correspondre a deux plans qui vont s'alterner. Regrouper les scènes similaires permet de réduire encore un peu plus le nombre d'analyses nécessaires.
+Lors de dialogues, la caméra peut faire des changements répétitifs entre deux personnages qui au final vont correspondre à deux plans qui vont s'alterner. Regrouper les scènes similaires permet de réduire encore un peu plus le nombre d'analyses nécessaires.
 
-Pour se faire, il est possible de comparer la première frame d'une scène avec la dernière frame des scènes précédantes. SSIM (Structural SIMilarity) ou PSNR (Peak Signal to Noise Ratio) sont deux métriques qui permettent de mesurer la similarité entre deux images. 
+Pour ce faire, il est possible de comparer la première frame d'une scène avec la dernière frame des scènes précédentes. SSIM (Structural SIMilarity) ou PSNR (Peak Signal to Noise Ratio) sont deux métriques qui permettent de mesurer la similarité entre deux images. 
 
 ![Groups](images/groups.svg#darkmode "Regroupement des scènes")
 
 * les scènes 8 et 10 sont regroupées, il s'agit du même plan sur Camille
 * les scènes 9 et 11 sont regroupées, il s'agit du même plan sur Simon
 
-OpenCV permet l'implémentation de ces deux métriques, au delà d'un seuil paramétrable, les deux scène seront regroupées. Un exemple d'implémentation avec OpenCV est disponible [ici](https://docs.opencv.org/4.x/d5/dc4/tutorial_video_input_psnr_ssim.html).
+OpenCV permet l'implémentation de ces deux métriques, au-delà d'un seuil paramétrable, les deux scènes seront regroupées. Un exemple d'implémentation avec OpenCV est disponible [ici](https://docs.opencv.org/4.x/d5/dc4/tutorial_video_input_psnr_ssim.html).
 
-Nos stacks sont développées en Go, il existe un binding Go pour OpenCV : [gocv](https://gocv.io/).
+Nos stacks sont développées en langage Go, et il existe un binding Go pour OpenCV : [gocv](https://gocv.io/).
 
-Un exemple d'implémentation de SSIM avec gocv [ici](https://gist.github.com/rpinsonneau/7df55569cf2f784582ce9743286c4ed3).
+Un exemple d'implémentation de SSIM avec `gocv` [ici](https://gist.github.com/rpinsonneau/7df55569cf2f784582ce9743286c4ed3).
 
 ### Métrique de qualité de l'image
 
-Une fois les scènes détectées et regroupées, il va falloir déterminer une métrique pour conserver les N candidats de chaque groupe de scènes. Le niveau de flou ou de netteté de l'image est un critère important de selection.
+Une fois les scènes détectées et regroupées, il va falloir déterminer une métrique pour conserver les N candidats de chaque groupe de scènes. Le niveau de flou ou de netteté de l'image est aussi un critère important de selection.
 
-Une solution simple pour obtenir cette métrique est de convertir la frame en niveau de gris puis d'appliquer un filtre laplacien. Le filtre laplacien va mettre en évidance les contours des objets, plus l'image est nette plus les contours seront marqués. La variance est une mesure de la dispersion, en calculant celle-ci sur l'image obtenu on obtient un indicateur sur le niveau de détail et de nettetée de l'image : plus la dispersion est importante, plus il y a de contours détaillés plus l'image est nette.
+Une solution simple pour obtenir cette métrique est de convertir la frame en niveau de gris puis d'appliquer un filtre laplacien. Le filtre laplacien va mettre en évidence les contours des objets, plus l'image est nette plus les contours seront marqués. La variance est une mesure de la dispersion, en calculant celle-ci sur l'image obtenue, on obtient un indicateur sur le niveau de détail et de netteté de l'image : plus la dispersion est importante, plus il y a de contours détaillés et plus l'image est nette.
 
 ![Laplacian](images/laplacian.jpg "Filtre laplacien")
 
-Ci dessous un exemple de code avec gocv pour calculer la variance du filtre laplacien :
+Ci-dessous un exemple de code avec `gocv` pour calculer la variance du filtre laplacien :
 
 ```go
 func ComputeLaplacianVariance(input gocv.Mat) float64 {
@@ -719,7 +716,7 @@ func ComputeLaplacianVariance(input gocv.Mat) float64 {
 
 ### Detection des visages
 
-Il existe de multiples algorithmes permettant la detection de visages, ci dessous un tableau récapitulatifs des principaux algorithmes et leur année de publication.
+Il existe de multiples algorithmes permettant la detection de visages, ci-dessous un tableau récapitulatif des principaux algorithmes et leur année de publication.
 
 | Algorithme | Description | Support natif OpenCV | Année |
 | ---------- | ----------- | -------------- | ----- |
@@ -734,11 +731,11 @@ Il existe de multiples algorithmes permettant la detection de visages, ci dessou
 
 Le code OpenCV permettant l'implémentation du modèle Yunet est disponible dans les samples [ici](https://github.com/opencv/opencv/blob/4.x/samples/dnn/face_detect.cpp).
 
-Ce code implémente également la reconnaissance de visage avec sface, qui permet de déterminer la similarité de deux visages.
+Ce code implémente également la reconnaissance de visage avec SFace, qui permet de déterminer la similarité de deux visages.
 
-OpenCV est un framework de traitement d'image complet qui permet l'utilisation de différents modèles. Quelques un de ces modèles DNN (deep neural network) sont disponibles [ici](https://github.com/opencv/opencv_zoo) et donnent un aperçu de ce qu'il est possible de faire avec OpenCV.
+OpenCV est un framework de traitement d'image complet qui permet l'utilisation de différents modèles. Quelques-un de ces modèles DNN (Deep Neural Network) sont disponibles [ici](https://github.com/opencv/opencv_zoo) et donnent un aperçu de ce qu'il est possible de faire avec OpenCV.
 
-Ci dessous un exemple d'implémentation avec gocv de detection de visage avec Yunet.
+Ci-dessous un exemple d'implémentation avec `gocv` de detection de visage avec Yunet.
 
 ```go
 package opencv
@@ -818,33 +815,33 @@ func (fd *YunetFaceDetector) Close() {
 
 Le résultat de la detection est stocké dans une matrice, il faut donc récupérer les différents indices de chaque ligne pour récupérer la zone de détection (x, y, largeur, hauteur) et les landmarks (yeux, nez, bouche).
 
-Les landmarks sont des points d'intêret permettant de pointer les coordonnées de certaines parties du visage (yeux, nez, bouche, menton).
+Les landmarks sont des points d'intérêt permettant de pointer les coordonnées de certaines parties du visage (yeux, nez, bouche, menton).
 
 ![Preview](images/preview.gif "Preview")
 
-Le modèle Yunet remonte 5 landmarks, d'autre modèles permettent de remonter 68 landmarks avec [FacemarkLBF](https://docs.opencv.org/4.10.0/dc/d63/classcv_1_1face_1_1FacemarkLBF.html).
+Le modèle Yunet remonte 5 landmarks, d'autres modèles permettent de remonter 68 landmarks avec [FacemarkLBF](https://docs.opencv.org/4.10.0/dc/d63/classcv_1_1face_1_1FacemarkLBF.html).
 
 ![Landmarks](images/figure_68_markup.jpg "Landmarks")
 
 ### Estimation de l'orientation du visage
 
-OpenCV met à disposition une fonction [solvePnP](https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html) qui permet à partir d'une projection sur un plan 2d de déterminer les matrices de translation et de rotation déterminant la position de l'objet 3d dans le monde réel.
+OpenCV met à disposition une fonction [solvePnP](https://docs.opencv.org/4.x/d5/d1f/calib3d_solvePnP.html) qui permet à partir d'une projection sur un plan 2D de déterminer les matrices de translation et de rotation déterminant la position de l'objet 3D dans le monde réel.
 
 ![PnP](images/pnp.jpg "PnP")
 
-Pour cela la fonction prend plusieurs éléments en entrée :
-* 6 points, projetés sur le plan 2d, il s'agit ici des positions des landmarks
-* un modèle 3d de visage avec les 6 points correspondants aux landmarks
-* les paramètres de la camera, tel que la focale
+Pour cela, la fonction prend plusieurs éléments en entrée :
+* 6 points, projetés sur le plan 2D, il s'agit ici des positions des landmarks
+* un modèle 3D de visage avec les 6 points correspondants aux landmarks
+* les paramètres de la caméra, tel que la focale
 
-En toute rigueur, le modèle 3d de chaque personne est unique. Cependant, un modèle générique est suffisant pour estimer l'orientation de n'importe quel visage.
+En toute rigueur, le modèle 3D de chaque personne est unique. Cependant, un modèle générique est suffisant pour estimer l'orientation de n'importe quel visage.
 
-De même, les paramètres de la camera, notemment la focale, vont influencer sur cette estimation, cependant, des valeurs par défaut sont suffisantes pour une estimation.
+De même, les paramètres de la caméra, notamment la focale, vont influencer sur cette estimation, cependant des valeurs par défaut sont suffisantes pour une estimation.
 
-Ci-dessous un exemple de code avec gocv :
+Ci-dessous un exemple de code avec `gocv` :
 
 ```go
-		// 2d face landmarks
+		// 2D face landmarks
 		faceLandmarks := gocv.NewPoint2fVectorFromPoints([]gocv.Point2f{
 			{
 				X: float32(face.GetNose().X),
@@ -873,7 +870,7 @@ Ci-dessous un exemple de code avec gocv :
 		})
 		defer faceLandmarks.Close()
 
-		// 3d face model
+		// 3D face model
 		model := gocv.NewPoint3fVectorFromPoints([]gocv.Point3f{
 			{X: 0.0, Y: 0.0, Z: 0.0},          // Nose tip
 			{X: 0.0, Y: -330.0, Z: -65.0},     // Chin
@@ -934,28 +931,28 @@ Ci-dessous un exemple de code avec gocv :
 		face.Yaw = y * 180 / math.Pi
 		face.Roll = z * 180 / math.Pi
 ```
-Etant donnée qu'il faut 6 points minimum en entrée de la fonction solvePnP, les 5 landmarks du modèle Yunet ne sont pas suffisants pour l'estimation de la position du visage.
+
+Étant donné qu'il faut 6 points minimum en entrée de la fonction `solvePnP`, les 5 landmarks du modèle Yunet ne sont pas suffisants pour l'estimation de la position du visage.
 
 Ci-dessous, la detection du visage de Camille avec l'estimation de son orientation :
 
 ![Face](images/group20_scene20_frame2830_time_1m53.2s.jpg "Face detection")
 
-
 ### Scoring des frames
 
-Plusieurs niveaux de filtrage sont opérés à l'echelle de chaque regroupement de scène.
+Plusieurs niveaux de filtrage sont opérés à l'échelle de chaque regroupement de scène.
 
-Le premier niveau de filtrage s'appuit sur l'analyse avec opencv. Une fonction de scoring permet de ne garder que N frames pour chaque groupe. Cette fonction s'appuit sur les éléments suivants :
-* la proportion des visages sur l'ecran
-* la variance du filtre laplacien (sur l'image globale et sur les zones de détection des visages).
+Le premier niveau de filtrage s'appuie sur l'analyse avec OpenCV. Une fonction de scoring permet de ne garder que N frames pour chaque groupe. Cette fonction s'appuie sur les éléments suivants :
+* la proportion des visages sur l'écran
+* la variance du filtre laplacien (sur l'image globale et sur les zones de détection des visages)
 * le niveau de confiance de detection des visages
 * l'estimation de l'orientation du visage
 
-En effet, le seuil de confiance de detection est un indicateur important. Un visage partiellement occulté ou trop orienté sur un côté aura un niveau de confiance plus faible étant donnée sa detection plus difficile et donc moins fiable.
+En effet, le seuil de confiance de detection est un indicateur important. Un visage partiellement occulté ou trop orienté sur un côté aura un niveau de confiance plus faible, étant donnée sa detection plus difficile et donc moins fiable.
 
-Sur ce premier filtrage, nous conservons une selection de quelques frames par regroupement de scène, avec un écart minimum entre chaque candidat.
+Sur ce premier filtrage, nous conservons une sélection de quelques frames par regroupement de scène, avec un écart minimum entre chaque candidat.
 
-Le second niveau de filtrage s'effectue après l'analyse avec AWS Rekognition et s'appuit sur un scoring sur les éléments suivants :
+Le second niveau de filtrage s'effectue après l'analyse avec AWS Rekognition et s'appuie sur un scoring sur les éléments suivants :
 * taille et orientation du visage
 * ouverture et orientation des yeux
 * bouche fermée ou un sourire
@@ -963,9 +960,10 @@ Le second niveau de filtrage s'effectue après l'analyse avec AWS Rekognition et
 
 ### Reconnaissance de visages
 
-AWS Rekognition permet la reconnaissance de visage. Pour cela il est possible de créer une collection dans laquelle nous allons indexer des visages.
+AWS Rekognition permet la reconnaissance de visage. Pour cela, il est possible de créer une collection dans laquelle nous allons indexer des visages.
 
 Création de la collection :
+
 ```go
 _, err := r.client.CreateCollection(ctx, &rekognition.CreateCollectionInput{
   CollectionId: aws.String(r.collectionId),
@@ -975,7 +973,8 @@ if err != nil {
 }
 ```
 
-Indexation des visages d'une image
+Indexation des visages d'une image :
+
 ```go
   facesIndex, err := r.client.IndexFaces(ctx, &rekognition.IndexFacesInput{
     CollectionId:    aws.String(r.collectionId),
@@ -991,9 +990,11 @@ Indexation des visages d'une image
     panic(err)
   }
 ```
-L'indexation renvoit les même attributs que la detection, il n'est donc pas nécessaire de faire deux opérations.
 
-Recherche des visages similaire dans la collection
+L'indexation renvoie les mêmes attributs que la detection, il n'est donc pas nécessaire de faire deux opérations.
+
+Recherche des visages similaire dans la collection :
+
 ```go
   search, err := r.client.SearchFaces(ctx, &rekognition.SearchFacesInput{
     CollectionId:       aws.String(r.collectionId),
@@ -1005,7 +1006,7 @@ Recherche des visages similaire dans la collection
   }
 ```
 
-L'attribut FaceId doit être valorisé avec la valeur renseignée en sortie de l'indexation.
+L'attribut `FaceId` doit être valorisé avec la valeur renseignée en sortie de l'indexation.
 
 Exemple de retour de la recherche :
 
@@ -1273,7 +1274,8 @@ Exemple de retour de la recherche :
   "ResultMetadata": {}
 }
 ```
-La reconnaisance de visage permet d'itentifier les groupes de scène dans lesquels un même personnage apparaît. Pour cela il n'est pas nécessaire d'avoir une base de connaissance des personnages. Il suffit de déterminer les clusters de visages avec un algorithme KNN et d'utiliser le score de similarité de rekognition comme distance.
+
+La reconnaissance de visage permet d'identifier les groupes de scène dans lesquels un même personnage apparaît. Pour cela, il n'est pas nécessaire d'avoir une base de connaissance des personnages. Il suffit de déterminer les clusters de visages avec un algorithme KNN et d'utiliser le score de similarité de rekognition comme distance.
 
 Une fois les personnages associés aux groupes de scène, il est aisé de déterminer la durée d'apparition de chaque personnage et de déterminer le personnage principal ou secondaire.
 
@@ -1284,13 +1286,13 @@ Une fois le filtrage avec OpenCV et l'analyse des frames restantes avec rekognit
 * pour chaque personnage, l'ensemble des frames analysées où il apparaît
 * un scoring pour chaque frames s'appuyant sur les caractéristiques du visage
 
-Il est donc possible par exemple de selectionner les N meilleurs frames pour un critère tel que : "personnage secondaire, calme".
+Il est donc possible par exemple de sélectionner les N meilleures frames pour un critère tel que : "personnage secondaire, calme".
 
-Afin de faire la dernière selection parmis ces N derniers candidats, nous pourvons utiliser un LLM multi modal.
+Afin de faire la dernière selection parmi ces N derniers candidats, nous pouvons utiliser un LLM multi-modal.
 
-AWS bedrock permet l'inférence de différents modèles en SAS. Claude Haiku, un modèle d'Anthropic est un modèle multi modal. Cela signifie qu'en plus du prompt, il est possible de soumettre en entrée des images. Le modèle peut interpréter celles-ci et donner des informations selon le prompt associé.
+AWS bedrock permet l'inférence de différents modèles en SAS. Claude Haiku, un modèle d'Anthropic est un modèle multi-modal. Cela signifie qu'en plus du prompt, il est possible de soumettre en entrée des images. Le modèle peut interpréter celles-ci et donner des informations selon le prompt associé.
 
-Ci-dessous un exemple d'utilisation d'AWS bedrock avec Claude Haiku.
+Ci-dessous un exemple d'utilisation d'AWS bedrock avec Claude Haiku :
 
 ```go
 package bedrock
@@ -1520,7 +1522,7 @@ func (b *BedrockAnalysis) Analyze(ctx context.Context) {
 }
 ```
 
-Et le retour du modèle sur les frames selectionnées de Camille et Simon :
+Et le retour du modèle sur les frames sélectionnées de Camille et Simon :
 
 ```json
 [
@@ -1539,18 +1541,22 @@ Et le retour du modèle sur les frames selectionnées de Camille et Simon :
 ]
 ```
 
-Le prompt donné en exemple n'est pas très précis sur les critères de selection. Il est nécessaire de l'affiner selon le contexte du programme pour un filtrage plus selectif.
+Le prompt donné en exemple n'est pas très précis sur les critères de sélection. Il est nécessaire de l'affiner selon le contexte du programme pour un filtrage plus sélectif.
 
 ## Conclusion
 
-L'approche hybride nous permet de réduire par trois la facture AWS Rekognition sans impacter de façon structurante la qualité de l'analyse. OpenCV est framework complet, bien qu'il soit complexe de s'y retrouver dans la quantitée de modèles disponibles. La detection de visage est fiable, la reconnaissance de visage est encore perfectible sur les modèles open source disponibles. AWS rekognition reste à ce jour beaucoup plus performant notamment sur cet aspect. L'utilisation d'un LLM multi modal permet d'affiner d'avantage la selection.
+L'approche hybride nous permet de réduire par trois la facture AWS Rekognition sans impacter de façon structurante la qualité de l'analyse.
 
-Le use case de selection automatique des vignette couvre un ensemble varié d'outils : 
-* détection de scène avec ffmpeg
+OpenCV est un framework complet, bien qu'il soit complexe de s'y retrouver dans la quantité de modèles disponibles. La detection de visage est fiable, la reconnaissance de visage est encore perfectible sur les modèles Open Source disponibles.
+
+AWS rekognition reste à ce jour beaucoup plus performant notamment sur cet aspect. L'utilisation d'un LLM multi-modal permet d'affiner davantage la sélection.
+
+Le cas d'usage de sélection automatique des vignettes couvre un ensemble varié d'outils : 
+* détection de scène avec `ffmpeg`
 * similarité des plans avec SSIM
-* détection et reconnaissance des visages avec OpenCV (Yunet et SFace) ainsi que AWS Rekognition
-* analyse d'une image avec un LLM multi modal avec AWS Bedrock
+* détection et reconnaissance des visages avec OpenCV (Yunet et SFace), ainsi que AWS Rekognition
+* analyse d'une image avec un LLM multi-modal avec AWS Bedrock
 
-La mise en place des ces outils nous ont permis de gagner en expertise sur le domaine "computer vision". 
+La mise en place de ces outils nous ont permis de gagner en expertise sur le domaine Computer Vision. 
 
-Ces même outils nous permettent d'adresser différents cas d'usage notamment sur le chapitrage ou la détection du casting. De cette façon nous pouvons capitaliser sur ces outils en interne et ne pas dépendre d'une solution externe pour chaque usage.
+Ces mêmes outils nous permettent d'adresser différents cas d'usages, notamment sur le chapitrage ou la détection du casting. De cette façon, nous pouvons capitaliser sur ces outils en interne et ne pas dépendre d'une solution externe pour chaque besoin.
